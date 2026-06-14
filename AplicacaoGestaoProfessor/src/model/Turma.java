@@ -31,7 +31,7 @@ public class Turma implements Comparable<Turma> {
 	public int getAno_ingresso() {
 		return ano_ingresso;
 	}
-	public void set(int ano_ingresso) {
+	public void setAno_ingresso(int ano_ingresso) {
 		this.ano_ingresso = ano_ingresso;
 	}
 	public int getcodigo_curso() {
