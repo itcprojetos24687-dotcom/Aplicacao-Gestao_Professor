@@ -1,10 +1,12 @@
 package model;
-
+import java.util.ArrayList;
 public class Curso implements Comparable<Curso>  {
 
 		private int codigo_curso;
 		private String nome_curso;
-		private String duracao_curso;	
+		private String duracao_curso;
+		private ArrayList<Modu_curso> modulo_curso;
+		private ArrayList<Turma> turma;
 	
 	
 	public Curso(String nome_curso, String duracao_curso  ) {
