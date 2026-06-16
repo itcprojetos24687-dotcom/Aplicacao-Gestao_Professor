@@ -13,6 +13,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.SystemColor;
+import java.awt.Window;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -40,6 +41,9 @@ public class Cadastro_Curso {
 		});
 	}
 
+	public void mostrar() {
+	    frame.setVisible(true);
+	}
 	/**
 	 * Create the application.
 	 */
@@ -126,4 +130,13 @@ public class Cadastro_Curso {
 		btnCancelar.setBounds(371, 202, 103, 27);
 		frame.getContentPane().add(btnCancelar);
 	}
-}
+
+
+		public JFrame getFrame1() {
+		return frame;
+	}
+		public Window getFrame() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+  }
