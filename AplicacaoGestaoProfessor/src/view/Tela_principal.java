@@ -131,20 +131,6 @@ public class Tela_principal {
          mntmTurmas.addActionListener(new ActionListener() {
         	    public void actionPerformed(ActionEvent e) {
 
-        	        ViewTurma1 turma = new ViewTurma1();
-
-        	        try {
-        	            java.lang.reflect.Field frameField =
-        	                    ViewTurma1.class.getDeclaredField("frmGestaoTurmas");
-
-        	            frameField.setAccessible(true);
-
-        	            JFrame frameTurma = (JFrame) frameField.get(turma);
-        	            frameTurma.setVisible(true);
-
-        	        } catch (Exception ex) {
-        	            ex.printStackTrace();
-        	        }
         	    }
         	});
          
@@ -211,25 +197,7 @@ public class Tela_principal {
          JButton btnNewButton_1 = new JButton("Turmas");
          btnNewButton_1.setBounds(0, 56, 160, 27);
          panel_3.add(btnNewButton_1);
-         btnNewButton_1.addActionListener(new ActionListener() {
-        	    public void actionPerformed(ActionEvent e) {
-
-        	        ViewTurma1 turma = new ViewTurma1();
-
-        	        try {
-        	            java.lang.reflect.Field frameField =
-        	                    ViewTurma1.class.getDeclaredField("frmGestaoTurmas");
-
-        	            frameField.setAccessible(true);
-
-        	            JFrame frameTurma = (JFrame) frameField.get(turma);
-        	            frameTurma.setVisible(true);
-
-        	        } catch (Exception ex) {
-        	            ex.printStackTrace();
-        	        }
-        	    }
-        	});
+         
          
          JButton btnNewButton_2 = new JButton("Modulos");
          btnNewButton_2.setBounds(0, 84, 160, 27);

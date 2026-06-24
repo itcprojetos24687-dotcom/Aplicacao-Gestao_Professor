@@ -5,7 +5,7 @@ public class Qualificacao {
 	private String titulo;
 	private ArrayList<Classificacao> classificacoes;
 	private ArrayList<Quali_Nivel> quali_nivel;
-	private ArrayList<Quali_Modulo> quali_modulo;
+	private ArrayList<Quali_modulo> quali_modulo;
 	
 	public Qualificacao(String titulo) {
 		this.titulo = titulo;
