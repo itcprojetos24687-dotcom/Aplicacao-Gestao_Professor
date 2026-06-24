@@ -48,6 +48,10 @@ public class Formador {
 	public void setContacto(int contacto) {
 		this.contacto = contacto;
 	}
+	
+	public void cadastrarFormador(Formador formador) {
+		
+	}
 	@Override
 	public String toString() {
 		return "Formador [codigo=" + codigo + ", nome=" + nome + ", apelido=" + apelido + ", email=" + email
