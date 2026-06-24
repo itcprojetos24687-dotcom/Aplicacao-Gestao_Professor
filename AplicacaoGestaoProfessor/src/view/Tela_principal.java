@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.EventQueue;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JButton;
@@ -247,8 +248,7 @@ public class Tela_principal {
          btnNewButton_3.addActionListener(new ActionListener() {
              public void actionPerformed(ActionEvent e) {
 
-                 Cadastro_Curso telaCurso = new Cadastro_Curso();
-                 telaCurso.getFrame().setVisible(true);
+                 
 
              }
          });
@@ -299,8 +299,7 @@ public class Tela_principal {
      mntmCursos.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
 
-             Cadastro_Curso telaCurso = new Cadastro_Curso();
-             telaCurso.mostrar();
+             
          }
      });
      }
