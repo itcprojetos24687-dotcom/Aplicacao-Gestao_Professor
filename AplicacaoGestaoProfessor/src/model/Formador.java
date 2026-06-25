@@ -1,20 +1,29 @@
 package model;
 
 import java.util.ArrayList;
+import dao.*;
 
 public class Formador {
 	private int codigo;
 	private String nome;
 	private String apelido;
 	private String email;
+	private String genero;
+	private String estadoCivil;
 	private int contacto;
+	
+	private double salario;
 	private ArrayList<Licao> licoes;
 	
-	public Formador(String nome, String apelido, String email, int contacto) {
+	public Formador() {}
+	public Formador(String nome, String apelido, String email, String genero, String estadoCivil,int contacto, double salario) {
 		this.nome = nome;
 		this.apelido = apelido;
 		this.email = email;
+		this.genero = genero;
+		this.estadoCivil = estadoCivil;
 		this.contacto = contacto;
+		this.salario = salario;
 	}
 	
 	
@@ -42,15 +51,48 @@ public class Formador {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	public String getGenero() {
+		return genero;
+	}
+
+
+	public void setGenero(String genero) {
+		this.genero = genero;
+	}
+
+
+	public String getEstadoCivil() {
+		return estadoCivil;
+	}
+
+
+	public void setEstadoCivil(String estadoCivil) {
+		this.estadoCivil = estadoCivil;
+	}
+
+
 	public int getContacto() {
 		return contacto;
 	}
 	public void setContacto(int contacto) {
 		this.contacto = contacto;
 	}
+	public double getSalario() {
+		return this.salario;
+	}
+	public void setSalario(double salario) {
+		this.salario = salario;
+	}
+	public static double calcularSalario(int valor_hora, int num_horas) {
+		double salario = valor_hora * num_horas;
+		return salario;
+	}
 	
-	public void cadastrarFormador(Formador formador) {
-		
+	public void cadastrarFormador(Formador formador) throws ExceptionDao{
+		new FormadorDao().cadastrarFormador(formador);
+	}
+	public ArrayList<Formador> listarFormador(String nome) throws ExceptionDao{
+		return new FormadorDao().listarFormador(nome);
 	}
 	@Override
 	public String toString() {

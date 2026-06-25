@@ -1,29 +1,52 @@
 package view;
+import controller.FormadorController;
+import dao.ExceptionDao;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+
+import java.awt.EventQueue;
 import java.awt.Font;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Formulario_ProfessorTela extends JFrame {
 
     private static final long serialVersionUID = 1L;
 
     private JTextField txtCadatroProfessores;
-    private JTextField textField;
-    private JTextField textField_1;
-    private JTextField textField_2;
-    private JTextField textField_3;
-    private JTextField textField_4;
-    private JTextField textField_5;
+    private JTextField textNome;
+    private JTextField textApelido;
+    private JTextField textContacto;
+    private JTextField textEmail;
+    private JTextField textValor_horas;
+    JSpinner spinHoras;
+    JComboBox<String> comboGenero;
+    JComboBox<String> comboCivil;
 
     /**
      * Create the frame.
      */
+    public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Formulario_ProfessorTela frame = new Formulario_ProfessorTela();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+    
+    
     public Formulario_ProfessorTela() {
 
         setTitle("Cadastro de Professores");
@@ -33,6 +56,42 @@ public class Formulario_ProfessorTela extends JFrame {
         getContentPane().setLayout(null);
 
         JButton btnNewButton = new JButton("Guardar");
+        btnNewButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		boolean sucesso;
+        		try {
+        			String nome = textNome.getText();
+        			String apelido =textApelido.getText();
+        			int contacto = Integer.parseInt(textContacto.getText());
+        			String email = textEmail.getText();
+        			String genero = comboGenero.getSelectedItem().toString();
+        			String estadoCivil = comboCivil.getSelectedItem().toString();
+        			int horas = spinHoras.getComponentCount();
+        			int valor = Integer.parseInt(textValor_horas.getText());
+        			double salario = valor * horas;
+        			
+        			// instancia o controller
+        			FormadorController formadorController = new FormadorController();
+        			
+        			//Chamada do metodo cadastrar para validar todos os dados
+        			sucesso = formadorController.cadastrarFormador(nome, apelido, email, genero, estadoCivil,contacto, salario); 
+        			if (sucesso) {
+        				JOptionPane.showMessageDialog(null, "Dados guardados com sucesso");
+        			}
+        			else {
+        				JOptionPane.showMessageDialog(null, "Introducao invalida, Tente Novamente");
+        			}
+        			
+        		}catch(NumberFormatException ex) {
+        			JOptionPane.showMessageDialog(null, "Introduca todos os dados corretamente");
+        			ex.printStackTrace();
+        			
+        		}catch(Exception el) {
+        			JOptionPane.showMessageDialog(null, "Introduca todo os dados");
+        		}
+        		
+        	}
+        });
         btnNewButton.setFont(new Font("Times New Roman", Font.BOLD, 12));
         btnNewButton.setBounds(573, 463, 89, 23);
         getContentPane().add(btnNewButton);
@@ -59,15 +118,10 @@ public class Formulario_ProfessorTela extends JFrame {
         lblNewLabel_2.setBounds(31, 163, 61, 14);
         getContentPane().add(lblNewLabel_2);
 
-        JLabel lblNewLabel_3 = new JLabel("Curso");
+        JLabel lblNewLabel_3 = new JLabel("email");
         lblNewLabel_3.setFont(new Font("Times New Roman", Font.BOLD, 14));
         lblNewLabel_3.setBounds(32, 201, 46, 14);
         getContentPane().add(lblNewLabel_3);
-
-        JLabel lblNewLabel_4 = new JLabel("Turma");
-        lblNewLabel_4.setFont(new Font("Times New Roman", Font.BOLD, 14));
-        lblNewLabel_4.setBounds(32, 235, 46, 14);
-        getContentPane().add(lblNewLabel_4);
 
         JLabel lblNewLabel_5 = new JLabel("Genero");
         lblNewLabel_5.setFont(new Font("Times New Roman", Font.BOLD, 14));
@@ -84,56 +138,51 @@ public class Formulario_ProfessorTela extends JFrame {
         lblNewLabel_7.setBounds(32, 344, 101, 14);
         getContentPane().add(lblNewLabel_7);
 
-        textField = new JTextField();
-        textField.setBounds(91, 93, 134, 20);
-        getContentPane().add(textField);
-        textField.setColumns(10);
+        textNome = new JTextField();
+        textNome.setBounds(91, 93, 134, 20);
+        getContentPane().add(textNome);
+        textNome.setColumns(10);
 
-        textField_1 = new JTextField();
-        textField_1.setBounds(91, 125, 134, 20);
-        getContentPane().add(textField_1);
-        textField_1.setColumns(10);
+        textApelido = new JTextField();
+        textApelido.setBounds(91, 125, 134, 20);
+        getContentPane().add(textApelido);
+        textApelido.setColumns(10);
 
-        textField_2 = new JTextField();
-        textField_2.setBounds(91, 161, 134, 20);
-        getContentPane().add(textField_2);
-        textField_2.setColumns(10);
+        textContacto = new JTextField();
+        textContacto.setBounds(91, 161, 134, 20);
+        getContentPane().add(textContacto);
+        textContacto.setColumns(10);
 
-        textField_3 = new JTextField();
-        textField_3.setBounds(91, 199, 134, 20);
-        getContentPane().add(textField_3);
-        textField_3.setColumns(10);
+        textEmail = new JTextField();
+        textEmail.setBounds(91, 199, 134, 20);
+        getContentPane().add(textEmail);
+        textEmail.setColumns(10);
 
-        textField_4 = new JTextField();
-        textField_4.setBounds(91, 233, 134, 20);
-        getContentPane().add(textField_4);
-        textField_4.setColumns(10);
+        spinHoras = new JSpinner();
+        spinHoras.setBounds(195, 342, 60, 20);
+        getContentPane().add(spinHoras);
 
-        JSpinner spinner_1 = new JSpinner();
-        spinner_1.setBounds(195, 342, 60, 20);
-        getContentPane().add(spinner_1);
-
-        JComboBox<String> comboBox = new JComboBox<String>();
-        comboBox.setModel(new DefaultComboBoxModel<String>(
+        comboGenero = new JComboBox<String>();
+        comboGenero.setModel(new DefaultComboBoxModel<String>(
                 new String[] {"Masculino", "Feminino"}));
-        comboBox.setBounds(91, 267, 134, 22);
-        getContentPane().add(comboBox);
+        comboGenero.setBounds(91, 267, 134, 22);
+        getContentPane().add(comboGenero);
 
-        JComboBox<String> comboBox_1 = new JComboBox<String>();
-        comboBox_1.setModel(new DefaultComboBoxModel<String>(
+        comboCivil = new JComboBox<String>();
+        comboCivil.setModel(new DefaultComboBoxModel<String>(
                 new String[] {"Casado", "Solteiro"}));
-        comboBox_1.setBounds(123, 305, 102, 22);
-        getContentPane().add(comboBox_1);
+        comboCivil.setBounds(123, 305, 102, 22);
+        getContentPane().add(comboCivil);
 
         JLabel lblNewLabel_8 = new JLabel("Valor Horas");
         lblNewLabel_8.setFont(new Font("Times New Roman", Font.BOLD, 14));
         lblNewLabel_8.setBounds(35, 384, 78, 14);
         getContentPane().add(lblNewLabel_8);
 
-        textField_5 = new JTextField();
-        textField_5.setBounds(123, 382, 102, 20);
-        getContentPane().add(textField_5);
-        textField_5.setColumns(10);
+        textValor_horas = new JTextField();
+        textValor_horas.setBounds(123, 382, 102, 20);
+        getContentPane().add(textValor_horas);
+        textValor_horas.setColumns(10);
 
         setVisible(true);
     }
