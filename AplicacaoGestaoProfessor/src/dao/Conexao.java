@@ -8,6 +8,9 @@ import javax.swing.JOptionPane;
 
 public class Conexao {
 	//classe para estabelecer conexao com a base de dados
+	public void main (String[] args) {
+		Connection co = new Conexao().getConnection();
+	}
 	public Connection getConnection() {
 		Connection con = null;
 		
