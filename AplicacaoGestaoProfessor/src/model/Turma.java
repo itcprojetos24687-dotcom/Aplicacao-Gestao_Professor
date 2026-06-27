@@ -45,6 +45,10 @@ public class Turma  {
 	public void setTurno(String turno) {
 		this.turno = turno;
 	}
+	
+	public void cadastrarTurma(Turma turma) {
+		
+	}
 
 	@Override
 	public String toString() {
