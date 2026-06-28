@@ -1,11 +1,17 @@
 package model;
 import java.util.ArrayList;
+import dao.*;
+
 public class Modulo {
 	private int codigo;
 	private String nome;
 	private int carga_horaria;
 	private ArrayList<Licao> licoes;
 	private ArrayList<Quali_modulo> quali_modulo;
+	
+	public Modulo() {
+		
+	}
 	
 	public Modulo(String nome,int carga_horaria) {
 		this.nome = nome;
@@ -35,7 +41,13 @@ public class Modulo {
 	public void setCarga_horaria(int carga_horaria) {
 		this.carga_horaria = carga_horaria;
 	}
-
+	
+	public void cadastrarModulo(Modulo modulo) throws ExceptionDao{
+		new ModuloDao().cadastrarModulo(modulo);
+	}
+	public ArrayList<Modulo> listarModulo(String nome) throws ExceptionDao{
+		return new ModuloDao().listarModulo(nome);
+	}
 	@Override
 	public String toString() {
 		return "Modulo [codigo=" + codigo + ", nome=" + nome + ", carga_horaria=" + carga_horaria + "]";

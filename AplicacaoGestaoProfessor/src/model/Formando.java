@@ -1,5 +1,6 @@
 package model;
 import java.util.ArrayList;
+import dao.*;
 public class Formando {
 	private int codigo;
 	private String nome;
@@ -9,6 +10,10 @@ public class Formando {
 	private String bi;
 	private ArrayList<Inscricao> Inscricoes;
 	private ArrayList<Matricula> matricula;
+	
+	public Formando() {
+		
+	}
 	
 	public Formando(String nome, String apelido, int contacto, String email, String bi) {
 		this.nome = nome;
@@ -64,6 +69,12 @@ public class Formando {
 
 	public void setBi(String bi) {
 		this.bi = bi;
+	}
+	public void cadastrarFormando(Formando formando) throws ExceptionDao{
+		new FormandoDao().cadastrarFormando(formando);
+	}
+	public ArrayList<Formando>listarFormando(String nome) throws ExceptionDao{
+		return new FormandoDao().listarFormando(nome);
 	}
 
 	@Override
