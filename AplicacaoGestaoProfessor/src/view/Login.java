@@ -5,17 +5,13 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import java.awt.Color;
 import javax.swing.JLabel;
 import java.awt.Font;
+import javax.swing.SwingConstants;
 import javax.swing.JTextField;
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.border.BevelBorder;
-import java.awt.Color;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JCheckBox;
 import javax.swing.ImageIcon;
-import javax.swing.UIManager;
 
 public class Login extends JFrame {
 
@@ -44,66 +40,124 @@ public class Login extends JFrame {
 	 * Create the frame.
 	 */
 	public Login() {
-		setFont(new Font("Times New Roman", Font.BOLD, 18));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 881, 468);
+		setBounds(100, 100, 1386, 788);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(28, 113, 216));
-		contentPane.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("Login");
-		lblNewLabel.setForeground(Color.WHITE);
-		lblNewLabel.setFont(new Font("Arial Black", Font.BOLD, 27));
-		lblNewLabel.setBounds(534, 30, 103, 41);
-		contentPane.add(lblNewLabel);
+		JPanel panel = new JPanel();
+		panel.setBackground(Color.BLUE);
+		panel.setBounds(126, 89, 534, 552);
+		contentPane.add(panel);
+		panel.setLayout(null);
 		
-		JLabel lblUsuario = new JLabel("Usuario");
-		lblUsuario.setForeground(Color.WHITE);
-		lblUsuario.setFont(new Font("Times New Roman", Font.BOLD, 18));
-		lblUsuario.setBounds(432, 92, 72, 24);
-		contentPane.add(lblUsuario);
+		JLabel lblNewLabel = new JLabel("SISTEMA\r\n\r\n");
+		lblNewLabel.setVerticalAlignment(SwingConstants.TOP);
+		lblNewLabel.setForeground(Color.WHITE);
+		lblNewLabel.setFont(new Font("Arial Black", Font.BOLD, 24));
+		lblNewLabel.setBounds(169, 52, 130, 35);
+		panel.add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("DE");
+		lblNewLabel_1.setForeground(Color.WHITE);
+		lblNewLabel_1.setFont(new Font("Arial Black", Font.BOLD, 24));
+		lblNewLabel_1.setBounds(206, 98, 49, 26);
+		panel.add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("GESTÃO\r\n");
+		lblNewLabel_2.setVerticalAlignment(SwingConstants.TOP);
+		lblNewLabel_2.setForeground(Color.WHITE);
+		lblNewLabel_2.setFont(new Font("Arial Black", Font.BOLD, 24));
+		lblNewLabel_2.setBounds(169, 135, 130, 35);
+		panel.add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_1_1 = new JLabel("DE");
+		lblNewLabel_1_1.setForeground(Color.WHITE);
+		lblNewLabel_1_1.setFont(new Font("Arial Black", Font.BOLD, 24));
+		lblNewLabel_1_1.setBounds(206, 181, 49, 26);
+		panel.add(lblNewLabel_1_1);
+		
+		JLabel lblNewLabel_2_1 = new JLabel("PROFESSORES");
+		lblNewLabel_2_1.setVerticalAlignment(SwingConstants.TOP);
+		lblNewLabel_2_1.setForeground(Color.WHITE);
+		lblNewLabel_2_1.setFont(new Font("Arial Black", Font.BOLD, 24));
+		lblNewLabel_2_1.setBounds(130, 218, 204, 35);
+		panel.add(lblNewLabel_2_1);
+		
+		JLabel lblNewLabel_4 = new JLabel("");
+		lblNewLabel_4.setIcon(new ImageIcon("C:\\Users\\user\\Downloads\\scientist-icon (2).png"));
+		lblNewLabel_4.setBounds(110, 264, 256, 264);
+		panel.add(lblNewLabel_4);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBackground(Color.WHITE);
+		panel_1.setBounds(670, 95, 541, 546);
+		contentPane.add(panel_1);
+		panel_1.setLayout(null);
+		
+		JLabel lblNewLabel_2_2 = new JLabel("LOGIN\r\n");
+		lblNewLabel_2_2.setVerticalAlignment(SwingConstants.TOP);
+		lblNewLabel_2_2.setForeground(Color.BLUE);
+		lblNewLabel_2_2.setFont(new Font("Arial Black", Font.BOLD, 24));
+		lblNewLabel_2_2.setBounds(210, 55, 130, 35);
+		panel_1.add(lblNewLabel_2_2);
+		
+		JLabel lblNewLabel_3 = new JLabel("USUÁRIO:");
+		lblNewLabel_3.setFont(new Font("Bahnschrift", Font.BOLD, 18));
+		lblNewLabel_3.setBounds(210, 152, 98, 26);
+		panel_1.add(lblNewLabel_3);
 		
 		textField = new JTextField();
-		textField.setBounds(432, 121, 322, 33);
-		contentPane.add(textField);
+		textField.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		textField.setBounds(146, 189, 225, 26);
+		panel_1.add(textField);
 		textField.setColumns(10);
 		
-		JLabel lblPalavrapasse = new JLabel("Palavra-passe");
-		lblPalavrapasse.setForeground(Color.WHITE);
-		lblPalavrapasse.setFont(new Font("Times New Roman", Font.BOLD, 18));
-		lblPalavrapasse.setBounds(432, 192, 127, 33);
-		contentPane.add(lblPalavrapasse);
+		JLabel lblNewLabel_3_1 = new JLabel("SENHA:");
+		lblNewLabel_3_1.setFont(new Font("Bahnschrift", Font.BOLD, 18));
+		lblNewLabel_3_1.setBounds(210, 265, 73, 26);
+		panel_1.add(lblNewLabel_3_1);
 		
 		textField_1 = new JTextField();
-		textField_1.setBounds(432, 226, 322, 33);
-		contentPane.add(textField_1);
+		textField_1.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		textField_1.setColumns(10);
+		textField_1.setBounds(146, 305, 225, 26);
+		panel_1.add(textField_1);
 		
-		JButton btnEntrar = new JButton("Entrar");
-		btnEntrar.setForeground(new Color(28, 113, 216));
-		btnEntrar.setFont(new Font("Cantarell Extra Bold", Font.BOLD, 18));
-		btnEntrar.setBounds(534, 305, 103, 27);
-		contentPane.add(btnEntrar);
+		JButton btnNewButton = new JButton("SAIR\r\n");
+		btnNewButton.setForeground(Color.WHITE);
+		btnNewButton.setBackground(Color.BLUE);
+		btnNewButton.setFont(new Font("Bahnschrift", Font.BOLD, 13));
+		btnNewButton.setBounds(263, 488, 89, 25);
+		panel_1.add(btnNewButton);
 		
-		JButton btnSair = new JButton("Sair");
-		btnSair.setForeground(new Color(28, 113, 216));
-		btnSair.setFont(new Font("Cantarell Extra Bold", Font.BOLD, 18));
-		btnSair.setBounds(534, 371, 103, 27);
-		contentPane.add(btnSair);
+		JButton btnNewButton_1 = new JButton("ENTRAR");
+		btnNewButton_1.setBackground(Color.WHITE);
+		btnNewButton_1.setFont(new Font("Bahnschrift", Font.BOLD, 13));
+		btnNewButton_1.setBounds(415, 487, 89, 26);
+		panel_1.add(btnNewButton_1);
 		
-		JLabel lblNewLabel_1 = new JLabel("New label");
-		lblNewLabel_1.setIcon(new ImageIcon(Login.class.getResource("/img/woman-user-color-icon.png")));
-		lblNewLabel_1.setBounds(12, 23, 403, 373);
-		contentPane.add(lblNewLabel_1);
+		JPanel panel_2 = new JPanel();
+		panel_2.setBackground(Color.BLUE);
+		panel_2.setBounds(93, 641, 1148, 21);
+		contentPane.add(panel_2);
 		
-		JLabel lblSistemaDeGestao = new JLabel("Sistema de Gestao \nde Professores");
-		lblSistemaDeGestao.setForeground(Color.WHITE);
-		lblSistemaDeGestao.setBackground(Color.WHITE);
-		lblSistemaDeGestao.setFont(new Font("Arial Black", Font.BOLD, 16));
-		lblSistemaDeGestao.setBounds(50, 402, 329, 41);
-		contentPane.add(lblSistemaDeGestao);
+		JPanel panel_3 = new JPanel();
+		panel_3.setBackground(Color.BLUE);
+		panel_3.setBounds(93, 73, 39, 568);
+		contentPane.add(panel_3);
+		
+		JPanel panel_4 = new JPanel();
+		panel_4.setBackground(Color.BLUE);
+		panel_4.setBounds(131, 73, 1110, 21);
+		contentPane.add(panel_4);
+		
+		JPanel panel_5 = new JPanel();
+		panel_5.setBackground(Color.BLUE);
+		panel_5.setBounds(1211, 89, 30, 552);
+		contentPane.add(panel_5);
 
 	}
 }
