@@ -10,10 +10,7 @@ public class Conexao {
 	public static void main(String []args) {
 		Connection con = new Conexao().getConnection()
 ;	}
-	//classe para estabelecer conexao com a base de dados
-	public void main (String[] args) {
-		Connection co = new Conexao().getConnection();
-	}
+	
 	public Connection getConnection() {
 		Connection con = null;
 		
