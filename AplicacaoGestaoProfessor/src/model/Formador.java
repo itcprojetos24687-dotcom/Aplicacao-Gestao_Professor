@@ -1,6 +1,9 @@
 package model;
 
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+
 import dao.*;
 
 public class Formador {
@@ -11,7 +14,6 @@ public class Formador {
 	private String genero;
 	private String estadoCivil;
 	private int contacto;
-	
 	private double salario;
 	private ArrayList<Licao> licoes;
 	
@@ -94,11 +96,20 @@ public class Formador {
 	public ArrayList<Formador> listarFormador(String nome) throws ExceptionDao{
 		return new FormadorDao().listarFormador(nome);
 	}
+	public void atualizarFormador(Formador formador) throws ExceptionDao{
+		new FormadorDao().atualizarFormador(formador);
+	}
+	public void apagarFormador(Formador formador) throws ExceptionDao{
+		JOptionPane.showMessageDialog(null, "Chamado no model com sucesso");
+		new FormadorDao().apagarFormador(formador);
+	}
 	@Override
 	public String toString() {
 		return "Formador [codigo=" + codigo + ", nome=" + nome + ", apelido=" + apelido + ", email=" + email
 				+ ", contacto=" + contacto + "]";
 	}
+	
+	
 	
 	
 }

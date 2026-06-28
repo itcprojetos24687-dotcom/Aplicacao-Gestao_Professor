@@ -47,6 +47,7 @@ public class Formulario_ProfessorTela extends JFrame {
 	}
     
     
+    
     public Formulario_ProfessorTela() {
 
         setTitle("Cadastro de Professores");
