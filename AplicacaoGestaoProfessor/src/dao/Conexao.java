@@ -7,10 +7,10 @@ import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 public class Conexao {
-	//classe para estabelecer conexao com a base de dados
-	public void main (String[] args) {
-		Connection co = new Conexao().getConnection();
-	}
+	public static void main(String []args) {
+		Connection con = new Conexao().getConnection()
+;	}
+	
 	public Connection getConnection() {
 		Connection con = null;
 		
@@ -18,7 +18,7 @@ public class Conexao {
 		final String driver = "com.mysql.cj.jdbc.Driver";
 		final String url = "jdbc:mysql://localhost:3306/GestaoProfessor";
 		final String user = "root";
-		final String senha = "Malikdb123!";
+		final String senha = "846533793";
 		
 		//Carregando o driver com a classe class
 		try {
@@ -38,5 +38,6 @@ public class Conexao {
 			System.out.print(f.getMessage());
 		}
 		return con;
+		
 	}
 }
