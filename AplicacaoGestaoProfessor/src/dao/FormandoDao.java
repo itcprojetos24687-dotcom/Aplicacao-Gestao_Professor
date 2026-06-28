@@ -28,13 +28,13 @@ public class FormandoDao {
 			InsertFormando.execute();
 			
 		}catch(SQLException e) {
-			JOptionPane.showMessageDialog(null, "Erro ao inserir dado");
+			//JOptionPane.showMessageDialog(null, "Erro ao inserir dado");
 			throw new ExceptionDao("Erro ao inserir dados :" + e );
 		}finally {
 			try {
 				if(InsertFormando != null) {
 					InsertFormando.close();
-					JOptionPane.showMessageDialog(null, "Statemente fechado com sucesso");
+					//JOptionPane.showMessageDialog(null, "Statemente fechado com sucesso");
 				}
 			}catch(SQLException sq) {
 				throw new ExceptionDao("Erro ao fechar o statement");
@@ -42,17 +42,15 @@ public class FormandoDao {
 			try {
 			if (con != null) {
 				con.close();
-				JOptionPane.showMessageDialog(null, "Conexao fechado com Sucesso" );
+				//JOptionPane.showMessageDialog(null, "Conexao fechado com Sucesso" );
 			}
 		}catch(SQLException f) {
 			throw new ExceptionDao("Erro ao fechar a conexao ");
 		}
 	}
 }
-	public static void main(String[] args) throws ExceptionDao {
+	public ArrayList<Formando> listarFormando(String nome ) throws ExceptionDao{
 		
-	}
-	public ArrayList<Formando> listarFormando(String nome )throws ExceptionDao{
 		String sql = "select * from formando where nome like '%" + nome + "%'";
 		PreparedStatement listarFormando = null;
 		ArrayList <Formando> formandos = null;
@@ -74,31 +72,31 @@ public class FormandoDao {
 					formando.setEmail(rs.getString("Email"));
 					formando.setBi(rs.getString("Bi"));
 					formandos.add(formando);
-					JOptionPane.showMessageDialog(null, "Adicionado com sucesso");
+					//JOptionPane.showMessageDialog(null, "Adicionado com sucesso");
 					
 					}
 				}
 		}catch(SQLException ex) {
-			JOptionPane.showMessageDialog(null, "Erro ao selecionar");
+			//JOptionPane.showMessageDialog(null, "Erro ao selecionar");
 			throw new ExceptionDao("Erro ao selecionar dados " + ex);
 		}finally {
 			try {
 				if(listarFormando != null) {
 					listarFormando.close();
-					JOptionPane.showMessageDialog(null, "statement fechado com sucesso");
+					//JOptionPane.showMessageDialog(null, "statement fechado com sucesso");
 				}
 			}catch(Exception es) {
-				JOptionPane.showMessageDialog(null, "Erro ao fechar statement");
+				//JOptionPane.showMessageDialog(null, "Erro ao fechar statement");
 				throw new ExceptionDao("Erro ao fechar o statement: " + es);
 			}
 			try {
 				if(con != null) {
 					con.close();
-					JOptionPane.showMessageDialog(null, "Conexao fechado com sucesso");
+					//JOptionPane.showMessageDialog(null, "Conexao fechado com sucesso");
 				}
 			}
 			catch(SQLException sq) {
-				JOptionPane.showMessageDialog(null, "Erro ao fechar conexao");
+				//JOptionPane.showMessageDialog(null, "Erro ao fechar conexao");
 				throw new ExceptionDao("Erro ao fechar conexao: " + sql);
 			}
 		}
@@ -106,7 +104,7 @@ public class FormandoDao {
 			
 	}
 	public void atualizarFormando(Formando formando) {
-		String  sql = "update Formando set nome = ?, apelido = ?, contacto = ?, email = ?, Bi = ?";
+		String  sql = "update Formando set nome = ?, apelido = ?, contacto = ?, email = ?, Bi = ? where codigo = ?";
 		PreparedStatement alterarFormando = null;
 		
 		try {
@@ -118,14 +116,14 @@ public class FormandoDao {
 			alterarFormando.setString(3, formando.getEmail());
 			alterarFormando.setString(4, formando.getBi());
 		}catch(SQLException e) {
-			JOptionPane.showMessageDialog(null,"Erro ao alterar");
+			//JOptionPane.showMessageDialog(null,"Erro ao alterar");
 			e.printStackTrace();
 		}
 		finally {
 			try {
 				if(alterarFormando != null) {
 					alterarFormando.close();
-					JOptionPane.showMessageDialog(null, "Fechado com sucesso");
+					//JOptionPane.showMessageDialog(null, "Fechado com sucesso");
 				}
 			}catch(SQLException sq) {
 				sq.printStackTrace();
@@ -133,11 +131,47 @@ public class FormandoDao {
 			try {
 				if(con != null) {
 					con.close();
-					JOptionPane.showMessageDialog(null, "Fechado com sucesso");
+					//JOptionPane.showMessageDialog(null, "Fechado com sucesso");
 				}
 			}catch(SQLException l) {
-				JOptionPane.showMessageDialog(null, "Falha de fechado ");
+				//JOptionPane.showMessageDialog(null, "Falha de fechado ");
 			}
 		}
 	}
+
+public void apagarFormando(Formando formando) throws ExceptionDao {
+
+	String sql = "delete from Formador where codigo=?";
+	PreparedStatement apagarFormando = null;
+	try {
+		
+		con = new Conexao().getConnection();
+		apagarFormando = con.prepareStatement(sql);
+		apagarFormando.setInt(1, formando.getCodigo());
+		apagarFormando.executeUpdate();
+		//JOptionPane.showMessageDialog(null, "Apagado com sucesso");
+		
+	}catch(SQLException e) {
+		//JOptionPane.showMessageDialog(null, "Erro ao inserir dado");
+		 throw new ExceptionDao("Erro ao inserir dados :" + e);
+	}finally {
+		try {
+			if(apagarFormando != null) {
+				apagarFormando.close();
+				//JOptionPane.showMessageDialog(null, "Statemente fechado com sucesso");
+			}
+		}catch(SQLException sq) {
+			throw new ExceptionDao("Erro ao fechar o statement");
+		}
+		try {
+			if (con != null) {
+				con.close();
+				//JOptionPane.showMessageDialog(null, "Conexao fechado com sucesso");
+			}
+		}catch(SQLException f) {
+			throw new ExceptionDao("Erro ao fechar a conexao ");
+		}
+	}
 }
+}
+

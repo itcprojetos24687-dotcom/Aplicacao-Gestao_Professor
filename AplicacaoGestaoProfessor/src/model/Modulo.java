@@ -1,5 +1,8 @@
 package model;
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+
 import dao.*;
 
 public class Modulo {
@@ -47,6 +50,13 @@ public class Modulo {
 	}
 	public ArrayList<Modulo> listarModulo(String nome) throws ExceptionDao{
 		return new ModuloDao().listarModulo(nome);
+	}
+	public void atualizarModulo(Modulo modulo) throws ExceptionDao{
+		new ModuloDao().atualizarModulo(modulo);
+	}
+	public void apagarModulo(Modulo modulo) throws ExceptionDao{
+		JOptionPane.showMessageDialog(null, "Chamado no model com sucesso");
+		new ModuloDao().apagarModulo(modulo);
 	}
 	@Override
 	public String toString() {
