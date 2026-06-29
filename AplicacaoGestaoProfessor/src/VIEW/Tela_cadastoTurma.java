@@ -5,24 +5,31 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import controller.TurmaController;
+
 import java.awt.Color;
 import javax.swing.JTextField;
 import java.awt.Font;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Tela_cadastoTurma extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-
+	private JTextField textTurma;
+	private JTextField textano_ingresso;
+	JComboBox comboDiretor_turma;
+	JComboBox comboTurno;
+	JComboBox comboQualificacao;
 	/**
 	 * Launch the application.
 	 */
@@ -57,20 +64,14 @@ public class Tela_cadastoTurma extends JFrame {
 		panel_1.setBounds(576, 48, 523, 504);
 		contentPane.add(panel_1);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(10, 60, 212, 28);
-		panel_1.add(textField);
-		
-		textField_1 = new JTextField();
-		textField_1.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		textField_1.setColumns(10);
-		textField_1.setBounds(159, 360, 212, 28);
-		panel_1.add(textField_1);
+		textTurma = new JTextField();
+		textTurma.setColumns(10);
+		textTurma.setBounds(12, 69, 212, 28);
+		panel_1.add(textTurma);
 		
 		JLabel lblNewLabel_3 = new JLabel("Nome da Turma");
 		lblNewLabel_3.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		lblNewLabel_3.setBounds(48, 36, 109, 21);
+		lblNewLabel_3.setBounds(48, 36, 143, 21);
 		panel_1.add(lblNewLabel_3);
 		
 		JLabel lblNewLabel_3_5 = new JLabel("Ano de Ingresso");
@@ -79,6 +80,27 @@ public class Tela_cadastoTurma extends JFrame {
 		panel_1.add(lblNewLabel_3_5);
 		
 		JButton btnNewButton = new JButton("Guardar");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				boolean sucesso;
+				try {
+					String nome = textTurma.getText();
+					JOptionPane.showMessageDialog(null, nome);
+					int ano_ingresso = Integer.parseInt(textano_ingresso.getText());
+					String turno = comboTurno.getSelectedItem().toString();
+					TurmaController tc = new TurmaController();
+					sucesso = tc.cadastrarTurma(nome,ano_ingresso,turno);
+					if(sucesso) {
+						JOptionPane.showMessageDialog(null, "Cadastrado com sucesso");
+					}else {
+						JOptionPane.showMessageDialog(null, "Dados invalidos");
+					}
+				}catch(Exception sq) {
+					sq.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Ocorreu um erro");
+				}
+			}
+		});
 		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnNewButton.setBackground(Color.WHITE);
 		btnNewButton.setBounds(409, 454, 89, 23);
@@ -106,22 +128,27 @@ public class Tela_cadastoTurma extends JFrame {
 		lblNewLabel_3_8.setBounds(79, 190, 62, 21);
 		panel_1.add(lblNewLabel_3_8);
 		
-		textField_2 = new JTextField();
-		textField_2.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		textField_2.setColumns(10);
-		textField_2.setBounds(286, 60, 212, 28);
-		panel_1.add(textField_2);
+		textano_ingresso = new JTextField();
+		textano_ingresso.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		textano_ingresso.setColumns(10);
+		textano_ingresso.setBounds(311, 223, 149, 28);
+		panel_1.add(textano_ingresso);
 		
-		textField_3 = new JTextField();
-		textField_3.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		textField_3.setColumns(10);
-		textField_3.setBounds(286, 223, 212, 28);
-		panel_1.add(textField_3);
+		 comboTurno = new JComboBox();
+		comboTurno.setBackground(new Color(255, 255, 255));
+		comboTurno.setModel(new DefaultComboBoxModel(new String[] {"Diurno", "Noturno"}));
+		comboTurno.setBounds(36, 222, 111, 26);
+		panel_1.add(comboTurno);
 		
-		textField_4 = new JTextField();
-		textField_4.setColumns(10);
-		textField_4.setBounds(10, 222, 212, 28);
-		panel_1.add(textField_4);
+		comboQualificacao = new JComboBox();
+		comboQualificacao.setBackground(new Color(255, 255, 255));
+		comboQualificacao.setBounds(288, 69, 169, 26);
+		panel_1.add(comboQualificacao);
+		
+		comboDiretor_turma = new JComboBox();
+		comboDiretor_turma.setBackground(new Color(255, 255, 255));
+		comboDiretor_turma.setBounds(187, 376, 156, 26);
+		panel_1.add(comboDiretor_turma);
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(null);

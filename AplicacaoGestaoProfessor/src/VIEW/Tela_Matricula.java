@@ -10,7 +10,7 @@ import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-
+import controller.FormadorController;
 public class Tela_Matricula extends JFrame {
 
 	private static final long serialVersionUID = 1L;

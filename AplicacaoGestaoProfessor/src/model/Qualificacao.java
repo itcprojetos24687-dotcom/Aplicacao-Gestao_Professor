@@ -1,5 +1,6 @@
 package model;
 import java.util.ArrayList;
+import dao.*;
 public class Qualificacao {
 	private int codigo;
 	private String titulo;
@@ -7,6 +8,9 @@ public class Qualificacao {
 	private ArrayList<Quali_Nivel> quali_nivel;
 	private ArrayList<Quali_modulo> quali_modulo;
 	
+	public Qualificacao() {
+		
+	}
 	public Qualificacao(String titulo) {
 		this.titulo = titulo;
 	}
@@ -25,6 +29,12 @@ public class Qualificacao {
 
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
+	}
+	public void cadastrarQualificacao(Qualificacao qc) throws ExceptionDao{
+		new QualificacaoDao().cadastrarQualificacao(qc);
+	}
+	public ArrayList<Qualificacao> comboQualificacao()throws ExceptionDao{
+		return QualificacaoDao().comboQualificacao();
 	}
 
 	@Override
