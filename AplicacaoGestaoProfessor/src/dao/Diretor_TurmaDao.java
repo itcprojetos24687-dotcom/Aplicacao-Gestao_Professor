@@ -51,7 +51,7 @@ public class Diretor_TurmaDao {
 			}
 		}
 	}
-	public ArrayList<Diretor_Turma> listaDiretor_Turma(String nome) throws ExceptionDao{
+	/*public ArrayList<Diretor_Turma> listaDiretor_Turma(String nome) throws ExceptionDao{
 
 		String sql = "select * from Formador where nome like '%" + nome + "%'";
 		PreparedStatement listarFormador = null;
@@ -184,5 +184,5 @@ public class Diretor_TurmaDao {
 				throw new ExceptionDao("Erro ao fechar a conexao ");
 			}
 		}
-	}
+	}*/
 }

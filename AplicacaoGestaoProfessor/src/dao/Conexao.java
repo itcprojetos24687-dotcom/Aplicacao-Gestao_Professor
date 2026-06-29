@@ -18,7 +18,7 @@ public class Conexao {
 		final String driver = "com.mysql.cj.jdbc.Driver";
 		final String url = "jdbc:mysql://localhost:3306/GestaoProfessor";
 		final String user = "root";
-		final String senha = "846533793";
+		final String senha = "Malikdb123!";
 		
 		//Carregando o driver com a classe class
 		try {

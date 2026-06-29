@@ -1,24 +1,29 @@
 package view;
 
 import java.awt.EventQueue;
+import controller.UsuarioController;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Login extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField textUsername;
+	private JTextField textPassword;
 
 	/**
 	 * Launch the application.
@@ -109,22 +114,22 @@ public class Login extends JFrame {
 		lblNewLabel_3.setBounds(210, 152, 98, 26);
 		panel_1.add(lblNewLabel_3);
 		
-		textField = new JTextField();
-		textField.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		textField.setBounds(146, 189, 225, 26);
-		panel_1.add(textField);
-		textField.setColumns(10);
+		textUsername = new JTextField();
+		textUsername.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		textUsername.setBounds(146, 189, 225, 26);
+		panel_1.add(textUsername);
+		textUsername.setColumns(10);
 		
 		JLabel lblNewLabel_3_1 = new JLabel("SENHA:");
 		lblNewLabel_3_1.setFont(new Font("Bahnschrift", Font.BOLD, 18));
 		lblNewLabel_3_1.setBounds(210, 265, 73, 26);
 		panel_1.add(lblNewLabel_3_1);
 		
-		textField_1 = new JTextField();
-		textField_1.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		textField_1.setColumns(10);
-		textField_1.setBounds(146, 305, 225, 26);
-		panel_1.add(textField_1);
+		textPassword = new JTextField();
+		textPassword.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		textPassword.setColumns(10);
+		textPassword.setBounds(146, 305, 225, 26);
+		panel_1.add(textPassword);
 		
 		JButton btnNewButton = new JButton("SAIR\r\n");
 		btnNewButton.setForeground(Color.WHITE);
@@ -134,6 +139,28 @@ public class Login extends JFrame {
 		panel_1.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("ENTRAR");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String username = textUsername.getText();
+				String password = textPassword.getText();
+				UsuarioController uc = null;
+				boolean sucesso;
+				try {
+					uc = new UsuarioController();
+					sucesso = uc.login(username,password);
+					if(sucesso) {
+						JOptionPane.showMessageDialog(null, "Login com sucesso, Bem-Vindo ");
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "Nome do usuario ou password invalido!");
+					}
+				}catch(Exception ex) {
+					ex.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Por favor, Tente Novamente!");
+				}
+				
+			}
+		});
 		btnNewButton_1.setBackground(Color.WHITE);
 		btnNewButton_1.setFont(new Font("Bahnschrift", Font.BOLD, 13));
 		btnNewButton_1.setBounds(415, 487, 89, 26);

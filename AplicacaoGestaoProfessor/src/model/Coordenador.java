@@ -1,8 +1,21 @@
 package model;
 
-public class Coordenador extends Formador{
+public class Coordenador{
+	private Formador formador;
 	
-	public Coordenador(String nome, String apelido, String email, String genero, String estadoCivil, int contacto, double salario) {
-		super(nome, apelido, email, genero, estadoCivil, contacto, salario);
+	public Coordenador() {
+		
+	}
+	public Coordenador(Formador formador) {
+		this.formador = formador;
+	}
+	public Formador getFormador() {
+		return formador;
+	}
+	public void setFormador(Formador formador) {
+		this.formador = formador;
+	}
+	public void cadastrarCoordenador(Coordenador coordenador) {
+		
 	}
 }

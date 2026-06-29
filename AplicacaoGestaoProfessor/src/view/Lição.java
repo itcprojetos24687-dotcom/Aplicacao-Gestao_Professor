@@ -24,6 +24,7 @@ public class Lição extends JFrame {
 	private JTextField textField_4;
 	private JTextField textField_5;
 
+	
 	/**
 	 * Launch the application.
 	 */
@@ -31,7 +32,7 @@ public class Lição extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Lição frame = new Lição();
+					Turma frame = new Turma();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

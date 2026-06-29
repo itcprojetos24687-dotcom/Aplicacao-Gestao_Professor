@@ -28,13 +28,14 @@ public class Turma extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Turma frame = new Turma();
+					Lição frame = new Lição();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
+		
 	}
 
 	/**
