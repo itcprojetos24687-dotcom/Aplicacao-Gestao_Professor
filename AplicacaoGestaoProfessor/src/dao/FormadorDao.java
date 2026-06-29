@@ -4,6 +4,8 @@ import model.Formador;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
+
 import javax.swing.JOptionPane;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -19,7 +21,7 @@ public class FormadorDao {
 		try {
 			
 			con = new Conexao().getConnection();
-			InsertFormador = con.prepareStatement(sql);
+			InsertFormador = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			InsertFormador.setString(1, formador.getNome());
 			InsertFormador.setString(2, formador.getApelido());
 			InsertFormador.setString(3, formador.getEmail() );
@@ -28,6 +30,12 @@ public class FormadorDao {
 			InsertFormador.setInt(6, formador.getContacto());
 			InsertFormador.setDouble(7, formador.getSalario());
 			InsertFormador.execute();
+			
+			ResultSet rs = InsertFormador.getGeneratedKeys();
+			if(rs != null  && rs.next()) {
+				formador.setCodigo(rs.getInt(1));
+				
+			}
 			
 		}catch(SQLException e) {
 			//JOptionPane.showMessageDialog(null, "Erro ao inserir dado");

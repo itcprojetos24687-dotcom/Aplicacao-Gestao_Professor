@@ -16,7 +16,7 @@ public class Diretor_Turma {
 		this.formador=formador;
 	}
 	
-	public void cadastrarDiretor_Turma(Diretor_Turma diretor)throws ExceptionDao{
+	/*public void cadastrarDiretor_Turma(Diretor_Turma diretor)throws ExceptionDao{
 		new Diretor_TurmaDao().cadastrarDiretor_Turma(diretor);;
 	}
 	public ArrayList<Diretor_Turmas> listarDiretor_Turma(Diretor_Turma diretor) throws ExceptionDao{
@@ -27,6 +27,6 @@ public class Diretor_Turma {
 	}
 	public void apagarCampo(Diretor_Turma diretor)throws ExceptionDao{
 		new Diretor_TurmaDao().apagarDiretor_Turma(diretor);
-	}
+	}*/
 	
 }
