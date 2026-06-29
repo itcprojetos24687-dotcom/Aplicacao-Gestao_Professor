@@ -1,33 +1,37 @@
 package model;
 import java.util.ArrayList;
+import dao.*;
 public class Turma  {
-	private int codigo_turma;
-	private String nome_turma;
+	private int codigo;
+	private String nome;
 	private int ano_ingresso;
 	private String turno;
 	private ArrayList<Licao> licoes;
 	private Diretor_Turma diretor_turma;
 	
+	public Turma() {
+		
+	}
 	public Turma(String nome, int ano_ingresso, String turno) {
-		nome_turma = nome;
+		nome = nome;
 		this.ano_ingresso = ano_ingresso;
 		this.turno = turno;
 	}
 
-	public int getCodigo_turma() {
-		return codigo_turma;
+	public int getCodigo() {
+		return codigo;
 	}
 
-	public void setCodigo_turma(int codigo_turma) {
-		this.codigo_turma = codigo_turma;
+	public void setCodigo(int codigo) {
+		this.codigo = codigo;
 	}
 
-	public String getNome_turma() {
-		return nome_turma;
+	public String getNome() {
+		return nome;
 	}
 
-	public void setNome_turma(String nome_turma) {
-		this.nome_turma = nome_turma;
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
 	public int getAno_ingresso() {
@@ -47,12 +51,12 @@ public class Turma  {
 	}
 	
 	public void cadastrarTurma(Turma turma) {
-		
+		new TurmaDao().cadastrarTurma(turma);
 	}
 
 	@Override
 	public String toString() {
-		return "Turma [codigo_turma=" + codigo_turma + ", nome_turma=" + nome_turma + ", ano_ingresso=" + ano_ingresso
+		return "Turma [codigo=" + codigo + ", nome_turma=" + nome + ", ano_ingresso=" + ano_ingresso
 				+ ", turno=" + turno + "]";
 	}
 	

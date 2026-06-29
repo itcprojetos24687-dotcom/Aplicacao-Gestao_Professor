@@ -5,28 +5,35 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import controller.FormadorController;
+
 import java.awt.Color;
 import javax.swing.JTextField;
 import java.awt.Font;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import javax.swing.JSpinner;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
+import javax.swing.JComboBox;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.DefaultComboBoxModel;
 
 public class Tela_cadastroProfessor extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField textField_5;
-	private JTextField textField_6;
-	private JTextField textField_7;
-	private JTextField textField_8;
+	private JTextField textNome;
+	private JTextField textApelido;
+	private JTextField textEmail;
+	private JTextField textContacto;
+	private JComboBox comboGenero;
+	private JComboBox comboEstadoCivil;
+	private JSpinner spinnerSalariohora; 
+	private JSpinner spinnerHoras;
 
 	/**
 	 * Launch the application.
@@ -62,22 +69,22 @@ public class Tela_cadastroProfessor extends JFrame {
 		panel_1.setBounds(437, 40, 523, 504);
 		contentPane.add(panel_1);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(10, 36, 212, 35);
-		panel_1.add(textField);
+		textNome = new JTextField();
+		textNome.setColumns(10);
+		textNome.setBounds(10, 36, 212, 35);
+		panel_1.add(textNome);
 		
-		textField_1 = new JTextField();
-		textField_1.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		textField_1.setColumns(10);
-		textField_1.setBounds(10, 130, 212, 35);
-		panel_1.add(textField_1);
+		textApelido = new JTextField();
+		textApelido.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		textApelido.setColumns(10);
+		textApelido.setBounds(10, 130, 212, 35);
+		panel_1.add(textApelido);
 		
-		textField_2 = new JTextField();
-		textField_2.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		textField_2.setColumns(10);
-		textField_2.setBounds(10, 215, 212, 35);
-		panel_1.add(textField_2);
+		textEmail = new JTextField();
+		textEmail.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		textEmail.setColumns(10);
+		textEmail.setBounds(10, 215, 212, 35);
+		panel_1.add(textEmail);
 		
 		JLabel lblNewLabel_3 = new JLabel("Nome");
 		lblNewLabel_3.setFont(new Font("Bahnschrift", Font.BOLD, 14));
@@ -95,6 +102,38 @@ public class Tela_cadastroProfessor extends JFrame {
 		panel_1.add(lblNewLabel_3_5);
 		
 		JButton btnNewButton = new JButton("Guardar");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String nome = textNome.getText();
+				String apelido = textApelido.getText();
+				String email = textEmail.getText();
+				int contacto = Integer.parseInt(textContacto.getText());
+				String genero = comboGenero.getSelectedItem().toString();
+				String estadoCivil = comboEstadoCivil.getSelectedItem().toString();
+				int valor_hora = spinnerHoras.getComponentCount();
+				int hora = spinnerSalariohora.getComponentCount();
+				int salario = valor_hora * hora;
+				boolean sucesso;
+				try {
+					FormadorController formadorController = new FormadorController();
+        			
+        			//Chamada do metodo cadastrar para validar todos os dados
+        			sucesso = formadorController.cadastrarFormador(nome, apelido, email, genero, estadoCivil,contacto, salario); 
+        			if (sucesso) {
+        				JOptionPane.showMessageDialog(null, "Dados guardados com sucesso");
+        			}
+        			else {
+        				JOptionPane.showMessageDialog(null, "Introducao invalida, Tente Novamente");
+        			}
+				}catch(NumberFormatException ex) {
+					JOptionPane.showMessageDialog(null, "Introduca todos os dados corretamente");
+        			ex.printStackTrace();
+				}catch(Exception el) {
+        			JOptionPane.showMessageDialog(null, "Introduca todo os dados");
+        		}
+				
+			}
+		});
 		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnNewButton.setBackground(Color.WHITE);
 		btnNewButton.setBounds(409, 454, 89, 23);
@@ -117,23 +156,11 @@ public class Tela_cadastroProfessor extends JFrame {
 		lblNewLabel_3_8.setBounds(286, 98, 94, 21);
 		panel_1.add(lblNewLabel_3_8);
 		
-		textField_3 = new JTextField();
-		textField_3.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		textField_3.setColumns(10);
-		textField_3.setBounds(286, 36, 212, 35);
-		panel_1.add(textField_3);
-		
-		textField_4 = new JTextField();
-		textField_4.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		textField_4.setColumns(10);
-		textField_4.setBounds(286, 130, 212, 35);
-		panel_1.add(textField_4);
-		
-		textField_5 = new JTextField();
-		textField_5.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		textField_5.setColumns(10);
-		textField_5.setBounds(10, 303, 212, 35);
-		panel_1.add(textField_5);
+		textContacto = new JTextField();
+		textContacto.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		textContacto.setColumns(10);
+		textContacto.setBounds(10, 303, 212, 35);
+		panel_1.add(textContacto);
 		
 		JLabel lblNewLabel_3_6_1 = new JLabel("Contacto ");
 		lblNewLabel_3_6_1.setFont(new Font("Bahnschrift", Font.BOLD, 14));
@@ -145,12 +172,6 @@ public class Tela_cadastroProfessor extends JFrame {
 		lblNewLabel_3_7.setBounds(288, 193, 165, 21);
 		panel_1.add(lblNewLabel_3_7);
 		
-		textField_6 = new JTextField();
-		textField_6.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		textField_6.setColumns(10);
-		textField_6.setBounds(286, 215, 212, 35);
-		panel_1.add(textField_6);
-		
 		JLabel lblNewLabel_3_3 = new JLabel("Horas de Trabalho");
 		lblNewLabel_3_3.setFont(new Font("Bahnschrift", Font.BOLD, 14));
 		lblNewLabel_3_3.setBounds(288, 276, 140, 21);
@@ -161,15 +182,15 @@ public class Tela_cadastroProfessor extends JFrame {
 		lblNewLabel_3_4.setBounds(288, 313, 109, 21);
 		panel_1.add(lblNewLabel_3_4);
 		
-		JSpinner spinner_1 = new JSpinner();
-		spinner_1.setFont(new Font("Bahnschrift", Font.PLAIN, 12));
-		spinner_1.setBounds(431, 273, 67, 20);
-		panel_1.add(spinner_1);
+		 spinnerHoras = new JSpinner();
+		spinnerHoras.setFont(new Font("Bahnschrift", Font.PLAIN, 12));
+		spinnerHoras.setBounds(431, 273, 67, 20);
+		panel_1.add(spinnerHoras);
 		
-		JSpinner spinner_1_1 = new JSpinner();
-		spinner_1_1.setFont(new Font("Bahnschrift", Font.PLAIN, 12));
-		spinner_1_1.setBounds(431, 318, 67, 20);
-		panel_1.add(spinner_1_1);
+		spinnerSalariohora = new JSpinner();
+		spinnerSalariohora.setFont(new Font("Bahnschrift", Font.PLAIN, 12));
+		spinnerSalariohora.setBounds(431, 318, 67, 20);
+		panel_1.add(spinnerSalariohora);
 		
 		JLabel lblNewLabel_3_9 = new JLabel("EstadoCivil");
 		lblNewLabel_3_9.setFont(new Font("Bahnschrift", Font.BOLD, 14));
@@ -181,17 +202,27 @@ public class Tela_cadastroProfessor extends JFrame {
 		lblNewLabel_3_6_2.setBounds(286, 11, 94, 21);
 		panel_1.add(lblNewLabel_3_6_2);
 		
-		textField_7 = new JTextField();
-		textField_7.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		textField_7.setColumns(10);
-		textField_7.setBounds(96, 366, 126, 21);
-		panel_1.add(textField_7);
+		comboEstadoCivil = new JComboBox();
+		comboEstadoCivil.setModel(new DefaultComboBoxModel(new String[] {"solteiro", "casado"}));
+		comboEstadoCivil.setBounds(110, 364, 107, 26);
+		panel_1.add(comboEstadoCivil);
 		
-		textField_8 = new JTextField();
-		textField_8.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		textField_8.setColumns(10);
-		textField_8.setBounds(96, 409, 126, 21);
-		panel_1.add(textField_8);
+		comboGenero = new JComboBox();
+		comboGenero.setModel(new DefaultComboBoxModel(new String[] {"masculino", "feminino"}));
+		comboGenero.setBounds(104, 407, 92, 26);
+		panel_1.add(comboGenero);
+		
+		JComboBox comboTurma = new JComboBox();
+		comboTurma.setBounds(296, 133, 157, 26);
+		panel_1.add(comboTurma);
+		
+		JComboBox comboFuncao = new JComboBox();
+		comboFuncao.setBounds(298, 224, 165, 26);
+		panel_1.add(comboFuncao);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setBounds(288, 44, 165, 26);
+		panel_1.add(comboBox);
 		
 		JLabel lblNewLabel = new JLabel("Cadastrar Professor");
 		lblNewLabel.setForeground(Color.WHITE);
