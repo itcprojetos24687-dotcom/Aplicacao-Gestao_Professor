@@ -8,6 +8,9 @@ import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import javax.swing.JTextField;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JSpinner;
@@ -48,7 +51,7 @@ public class Tela_cadastroProfessor extends JFrame {
 	 * Create the frame.
 	 */
 	public Tela_cadastroProfessor() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 1000, 613);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.BLUE);
@@ -106,6 +109,11 @@ public class Tela_cadastroProfessor extends JFrame {
 		btnNewButton_1.setBackground(Color.BLUE);
 		btnNewButton_1.setBounds(288, 454, 101, 23);
 		panel_1.add(btnNewButton_1);
+		btnNewButton_1.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        dispose();
+		    }
+		});
 		
 		JLabel lblNewLabel_3_6 = new JLabel("Genero");
 		lblNewLabel_3_6.setFont(new Font("Bahnschrift", Font.BOLD, 14));

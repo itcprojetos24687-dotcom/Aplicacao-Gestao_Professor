@@ -40,7 +40,7 @@ public class Tela_Matricula extends JFrame {
 	 * Create the frame.
 	 */
 	public Tela_Matricula() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 885, 495);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.BLUE);

@@ -37,7 +37,7 @@ public class Tela_cadastroNivel extends JFrame {
 	 * Create the frame.
 	 */
 	public Tela_cadastroNivel() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 488, 323);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.BLUE);

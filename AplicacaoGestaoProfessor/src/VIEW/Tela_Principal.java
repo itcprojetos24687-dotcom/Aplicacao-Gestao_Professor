@@ -50,16 +50,12 @@ public class Tela_Principal {
      * Create the application.
      */
     public Tela_Principal() {
-        initialize(); // ✅ inicializa o frame PRIMEIRO
-    }
+        initialize();  }
 
     
-    /**
-     * Initialize the contents of the frame.
-     */
-    private void initialize() {
-    	 frame = new JFrame();
-    	 frame.getContentPane().setBackground(Color.BLUE);
+       private void initialize() {
+         frame = new JFrame();
+         frame.getContentPane().setBackground(Color.BLUE);
          frame.setBounds(100, 100, 995, 544);
          frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
          frame.getContentPane().setLayout(null);
@@ -110,14 +106,13 @@ public class Tela_Principal {
          
          JMenuItem mntmSair = new JMenuItem("Sair");
          mntmSair.addActionListener(new ActionListener() {
-         	public void actionPerformed(ActionEvent e) {
-         		//int respota = JOptionPane.showMessageDialog(this, "Tens a certeza que queres sair?", "Confirmacao",JOptionPane.YES_NO_OPTION);
-         		int resposta = JOptionPane.showConfirmDialog(null,"Tens a certeza que queres sair?", "Confirmacao",JOptionPane.YES_NO_OPTION);
-         		if(resposta == JOptionPane.YES_NO_OPTION) {
-         			System.exit(0);
-         		}
-         		
-         	}
+            public void actionPerformed(ActionEvent e) {
+                int resposta = JOptionPane.showConfirmDialog(null,"Tens a certeza que queres sair?", "Confirmacao",JOptionPane.YES_NO_OPTION);
+                if(resposta == JOptionPane.YES_NO_OPTION) {
+                    System.exit(0);
+                }
+                
+            }
          });
          mntmSair.setMnemonic(KeyEvent.VK_S);
          mnFile.add(mntmSair);
@@ -130,33 +125,61 @@ public class Tela_Principal {
          JMenuItem mntmProfessores = new JMenuItem("Professores");
          mnCadastros.add(mntmProfessores);
          mntmProfessores.addActionListener(new ActionListener() {
-        	    public void actionPerformed(ActionEvent e) {
-        	        new Tela_cadastroProfessor();
-        	    }
-        	});
+                public void actionPerformed(ActionEvent e) {
+                    Tela_cadastroProfessor telaCadastro = new Tela_cadastroProfessor();
+                    telaCadastro.setVisible(true);
+                }
+            });
          
          JMenuItem mntmTurmas = new JMenuItem("Turmas");
          mnCadastros.add(mntmTurmas);
          mntmTurmas.addActionListener(new ActionListener() {
-        	    public void actionPerformed(ActionEvent e) {
-
-        	    }
-        	});
+                public void actionPerformed(ActionEvent e) {
+                    new Tela_cadastoTurma().setVisible(true);
+                }
+            });
          
          JMenuItem mntmCursos = new JMenuItem("Cursos");
          mnCadastros.add(mntmCursos);
       
+         // Conectado com: Tela_Incrição
          JMenuItem mntmModulocursos = new JMenuItem("Inscrições");
          mnCadastros.add(mntmModulocursos);
+         mntmModulocursos.addActionListener(new ActionListener() {
+             public void actionPerformed(ActionEvent e) {
+                 Tela_Incrição telaInscricao = new Tela_Incrição();
+                 telaInscricao.setVisible(true);
+             }
+         });
          
+         // Conectado com: Tela_cadastroLição
          JMenuItem mntmModulos = new JMenuItem("Modulos");
          mnCadastros.add(mntmModulos);
+         mntmModulos.addActionListener(new ActionListener() {
+             public void actionPerformed(ActionEvent e) {
+                 Tela_cadastroLição telaLicao = new Tela_cadastroLição();
+                 telaLicao.setVisible(true);
+             }
+         });
          
          JMenuItem mntmQualificações = new JMenuItem("Qualificações");
          mnCadastros.add(mntmQualificações);
+         mntmQualificações.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    Tela_cadastroQualificação telaQualificacao = new Tela_cadastroQualificação();
+                    telaQualificacao.setVisible(true); 
+                }
+            });
          
+         // AGORA CONECTADO COM: Tela_Matricula
          JMenuItem mntmMatrículas = new JMenuItem("Matrículas");
          mnCadastros.add(mntmMatrículas);
+         mntmMatrículas.addActionListener(new ActionListener() {
+             public void actionPerformed(ActionEvent e) {
+                 Tela_Matricula telaMatricula = new Tela_Matricula();
+                 telaMatricula.setVisible(true);
+             }
+         });
          
          JMenu mnConfiguracoes = new JMenu("Configuracoes");
          mnConfiguracoes.setFont(new Font("Times New Roman", Font.PLAIN, 13));
@@ -205,18 +228,21 @@ public class Tela_Principal {
          btnNewButton.setBounds(10, 38, 140, 27);
          panel_3.add(btnNewButton);
          btnNewButton.addActionListener(new ActionListener() {
-        	    public void actionPerformed(ActionEvent e) {
-
-        	        new Tela_cadastroProfessor();
-
-        	    }
-        	});
+                public void actionPerformed(ActionEvent e) {
+                    Tela_cadastroProfessor telaCadastro = new Tela_cadastroProfessor();
+                    telaCadastro.setVisible(true);
+                }
+            });
              
          JButton btnNewButton_1 = new JButton("Turmas");
          btnNewButton_1.setBackground(Color.WHITE);
          btnNewButton_1.setBounds(10, 86, 140, 27);
          panel_3.add(btnNewButton_1);
-         
+         btnNewButton_1.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    new Tela_cadastoTurma().setVisible(true); 
+                }
+            });
          
          JButton btnNewButton_2 = new JButton("Modulos");
          btnNewButton_2.setBackground(Color.WHITE);
@@ -235,11 +261,10 @@ public class Tela_Principal {
          btnNewButton_3.setBounds(10, 173, 140, 27);
          panel_3.add(btnNewButton_3);
          btnNewButton_3.addActionListener(new ActionListener() {
-             public void actionPerformed(ActionEvent e) {
-
-                 
-
-             }
+              public void actionPerformed(ActionEvent e) {
+                  Tela_cadastroQualificação telaQualificacao = new Tela_cadastroQualificação();
+                  telaQualificacao.setVisible(true);    
+              }
          });
          
          JButton btnNewButton_4 = new JButton("Cursos");
@@ -261,37 +286,37 @@ public class Tela_Principal {
          table.setFillsViewportHeight(true);
          table.setColumnSelectionAllowed(true);
          table.setModel(new DefaultTableModel(
-         	new Object[][] {
-         		{null, null, null, null, null},
-         	},
-         	new String[] {
-         		"ID", "Nome Completo", "Contacto", "Curso", "Modulo"
-         	}
+            new Object[][] {
+                {null, null, null, null, null},
+            },
+            new String[] {
+                "ID", "Nome Completo", "Contacto", "Curso", "Modulo"
+            }
          ));
          scrollPane.setViewportView(table);
          
          txtPesquisarProfessor = new JTextField();
          txtPesquisarProfessor.setFont(new Font("Bahnschrift", Font.PLAIN, 12));
          txtPesquisarProfessor.addActionListener(new ActionListener() {
-         	public void actionPerformed(ActionEvent e) {
-         		
-         	}
+            public void actionPerformed(ActionEvent e) {
+                
+            }
          });
          txtPesquisarProfessor.setBounds(397, 12, 150, 20);
          panel_4.add(txtPesquisarProfessor);
          txtPesquisarProfessor.setColumns(10);
          
-         JButton btnNewButton_5 = new JButton("  Pesquisar professor");
+         JButton btnNewButton_5 = new JButton("   Pesquisar professor");
+         btnNewButton_5.setBackground(new Color(255, 255, 255));
          btnNewButton_5.setIcon(new ImageIcon("/home/malik-dev/git/Aplicacao-Gestao_Professor/AplicacaoGestaoProfessor/src/img/find-icon.png"));
          btnNewButton_5.setBounds(556, 11, 145, 23);
          panel_4.add(btnNewButton_5);
      
     
-     mntmCursos.addActionListener(new ActionListener() {
-         public void actionPerformed(ActionEvent e) {
-
-             
-         }
-     });
+         mntmCursos.addActionListener(new ActionListener() {
+             public void actionPerformed(ActionEvent e) {
+                 
+             }
+         });
      }
-    }
+}
