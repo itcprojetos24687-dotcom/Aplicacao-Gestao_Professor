@@ -1,10 +1,11 @@
 package controller;
 import model.Formador;
+
 import dao.ExceptionDao;
 import java.util.Scanner;
 import javax.swing.JOptionPane;
 import java.util.ArrayList;
-
+import servico.FormadorServico;
 public class FormadorController {
 	static Scanner sc = new Scanner(System.in);
 	
@@ -13,7 +14,8 @@ public class FormadorController {
 	throws ExceptionDao{
 		if(nome != null && nome.length()>0 && nome.matches("[a-zA-Z]+")&& apelido != null && apelido.matches("[a-zA-z]+") && apelido.length() > 0 && email != null && email.length() > 0 && contacto > 0){
 			Formador formador = new Formador(nome, apelido, email,genero,estadoCivil,contacto, salario);
-			formador.cadastrarFormador(formador);
+			FormadorServico fs = new FormadorServico(formador);
+			fs.salvar(formador);
 			return true;
 		}
 		return false;
