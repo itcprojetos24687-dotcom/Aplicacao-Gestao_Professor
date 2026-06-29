@@ -44,7 +44,7 @@ public class Tela_cadastroQualificação extends JFrame {
 	 * Create the frame.
 	 */
 	public Tela_cadastroQualificação() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 900, 590);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.BLUE);
@@ -107,6 +107,11 @@ public class Tela_cadastroQualificação extends JFrame {
 		btnNewButton_1.setBackground(Color.BLUE);
 		btnNewButton_1.setBounds(286, 402, 101, 23);
 		panel_1.add(btnNewButton_1);
+		btnNewButton_1.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        dispose(); 
+		    }
+		});
 		
 		JLabel lblNewLabel_3_6 = new JLabel("Módulos Associados");
 		lblNewLabel_3_6.setFont(new Font("Bahnschrift", Font.BOLD, 14));

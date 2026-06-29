@@ -40,7 +40,7 @@ public class Tela_Incrição extends JFrame {
 	 * Create the frame.
 	 */
 	public Tela_Incrição() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 839, 538);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.BLUE);
