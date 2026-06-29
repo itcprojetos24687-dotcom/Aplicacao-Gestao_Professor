@@ -1,4 +1,5 @@
 package dao;
+import model.Formando;
 import model.Modulo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -133,4 +134,40 @@ public class ModuloDao {
 			}
 		}
 	}
+	public void apagarModulo(Modulo modulo) throws ExceptionDao {
+		
+
+		String sql = "delete from Modulo where codigo=?";
+		PreparedStatement apagarModulo = null;
+		try {
+			
+			con = new Conexao().getConnection();
+			apagarModulo = con.prepareStatement(sql);
+			apagarModulo.setInt(1, modulo.getCodigo());
+			apagarModulo.executeUpdate();
+			//JOptionPane.showMessageDialog(null, "Apagado com sucesso");
+			
+		}catch(SQLException e) {
+			//JOptionPane.showMessageDialog(null, "Erro ao inserir dado");
+			 throw new ExceptionDao("Erro ao inserir dados :" + e);
+		}finally {
+			try {
+				if(apagarModulo != null) {
+					apagarModulo.close();
+					//JOptionPane.showMessageDialog(null, "Statemente fechado com sucesso");
+				}
+			}catch(SQLException sq) {
+				throw new ExceptionDao("Erro ao fechar o statement");
+			}
+			try {
+				if (con != null) {
+					con.close();
+					//JOptionPane.showMessageDialog(null, "Conexao fechado com sucesso");
+				}
+			}catch(SQLException f) {
+				throw new ExceptionDao("Erro ao fechar a conexao ");
+			}
+		}
+	}
+	
 }

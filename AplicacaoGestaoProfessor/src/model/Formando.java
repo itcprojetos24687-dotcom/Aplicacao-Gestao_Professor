@@ -1,5 +1,8 @@
 package model;
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+
 import dao.*;
 public class Formando {
 	private int codigo;
@@ -75,6 +78,13 @@ public class Formando {
 	}
 	public ArrayList<Formando>listarFormando(String nome) throws ExceptionDao{
 		return new FormandoDao().listarFormando(nome);
+	}
+	public void atualizarFormando(Formando formando) throws ExceptionDao{
+		new FormandoDao().atualizarFormando(formando);
+	}
+	public void apagarFormando(Formando formando) throws ExceptionDao{
+		JOptionPane.showMessageDialog(null, "Chamado no model com sucesso");
+		new FormandoDao().apagarFormando(formando);
 	}
 
 	@Override
