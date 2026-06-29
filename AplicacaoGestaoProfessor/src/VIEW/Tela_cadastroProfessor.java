@@ -1,0 +1,253 @@
+package VIEW;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import java.awt.Color;
+import javax.swing.JTextField;
+import java.awt.Font;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import javax.swing.JSpinner;
+import javax.swing.ImageIcon;
+import javax.swing.SwingConstants;
+
+public class Tela_cadastroProfessor extends JFrame {
+
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JTextField textField;
+	private JTextField textField_1;
+	private JTextField textField_2;
+	private JTextField textField_3;
+	private JTextField textField_4;
+	private JTextField textField_5;
+	private JTextField textField_6;
+	private JTextField textField_7;
+	private JTextField textField_8;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Tela_cadastroProfessor frame = new Tela_cadastroProfessor();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public Tela_cadastroProfessor() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 1000, 613);
+		contentPane = new JPanel();
+		contentPane.setBackground(Color.BLUE);
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setLayout(null);
+		panel_1.setBackground(Color.WHITE);
+		panel_1.setBounds(437, 40, 523, 504);
+		contentPane.add(panel_1);
+		
+		textField = new JTextField();
+		textField.setColumns(10);
+		textField.setBounds(10, 36, 212, 35);
+		panel_1.add(textField);
+		
+		textField_1 = new JTextField();
+		textField_1.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		textField_1.setColumns(10);
+		textField_1.setBounds(10, 130, 212, 35);
+		panel_1.add(textField_1);
+		
+		textField_2 = new JTextField();
+		textField_2.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		textField_2.setColumns(10);
+		textField_2.setBounds(10, 215, 212, 35);
+		panel_1.add(textField_2);
+		
+		JLabel lblNewLabel_3 = new JLabel("Nome");
+		lblNewLabel_3.setFont(new Font("Bahnschrift", Font.BOLD, 14));
+		lblNewLabel_3.setBounds(10, 11, 94, 21);
+		panel_1.add(lblNewLabel_3);
+		
+		JLabel lblNewLabel_3_1 = new JLabel("Apelido");
+		lblNewLabel_3_1.setFont(new Font("Bahnschrift", Font.BOLD, 14));
+		lblNewLabel_3_1.setBounds(10, 98, 94, 21);
+		panel_1.add(lblNewLabel_3_1);
+		
+		JLabel lblNewLabel_3_5 = new JLabel("E-mail");
+		lblNewLabel_3_5.setFont(new Font("Bahnschrift", Font.BOLD, 14));
+		lblNewLabel_3_5.setBounds(10, 191, 186, 21);
+		panel_1.add(lblNewLabel_3_5);
+		
+		JButton btnNewButton = new JButton("Guardar");
+		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 13));
+		btnNewButton.setBackground(Color.WHITE);
+		btnNewButton.setBounds(409, 454, 89, 23);
+		panel_1.add(btnNewButton);
+		
+		JButton btnNewButton_1 = new JButton("Cancelar");
+		btnNewButton_1.setForeground(Color.WHITE);
+		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 13));
+		btnNewButton_1.setBackground(Color.BLUE);
+		btnNewButton_1.setBounds(288, 454, 101, 23);
+		panel_1.add(btnNewButton_1);
+		
+		JLabel lblNewLabel_3_6 = new JLabel("Genero");
+		lblNewLabel_3_6.setFont(new Font("Bahnschrift", Font.BOLD, 14));
+		lblNewLabel_3_6.setBounds(10, 410, 76, 21);
+		panel_1.add(lblNewLabel_3_6);
+		
+		JLabel lblNewLabel_3_8 = new JLabel("Turma");
+		lblNewLabel_3_8.setFont(new Font("Bahnschrift", Font.BOLD, 14));
+		lblNewLabel_3_8.setBounds(286, 98, 94, 21);
+		panel_1.add(lblNewLabel_3_8);
+		
+		textField_3 = new JTextField();
+		textField_3.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		textField_3.setColumns(10);
+		textField_3.setBounds(286, 36, 212, 35);
+		panel_1.add(textField_3);
+		
+		textField_4 = new JTextField();
+		textField_4.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		textField_4.setColumns(10);
+		textField_4.setBounds(286, 130, 212, 35);
+		panel_1.add(textField_4);
+		
+		textField_5 = new JTextField();
+		textField_5.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		textField_5.setColumns(10);
+		textField_5.setBounds(10, 303, 212, 35);
+		panel_1.add(textField_5);
+		
+		JLabel lblNewLabel_3_6_1 = new JLabel("Contacto ");
+		lblNewLabel_3_6_1.setFont(new Font("Bahnschrift", Font.BOLD, 14));
+		lblNewLabel_3_6_1.setBounds(10, 274, 94, 21);
+		panel_1.add(lblNewLabel_3_6_1);
+		
+		JLabel lblNewLabel_3_7 = new JLabel("Função Desempenhada");
+		lblNewLabel_3_7.setFont(new Font("Bahnschrift", Font.BOLD, 14));
+		lblNewLabel_3_7.setBounds(288, 193, 165, 21);
+		panel_1.add(lblNewLabel_3_7);
+		
+		textField_6 = new JTextField();
+		textField_6.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		textField_6.setColumns(10);
+		textField_6.setBounds(286, 215, 212, 35);
+		panel_1.add(textField_6);
+		
+		JLabel lblNewLabel_3_3 = new JLabel("Horas de Trabalho");
+		lblNewLabel_3_3.setFont(new Font("Bahnschrift", Font.BOLD, 14));
+		lblNewLabel_3_3.setBounds(288, 276, 140, 21);
+		panel_1.add(lblNewLabel_3_3);
+		
+		JLabel lblNewLabel_3_4 = new JLabel("Salário Hora");
+		lblNewLabel_3_4.setFont(new Font("Bahnschrift", Font.BOLD, 14));
+		lblNewLabel_3_4.setBounds(288, 313, 109, 21);
+		panel_1.add(lblNewLabel_3_4);
+		
+		JSpinner spinner_1 = new JSpinner();
+		spinner_1.setFont(new Font("Bahnschrift", Font.PLAIN, 12));
+		spinner_1.setBounds(431, 273, 67, 20);
+		panel_1.add(spinner_1);
+		
+		JSpinner spinner_1_1 = new JSpinner();
+		spinner_1_1.setFont(new Font("Bahnschrift", Font.PLAIN, 12));
+		spinner_1_1.setBounds(431, 318, 67, 20);
+		panel_1.add(spinner_1_1);
+		
+		JLabel lblNewLabel_3_9 = new JLabel("EstadoCivil");
+		lblNewLabel_3_9.setFont(new Font("Bahnschrift", Font.BOLD, 14));
+		lblNewLabel_3_9.setBounds(10, 367, 82, 21);
+		panel_1.add(lblNewLabel_3_9);
+		
+		JLabel lblNewLabel_3_6_2 = new JLabel("Qualificação");
+		lblNewLabel_3_6_2.setFont(new Font("Bahnschrift", Font.BOLD, 14));
+		lblNewLabel_3_6_2.setBounds(286, 11, 94, 21);
+		panel_1.add(lblNewLabel_3_6_2);
+		
+		textField_7 = new JTextField();
+		textField_7.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		textField_7.setColumns(10);
+		textField_7.setBounds(96, 366, 126, 21);
+		panel_1.add(textField_7);
+		
+		textField_8 = new JTextField();
+		textField_8.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		textField_8.setColumns(10);
+		textField_8.setBounds(96, 409, 126, 21);
+		panel_1.add(textField_8);
+		
+		JLabel lblNewLabel = new JLabel("Cadastrar Professor");
+		lblNewLabel.setForeground(Color.WHITE);
+		lblNewLabel.setBackground(Color.WHITE);
+		lblNewLabel.setFont(new Font("Arial Black", Font.BOLD, 24));
+		lblNewLabel.setBounds(10, 0, 309, 34);
+		contentPane.add(lblNewLabel);
+		
+		JPanel panel = new JPanel();
+		panel.setLayout(null);
+		panel.setToolTipText("Maculino\r\nFeminino");
+		panel.setBackground(Color.BLUE);
+		panel.setBounds(134, 40, 304, 504);
+		contentPane.add(panel);
+		
+		JLabel lblNewLabel_1 = new JLabel("\r\n");
+		lblNewLabel_1.setIcon(new ImageIcon("C:\\Users\\user\\Downloads\\scientist-icon (2).png"));
+		lblNewLabel_1.setForeground(Color.WHITE);
+		lblNewLabel_1.setBackground(Color.WHITE);
+		lblNewLabel_1.setBounds(21, 23, 260, 295);
+		panel.add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel(" Adicione um novo Professor\r\n");
+		lblNewLabel_2.setVerticalAlignment(SwingConstants.TOP);
+		lblNewLabel_2.setForeground(Color.WHITE);
+		lblNewLabel_2.setFont(new Font("Arial Black", Font.BOLD, 18));
+		lblNewLabel_2.setBackground(Color.WHITE);
+		lblNewLabel_2.setBounds(0, 329, 299, 36);
+		panel.add(lblNewLabel_2);
+		
+		JPanel panel_3 = new JPanel();
+		panel_3.setLayout(null);
+		panel_3.setBackground(Color.BLUE);
+		panel_3.setBounds(10, 40, 119, 504);
+		contentPane.add(panel_3);
+		
+		JButton btnNewButton_2 = new JButton("Cadastro");
+		btnNewButton_2.setFont(new Font("Bahnschrift", Font.BOLD, 14));
+		btnNewButton_2.setBackground(Color.WHITE);
+		btnNewButton_2.setBounds(10, 32, 104, 30);
+		panel_3.add(btnNewButton_2);
+		
+		JButton btnNewButton_2_1 = new JButton("Consulta");
+		btnNewButton_2_1.setFont(new Font("Bahnschrift", Font.BOLD, 14));
+		btnNewButton_2_1.setBounds(10, 156, 104, 30);
+		panel_3.add(btnNewButton_2_1);
+		
+		JButton btnNewButton_2_2 = new JButton("Actualizar");
+		btnNewButton_2_2.setFont(new Font("Bahnschrift", Font.BOLD, 14));
+		btnNewButton_2_2.setBounds(10, 290, 104, 30);
+		panel_3.add(btnNewButton_2_2);
+		
+		JButton btnNewButton_2_3 = new JButton("Remover");
+		btnNewButton_2_3.setFont(new Font("Bahnschrift", Font.BOLD, 14));
+		btnNewButton_2_3.setBounds(10, 431, 104, 30);
+		panel_3.add(btnNewButton_2_3);
+
+	}
+}
