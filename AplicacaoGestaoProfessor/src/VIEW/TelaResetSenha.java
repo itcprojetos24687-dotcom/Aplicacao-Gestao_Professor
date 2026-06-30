@@ -32,7 +32,7 @@ public class TelaResetSenha extends JFrame {
         card.add(lblTitulo);
 
 
-        JLabel lblEmail = new JLabel("E-mail do Professor:");
+        JLabel lblEmail = new JLabel("Senha Actual");
         lblEmail.setFont(new Font("Bahnschrift", Font.PLAIN, 12));
         lblEmail.setBounds(40, 90, 200, 20);
         card.add(lblEmail);
@@ -42,7 +42,7 @@ public class TelaResetSenha extends JFrame {
         card.add(txtEmail);
 
 
-        JLabel lblCodigo = new JLabel("Código de Recuperação:");
+        JLabel lblCodigo = new JLabel("Nova senha\r\n");
         lblCodigo.setFont(new Font("Bahnschrift", Font.PLAIN, 12));
         lblCodigo.setBounds(40, 160, 200, 20);
         card.add(lblCodigo);
@@ -52,7 +52,7 @@ public class TelaResetSenha extends JFrame {
         card.add(txtCodigo);
 
  
-        JLabel lblSenha = new JLabel("Nova Senha:");
+        JLabel lblSenha = new JLabel("Confirmar Senha");
         lblSenha.setFont(new Font("Bahnschrift", Font.PLAIN, 12));
         lblSenha.setBounds(40, 230, 200, 20);
         card.add(lblSenha);
@@ -74,9 +74,9 @@ public class TelaResetSenha extends JFrame {
         btnConfirmar.addActionListener(e -> {
             String email = txtEmail.getText();
             if (email.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Digite o e-mail do professor!");
+                JOptionPane.showMessageDialog(null, "Digite o nome do operador!");
             } else {
-                JOptionPane.showMessageDialog(null, "Senha de " + email + " alterada com sucesso!");
+                JOptionPane.showMessageDialog(null, "Senha " + " alterada com sucesso!");
                 dispose();
             }
         });
