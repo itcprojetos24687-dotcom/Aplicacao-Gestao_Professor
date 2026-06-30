@@ -67,16 +67,17 @@ public class Tela_Utilizadores extends JFrame {
         setLocationRelativeTo(null); 
 
         contentPane = new JPanel();
-        contentPane.setBackground(Color.BLUE);
+        contentPane.setBackground(new Color(0, 0, 128));
         contentPane.setBorder(new EmptyBorder(30, 40, 30, 40));
         contentPane.setLayout(new BorderLayout(0, 25));
         setContentPane(contentPane);
 
 
         JPanel panelHeader = new JPanel(new BorderLayout());
-        panelHeader.setBackground(Color.BLUE);
+        panelHeader.setBackground(new Color(0, 0, 128));
 
         JLabel lblTitulo = new JLabel("Gestão de Utilizadores");
+        lblTitulo.setBackground(new Color(0, 0, 128));
         lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 26));
         lblTitulo.setForeground(Color.WHITE);
         panelHeader.add(lblTitulo, BorderLayout.NORTH);

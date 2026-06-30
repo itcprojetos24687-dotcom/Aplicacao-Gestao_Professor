@@ -1,37 +1,41 @@
 package VIEW;
 
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Color;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.Dimension;
+import java.awt.Cursor;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JButton;
-import java.awt.Font;
-import java.awt.Color;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.ImageIcon;
-import javax.swing.JSeparator;
-import java.awt.Panel;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 public class Tela_Principal {
 
     private JFrame frame;
     private JTable table;
     private JTextField txtPesquisarProfessor;
-    /**
-     * Launch the application.
-     */
+    
+    private final Color AZUL_ESCURO_NAV = new Color(15, 38, 70);
+    private final Color AZUL_DESTAQUE  = new Color(13, 110, 253);
+    private final Color FUNDO_CLARO     = new Color(244, 246, 249);
+    private final Color BRANCO          = Color.WHITE;
+    private final Color TEXTO_MUTED     = new Color(108, 117, 125);
+
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -44,279 +48,213 @@ public class Tela_Principal {
             }
         });
     }
-   
-    
-    /**
-     * Create the application.
-     */
-    public Tela_Principal() {
-        initialize();  }
 
-    
-       private void initialize() {
-         frame = new JFrame();
-         frame.getContentPane().setBackground(Color.BLUE);
-         frame.setBounds(100, 100, 995, 544);
-         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-         frame.getContentPane().setLayout(null);
-         
-         Panel panel = new Panel();
-         panel.setBackground(Color.BLUE);
-         panel.setBounds(10, 72, 835, 32);
-         frame.getContentPane().add(panel);
-         panel.setLayout(null);
-         
-         JMenuBar menuBar = new JMenuBar();
-         menuBar.setBackground(Color.WHITE);
-         menuBar.setBounds(0, 0, 870, 32);
-         panel.add(menuBar);
-         
-         JMenu mnNovoProfessor = new JMenu("Novo Professor");
-         mnNovoProfessor.setForeground(Color.BLACK);
-         menuBar.add(mnNovoProfessor);
-         
-         JMenu mnEditar = new JMenu("Editar");
-         mnEditar.setForeground(Color.BLACK);
-         menuBar.add(mnEditar);
-         
-         JMenu mnExcluir = new JMenu("Excluir");
-         mnExcluir.setForeground(Color.BLACK);
-         menuBar.add(mnExcluir);
-         
-         JMenu mnPesquisar = new JMenu("Pesquisar");
-         mnPesquisar.setForeground(Color.BLACK);
-         menuBar.add(mnPesquisar);
-         
-         Panel panel_1 = new Panel();
-         panel_1.setBackground(Color.BLUE);
-         panel_1.setBounds(0, 43, 786, 23);
-         frame.getContentPane().add(panel_1);
-         panel_1.setLayout(null);
-         
-         JMenuBar menuPrincipal_fixo = new JMenuBar();
-         menuPrincipal_fixo.setBackground(Color.WHITE);
-         menuPrincipal_fixo.setBounds(10, 0, 866, 23);
-         panel_1.add(menuPrincipal_fixo);
-         
-         JMenu mnFile = new JMenu("File");
-         mnFile.setForeground(Color.BLACK);
-         mnFile.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-         menuPrincipal_fixo.add(mnFile);
-         mnFile.setMnemonic(KeyEvent.VK_F);
-         
-         JMenuItem mntmSair = new JMenuItem("Sair");
-         mntmSair.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                int resposta = JOptionPane.showConfirmDialog(null,"Tens a certeza que queres sair?", "Confirmacao",JOptionPane.YES_NO_OPTION);
-                if(resposta == JOptionPane.YES_NO_OPTION) {
-                    System.exit(0);
-                }
-                
+    public Tela_Principal() {
+        initialize();
+    }
+
+    private void initialize() {
+        frame = new JFrame();
+        frame.setTitle("AcademiaPro - Sistema de Gestão de Formação");
+        frame.setBounds(100, 100, 1280, 720);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().setLayout(new BorderLayout());
+        
+
+        JPanel panelTopo = new JPanel();
+        panelTopo.setBackground(AZUL_ESCURO_NAV);
+        panelTopo.setPreferredSize(new Dimension(1280, 50));
+        panelTopo.setLayout(new BorderLayout());
+        panelTopo.setBorder(new EmptyBorder(0, 20, 0, 20));
+        
+        JLabel lblTituloApp = new JLabel(" Sistema de Gestão de Professores");
+        lblTituloApp.setForeground(BRANCO);
+        lblTituloApp.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        panelTopo.add(lblTituloApp, BorderLayout.WEST);
+        
+        JLabel lblAdmin = new JLabel("Administrador");
+        lblAdmin.setForeground(BRANCO);
+        lblAdmin.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        panelTopo.add(lblAdmin, BorderLayout.EAST);
+        
+        frame.getContentPane().add(panelTopo, BorderLayout.NORTH);
+
+
+        JPanel panelMenuLateral = new JPanel();
+        panelMenuLateral.setBackground(AZUL_ESCURO_NAV);
+        panelMenuLateral.setPreferredSize(new Dimension(220, 670));
+        panelMenuLateral.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
+        
+  
+        String[] menus = {"Dashboard", "Formações", "Participantes", "Formadores", "Turmas", "Configurações"};
+        for (String menu : menus) {
+            JButton btnMenu = new JButton(menu);
+            btnMenu.setPreferredSize(new Dimension(200, 40));
+            btnMenu.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+            btnMenu.setForeground(BRANCO);
+            
+        
+            if (menu.equals("Formadores")) {
+                btnMenu.setBackground(AZUL_DESTAQUE);
+                btnMenu.setBorder(new LineBorder(AZUL_DESTAQUE));
+            } else {
+                btnMenu.setBackground(AZUL_ESCURO_NAV);
+                btnMenu.setBorder(null);
             }
-         });
-         mntmSair.setMnemonic(KeyEvent.VK_S);
-         mnFile.add(mntmSair);
-         
-         JMenu mnCadastros = new JMenu("Cadastros");
-         mnCadastros.setFont(new Font("Times New Roman", Font.PLAIN, 13));
-         mnCadastros.setForeground(Color.BLACK);
-         menuPrincipal_fixo.add(mnCadastros);
-         
-         JMenuItem mntmProfessores = new JMenuItem("Professores");
-         mnCadastros.add(mntmProfessores);
-         mntmProfessores.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    Tela_cadastroProfessor telaCadastro = new Tela_cadastroProfessor();
-                    telaCadastro.setVisible(true);
-                }
-            });
-         
-         JMenuItem mntmTurmas = new JMenuItem("Turmas");
-         mnCadastros.add(mntmTurmas);
-         mntmTurmas.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    new Tela_cadastoTurma().setVisible(true);
-                }
-            });
-         
-         JMenuItem mntmCursos = new JMenuItem("Cursos");
-         mnCadastros.add(mntmCursos);
+            btnMenu.setFocusPainted(false);
+            btnMenu.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            panelMenuLateral.add(btnMenu);
+        }
+        
+
+        JButton btnSairLateral = new JButton("Sair do Sistema");
+        btnSairLateral.setPreferredSize(new Dimension(200, 40));
+        btnSairLateral.setBackground(new Color(217, 83, 79));
+        btnSairLateral.setForeground(BRANCO);
+        btnSairLateral.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnSairLateral.setBorder(null);
+        btnSairLateral.addActionListener(e -> fecharAplicacao());
+        panelMenuLateral.add(btnSairLateral);
+        
+        frame.getContentPane().add(panelMenuLateral, BorderLayout.WEST);
+
+
+        JPanel panelConteudo = new JPanel();
+        panelConteudo.setBackground(FUNDO_CLARO);
+        panelConteudo.setBorder(new EmptyBorder(25, 30, 25, 30));
+        panelConteudo.setLayout(new BorderLayout(0, 20));
+        frame.getContentPane().add(panelConteudo, BorderLayout.CENTER);
+
+
+        JPanel panelHeaderConteudo = new JPanel();
+        panelHeaderConteudo.setBackground(FUNDO_CLARO);
+        panelHeaderConteudo.setLayout(new BorderLayout());
+        
+        JLabel lblTituloPagina = new JLabel("Formadores");
+        lblTituloPagina.setFont(new Font("Segoe UI", Font.BOLD, 28));
+        lblTituloPagina.setForeground(AZUL_ESCURO_NAV);
+        
+        JLabel lblSubtituloPagina = new JLabel("Gestão de Formadores");
+        lblSubtituloPagina.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        lblSubtituloPagina.setForeground(TEXTO_MUTED);
+        
+        JPanel agrupador = new JPanel();
+        agrupador.setBackground(FUNDO_CLARO);
+        agrupador.setLayout(new BorderLayout());
+        agrupador.add(lblTituloPagina, BorderLayout.NORTH);
+        agrupador.add(lblSubtituloPagina, BorderLayout.SOUTH);
+        panelHeaderConteudo.add(agrupador, BorderLayout.WEST);
+        panelConteudo.add(panelHeaderConteudo, BorderLayout.NORTH);
+
+
+        JPanel panelCard = new JPanel();
+        panelCard.setBackground(BRANCO);
+        panelCard.setBorder(new LineBorder(new Color(230, 233, 237), 1, true));
+        panelCard.setLayout(new BorderLayout(0, 15));
+        panelCard.setBorder(new EmptyBorder(15, 15, 15, 15));
+        panelConteudo.add(panelCard, BorderLayout.CENTER);
+
+
+        JPanel panelAcoes = new JPanel();
+        panelAcoes.setBackground(BRANCO);
+        panelAcoes.setLayout(new BorderLayout());
+
       
-         // Conectado com: Tela_Incrição
-         JMenuItem mntmModulocursos = new JMenuItem("Inscrições");
-         mnCadastros.add(mntmModulocursos);
-         mntmModulocursos.addActionListener(new ActionListener() {
-             public void actionPerformed(ActionEvent e) {
-                 Tela_Incrição telaInscricao = new Tela_Incrição();
-                 telaInscricao.setVisible(true);
-             }
-         });
-         
-         // Conectado com: Tela_cadastroLição
-         JMenuItem mntmModulos = new JMenuItem("Modulos");
-         mnCadastros.add(mntmModulos);
-         mntmModulos.addActionListener(new ActionListener() {
-             public void actionPerformed(ActionEvent e) {
-                 Tela_cadastroLição telaLicao = new Tela_cadastroLição();
-                 telaLicao.setVisible(true);
-             }
-         });
-         
-         JMenuItem mntmQualificações = new JMenuItem("Qualificações");
-         mnCadastros.add(mntmQualificações);
-         mntmQualificações.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    Tela_cadastroQualificação telaQualificacao = new Tela_cadastroQualificação();
-                    telaQualificacao.setVisible(true); 
-                }
-            });
-         
-         // AGORA CONECTADO COM: Tela_Matricula
-         JMenuItem mntmMatrículas = new JMenuItem("Matrículas");
-         mnCadastros.add(mntmMatrículas);
-         mntmMatrículas.addActionListener(new ActionListener() {
-             public void actionPerformed(ActionEvent e) {
-                 Tela_Matricula telaMatricula = new Tela_Matricula();
-                 telaMatricula.setVisible(true);
-             }
-         });
-         
-         JMenu mnConfiguracoes = new JMenu("Configuracoes");
-         mnConfiguracoes.setFont(new Font("Times New Roman", Font.PLAIN, 13));
-         mnConfiguracoes.setForeground(Color.BLACK);
-         menuPrincipal_fixo.add(mnConfiguracoes);
-         
-         JMenuItem mntmUsuarios = new JMenuItem("Usuarios");
-         mnConfiguracoes.add(mntmUsuarios);
-         
-         JMenu mnHelp = new JMenu("Help");
-         mnHelp.setForeground(Color.BLACK);
-         mnHelp.setFont(new Font("Times New Roman", Font.PLAIN, 13));
-         menuPrincipal_fixo.add(mnHelp);
-         
-         JMenuItem mntmManual = new JMenuItem("Manual");
-         mnHelp.add(mntmManual);
-         
-         JMenuItem mntmSobre = new JMenuItem("Sobre");
-         mnHelp.add(mntmSobre);
-         
-         JSeparator separator = new JSeparator();
-         separator.setBackground(new Color(0, 0, 0));
-         separator.setBounds(0, 67, 786, 10);
-         frame.getContentPane().add(separator);
-         
-         Panel panel_2 = new Panel();
-         panel_2.setBounds(0, 0, 786, 32);
-         frame.getContentPane().add(panel_2);
-         panel_2.setLayout(null);
-         
-         JLabel lblNewLabel = new JLabel("Sistema de Gestao de Professores");
-         lblNewLabel.setForeground(Color.WHITE);
-         lblNewLabel.setFont(new Font("Arial Black", Font.BOLD, 22));
-         lblNewLabel.setIcon(new ImageIcon("/home/malik-dev/git/Aplicacao-Gestao_Professor/AplicacaoGestaoProfessor/src/img/find-icon.png"));
-         lblNewLabel.setBounds(24, 0, 513, 29);
-         panel_2.add(lblNewLabel);
-         
-         JPanel panel_3 = new JPanel();
-         panel_3.setBackground(Color.BLUE);
-         panel_3.setBounds(10, 104, 150, 407);
-         frame.getContentPane().add(panel_3);
-         panel_3.setLayout(null);
-         
-         JButton btnNewButton = new JButton("Professor");
-         btnNewButton.setBackground(Color.WHITE);
-         btnNewButton.setBounds(10, 38, 140, 27);
-         panel_3.add(btnNewButton);
-         btnNewButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    Tela_cadastroProfessor telaCadastro = new Tela_cadastroProfessor();
-                    telaCadastro.setVisible(true);
-                }
-            });
-             
-         JButton btnNewButton_1 = new JButton("Turmas");
-         btnNewButton_1.setBackground(Color.WHITE);
-         btnNewButton_1.setBounds(10, 86, 140, 27);
-         panel_3.add(btnNewButton_1);
-         btnNewButton_1.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    new Tela_cadastoTurma().setVisible(true); 
-                }
-            });
-         
-         JButton btnNewButton_2 = new JButton("Modulos");
-         btnNewButton_2.setBackground(Color.WHITE);
-         btnNewButton_2.setBounds(10, 132, 140, 27);
-         panel_3.add(btnNewButton_2);
-         
-         JLabel lblNavegacao = new JLabel("Navegacao");
-         lblNavegacao.setBackground(UIManager.getColor("Button.select"));
-         lblNavegacao.setFont(new Font("Arial Rounded MT Bold", Font.BOLD, 12));
-         lblNavegacao.setForeground(Color.WHITE);
-         lblNavegacao.setBounds(41, 0, 84, 27);
-         panel_3.add(lblNavegacao);
-         
-         JButton btnNewButton_3 = new JButton("Qualificações");
-         btnNewButton_3.setBackground(Color.WHITE);
-         btnNewButton_3.setBounds(10, 173, 140, 27);
-         panel_3.add(btnNewButton_3);
-         btnNewButton_3.addActionListener(new ActionListener() {
-              public void actionPerformed(ActionEvent e) {
-                  Tela_cadastroQualificação telaQualificacao = new Tela_cadastroQualificação();
-                  telaQualificacao.setVisible(true);    
-              }
-         });
-         
-         JButton btnNewButton_4 = new JButton("Cursos");
-         btnNewButton_4.setBackground(Color.WHITE);
-         btnNewButton_4.setBounds(10, 219, 140, 27);
-         panel_3.add(btnNewButton_4);
-         
-         JPanel panel_4 = new JPanel();
-         panel_4.setBounds(170, 104, 711, 390);
-         frame.getContentPane().add(panel_4);
-         panel_4.setLayout(null);
-         
-         JScrollPane scrollPane = new JScrollPane();
-         scrollPane.setBounds(55, 49, 646, 315);
-         panel_4.add(scrollPane);
-         
-         table = new JTable();
-         table.setCellSelectionEnabled(true);
-         table.setFillsViewportHeight(true);
-         table.setColumnSelectionAllowed(true);
-         table.setModel(new DefaultTableModel(
+        JPanel panelPesquisa = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        panelPesquisa.setBackground(BRANCO);
+        
+        txtPesquisarProfessor = new JTextField();
+        txtPesquisarProfessor.setPreferredSize(new Dimension(250, 35));
+        txtPesquisarProfessor.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        panelPesquisa.add(txtPesquisarProfessor);
+        
+        JButton btnFiltrar = new JButton("Filtrar");
+        btnFiltrar.setPreferredSize(new Dimension(90, 35));
+        btnFiltrar.setBackground(BRANCO);
+        btnFiltrar.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        panelPesquisa.add(btnFiltrar);
+        
+        panelAcoes.add(panelPesquisa, BorderLayout.WEST);
+
+     
+        JPanel panelBotoesCrud = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
+        panelBotoesCrud.setBackground(BRANCO);
+
+        JButton btnNovo = new JButton("+ Novo");
+        btnNovo.setBackground(AZUL_DESTAQUE);
+        btnNovo.setForeground(BRANCO);
+        btnNovo.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnNovo.setPreferredSize(new Dimension(100, 35));
+        btnNovo.addActionListener(e -> new Tela_cadastroProfessor().setVisible(true));
+        panelBotoesCrud.add(btnNovo);
+
+        JButton btnEditar = new JButton("Editar");
+        btnEditar.setBackground(BRANCO);
+        btnEditar.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        btnEditar.setPreferredSize(new Dimension(90, 35));
+        panelBotoesCrud.add(btnEditar);
+
+        JButton btnEliminar = new JButton("Eliminar");
+        btnEliminar.setBackground(new Color(248, 215, 218));
+        btnEliminar.setForeground(new Color(114, 28, 36));
+        btnEliminar.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnEliminar.setPreferredSize(new Dimension(100, 35));
+        panelBotoesCrud.add(btnEliminar);
+
+        panelAcoes.add(panelBotoesCrud, BorderLayout.EAST);
+        panelCard.add(panelAcoes, BorderLayout.NORTH);
+
+   
+        JScrollPane scrollPane = new JScrollPane();
+        panelCard.add(scrollPane, BorderLayout.CENTER);
+
+        table = new JTable();
+        table.setRowHeight(35); 
+        table.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
+        table.getTableHeader().setBackground(new Color(248, 249, 250));
+        
+     
+        table.setModel(new DefaultTableModel(
             new Object[][] {
-                {null, null, null, null, null},
+                {"12345", "Malik", " Mangue", "Maculino", "Malikmang@gmail.com", "876543211", "Programação web", "Ativo"},
+                {"24788", "Keany", " Pessula", "Maculino", "Keanypessul@gmail.com", "844425235","Suporte Informático", "Ativo"},
+                {"54321", "Edmundo"," Mapotere", "Maculino", "EDMapotere@gmail.com","854328716", "Redes", "Ativo"},
             },
             new String[] {
-                "ID", "Nome Completo", "Contacto", "Curso", "Modulo"
+                "Código", "Nome", "Apelido", "Sexo", "Email", "Telefone", "Área de Atuação", "Estado"
             }
-         ));
-         scrollPane.setViewportView(table);
-         
-         txtPesquisarProfessor = new JTextField();
-         txtPesquisarProfessor.setFont(new Font("Bahnschrift", Font.PLAIN, 12));
-         txtPesquisarProfessor.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                
-            }
-         });
-         txtPesquisarProfessor.setBounds(397, 12, 150, 20);
-         panel_4.add(txtPesquisarProfessor);
-         txtPesquisarProfessor.setColumns(10);
-         
-         JButton btnNewButton_5 = new JButton("   Pesquisar professor");
-         btnNewButton_5.setBackground(new Color(255, 255, 255));
-         btnNewButton_5.setIcon(new ImageIcon("/home/malik-dev/git/Aplicacao-Gestao_Professor/AplicacaoGestaoProfessor/src/img/find-icon.png"));
-         btnNewButton_5.setBounds(556, 11, 145, 23);
-         panel_4.add(btnNewButton_5);
-     
-    
-         mntmCursos.addActionListener(new ActionListener() {
-             public void actionPerformed(ActionEvent e) {
-                 
-             }
-         });
-     }
+        ));
+        scrollPane.setViewportView(table);
+
+  
+        JMenuBar menuBarFixo = new JMenuBar();
+        frame.setJMenuBar(menuBarFixo);
+
+        JMenu mnFile = new JMenu("Ficheiro");
+        menuBarFixo.add(mnFile);
+
+        JMenuItem mntmSair = new JMenuItem("Sair");
+        mntmSair.setMnemonic(KeyEvent.VK_S);
+        mntmSair.addActionListener(e -> fecharAplicacao());
+        mnFile.add(mntmSair);
+
+        JMenu mnCadastros = new JMenu("Cadastros");
+        menuBarFixo.add(mnCadastros);
+
+        JMenuItem mntmProfessores = new JMenuItem("Professores");
+        mntmProfessores.addActionListener(e -> new Tela_cadastroProfessor().setVisible(true));
+        mnCadastros.add(mntmProfessores);
+
+        JMenuItem mntmTurmas = new JMenuItem("Turmas");
+        mntmTurmas.addActionListener(e -> new Tela_cadastoTurma().setVisible(true));
+        mnCadastros.add(mntmTurmas);
+    }
+
+    private void fecharAplicacao() {
+        int resposta = JOptionPane.showConfirmDialog(null, "Tens a certeza que queres sair?", "Confirmação", JOptionPane.YES_NO_OPTION);
+        if (resposta == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
+    }
 }
