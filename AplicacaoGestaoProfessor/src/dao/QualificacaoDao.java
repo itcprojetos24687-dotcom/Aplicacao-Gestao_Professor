@@ -1,74 +1,188 @@
 package dao;
-import model.Qualificacao;
 import java.sql.*;
 import java.util.ArrayList;
+import model.Qualificacao;
 public class QualificacaoDao {
-	public void cadastrarQualificacao(Qualificacao qc)throws ExceptionDao {
-		String sql = "insert into Qualificacao(titulo) values(?)";
+
+	public void cadastrarQualificacao(Qualificacao qc) throws ExceptionDao{
+
+		String sql = "insert into Qualificacao(titulo)" + "values(?)";
 		Connection con = null;
-		PreparedStatement inserir = null;
+		PreparedStatement InsertQualificacao = null;
 		try {
+
 			con = new Conexao().getConnection();
-			inserir = con.prepareStatement(sql);
-			inserir.setString(1, qc.getTitulo());
-			inserir.execute();
-		}catch(SQLException sq) {
-			new ExceptionDao("Erro ao inserir"+ sq);
+			InsertQualificacao = con.prepareStatement(sql);
+			InsertQualificacao.setString(1, qc.getTitulo());
+			InsertQualificacao.execute();
+
+		}catch(SQLException e) {
+			throw new ExceptionDao("Erro ao inserir dados :" + e);
 		}finally {
 			try {
-				if(inserir != null) {
-					inserir.close();
+				if(InsertQualificacao != null) {
+					InsertQualificacao.close();
 				}
-			}catch(SQLException q) {
-				new ExceptionDao("Erro ao fechar statement"+q);
+			}catch(SQLException sq) {
+				throw new ExceptionDao("Erro ao fechar o statement");
 			}
 			try {
-				if(con != null) {
+				if (con != null) {
 					con.close();
 				}
-			}catch(SQLException ex) {
-				new ExceptionDao("Erro ao fechar ao conexao"+ ex);
+			}catch(SQLException f) {
+				throw new ExceptionDao("Erro ao fechar a conexao ");
 			}
 		}
 	}
+
 	public ArrayList<Qualificacao> comboQualificacao() throws ExceptionDao{
+
 		String sql = "select * from Qualificacao";
 		Connection con = null;
-		PreparedStatement pre = null;
-		ArrayList<Qualificacao> qcs = null;
+		PreparedStatement comboQualificacao = null;
+		ArrayList<Qualificacao> qualificacoes = null;
+
 		try {
 			con = new Conexao().getConnection();
-			pre = con.prepareStatement(sql);
-			ResultSet rs = pre.executeQuery();
-			if(rs != null) {
-				qcs = new ArrayList();
+			comboQualificacao = con.prepareStatement(sql);
+			ResultSet rs = comboQualificacao.executeQuery();
+
+			if (rs != null) {
+				qualificacoes = new ArrayList();
 				while(rs.next()) {
 					Qualificacao qc = new Qualificacao();
-					qc.setCodigo(rs.getInt("cod_Quali"));
+					qc.setCodigo(rs.getInt("codigo"));
 					qc.setTitulo(rs.getString("titulo"));
-					qcs.add(qc);
+					qualificacoes.add(qc);
 				}
 			}
-		}catch(SQLException sq) {
-			new ExceptionDao("Erro ao selecionar as QUalificacao"+sq);
+		}catch(SQLException ex) {
+			throw new ExceptionDao("Erro ao selecionar dados " + ex);
 		}finally {
 			try {
-				if(pre != null) {
-					pre.close();
+				if(comboQualificacao != null) {
+					comboQualificacao.close();
 				}
-			}catch(SQLException e) {
-				new ExceptionDao("Erro ao fechar statement" + e);
-			}try {
+			}catch(Exception es) {
+				throw new ExceptionDao("Erro ao fechar o statement: " + es);
+			}
+			try {
 				if(con != null) {
 					con.close();
-				
 				}
-			}catch(SQLException q) {
-				new ExceptionDao("Erro ao fechar conexao"+ q);
 			}
-			
-			
+			catch(SQLException sq) {
+				throw new ExceptionDao("Erro ao fechar conexao: " + sql);
+			}
 		}
-		return qcs;
+		return qualificacoes;
+	}
+
+	public ArrayList<Qualificacao> listarQualificacao(String titulo) throws ExceptionDao{
+
+		String sql = "select * from Qualificacao where titulo like '%" + titulo + "%'";
+		Connection con = null;
+		PreparedStatement listarQualificacao = null;
+		ArrayList<Qualificacao> qualificacoes = null;
+
+		try {
+			con = new Conexao().getConnection();
+			listarQualificacao = con.prepareStatement(sql);
+			ResultSet rs = listarQualificacao.executeQuery();
+
+			if (rs != null) {
+				qualificacoes = new ArrayList();
+				while(rs.next()) {
+					Qualificacao qc = new Qualificacao();
+					qc.setCodigo(rs.getInt("codigo"));
+					qc.setTitulo(rs.getString("titulo"));
+					qualificacoes.add(qc);
+				}
+			}
+		}catch(SQLException ex) {
+			throw new ExceptionDao("Erro ao selecionar dados " + ex);
+		}finally {
+			try {
+				if(listarQualificacao != null) {
+					listarQualificacao.close();
+				}
+			}catch(Exception es) {
+				throw new ExceptionDao("Erro ao fechar o statement: " + es);
+			}
+			try {
+				if(con != null) {
+					con.close();
+				}
+			}
+			catch(SQLException sq) {
+				throw new ExceptionDao("Erro ao fechar conexao: " + sql);
+			}
+		}
+		return qualificacoes;
+	}
+
+	public void atualizarQualificacao(Qualificacao qc) throws ExceptionDao{
+
+		String sql = "update Qualificacao set titulo = ? where codigo = ?";
+		Connection con = null;
+		PreparedStatement alterarQualificacao = null;
+
+		try {
+			con = new Conexao().getConnection();
+			alterarQualificacao = con.prepareStatement(sql);
+			alterarQualificacao.setString(1, qc.getTitulo());
+			alterarQualificacao.setInt(2, qc.getCodigo());
+			alterarQualificacao.executeUpdate();
+		}catch(SQLException e) {
+			throw new ExceptionDao("Erro ao alterar dados :" + e);
+		}finally {
+			try {
+				if(alterarQualificacao != null) {
+					alterarQualificacao.close();
+				}
+			}catch(SQLException sq) {
+				throw new ExceptionDao("Erro ao fechar o statement");
+			}
+			try {
+				if(con != null) {
+					con.close();
+				}
+			}catch(SQLException l) {
+				throw new ExceptionDao("Erro ao fechar a conexao ");
+			}
+		}
+	}
+
+	public void apagarQualificacao(Qualificacao qc) throws ExceptionDao{
+
+		String sql = "delete from Qualificacao where codigo=?";
+		Connection con = null;
+		PreparedStatement apagarQualificacao = null;
+		try {
+
+			con = new Conexao().getConnection();
+			apagarQualificacao = con.prepareStatement(sql);
+			apagarQualificacao.setInt(1, qc.getCodigo());
+			apagarQualificacao.executeUpdate();
+
+		}catch(SQLException e) {
+			throw new ExceptionDao("Erro ao apagar dados :" + e);
+		}finally {
+			try {
+				if(apagarQualificacao != null) {
+					apagarQualificacao.close();
+				}
+			}catch(SQLException sq) {
+				throw new ExceptionDao("Erro ao fechar o statement");
+			}
+			try {
+				if (con != null) {
+					con.close();
+				}
+			}catch(SQLException f) {
+				throw new ExceptionDao("Erro ao fechar a conexao ");
+			}
+		}
 	}
 }
