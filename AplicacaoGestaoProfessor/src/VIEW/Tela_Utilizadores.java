@@ -1,5 +1,7 @@
 package VIEW;
 
+import model.*;
+import controller.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -59,7 +61,7 @@ public class Tela_Utilizadores extends JFrame {
 
     private JTextField campoNomeCompleto;
     private JTextField campoNomeOperador;
-    private JPasswordField campoSenha;
+    private JTextField campoSenha;
     private JComboBox<String> comboPerfil;
     private JTextField campoEmail;
     
@@ -320,7 +322,7 @@ public class Tela_Utilizadores extends JFrame {
         JPanel painelSenha = new JPanel(new BorderLayout(8, 0));
         painelSenha.setOpaque(false);
 
-        campoSenha = new JPasswordField();
+        campoSenha = new JTextField();
         painelSenha.add(campoSenha, BorderLayout.CENTER);
 
         JButton botaoGerarSenha = criarBotaoNeutro("Gerar senha");
@@ -355,9 +357,31 @@ public class Tela_Utilizadores extends JFrame {
 
         JButton botaoGuardar = criarBotaoGuardar();
         botaoGuardar.addActionListener(e -> {
-            // aqui entra a lógica de gravação
-        	String nome = campoNomeCompleto.getText();
-        	String username = campoNomeOperador.getText();
+        	boolean sucesso;
+            try {
+            	
+            	String nome = campoNomeCompleto.getText();
+            	String username = campoNomeOperador.getText();
+            	String senha =  campoSenha.getText();
+            	String email = campoEmail.getText();
+            	
+            	
+            	UsuarioController uc = new UsuarioController();
+            	sucesso = uc.cadastrarUsuario(nome,username,senha,email);
+            	if(sucesso) {
+            		JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso");
+            	}
+            	else {
+            		JOptionPane.showMessageDialog(null, "Introducao invalida, Tente Novamente");
+            	}
+            }catch(NumberFormatException ex) {
+            	JOptionPane.showMessageDialog(null, "Introduca todos os dados corretamente");
+            }catch(Exception x) {
+            	JOptionPane.showMessageDialog(null, "Introduca todos os dados");
+            }
+        	// aqui entra a lógica de gravação
+        	
+        	
             JOptionPane.showMessageDialog(d, "Registo guardado com sucesso!");
         });
 
