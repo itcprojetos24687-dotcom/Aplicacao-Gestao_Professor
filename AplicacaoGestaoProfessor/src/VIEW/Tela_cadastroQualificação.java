@@ -1,159 +1,161 @@
 package VIEW;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import controller.QualificacaoController;
-
+import java.awt.BorderLayout;
 import java.awt.Color;
-import javax.swing.JTextField;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
-public class Tela_cadastroQualificação extends JFrame {
+public class Tela_cadastroQualificação extends JPanel {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private JTextField textTitulo;
+    private static final long serialVersionUID = 1L;
+    
+    // Componentes de Entrada de Dados
+    private JTextField txtNomeQualificacao;
+    private JTextField txtModulosAssociados;
+    private JTextField txtCoordenador;
+    private JTextField txtNivelQualificacao;
+    private JTextField txtCampoPertencente;
+    private JButton btnSalvar, btnLimpar;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Tela_cadastroQualificação frame = new Tela_cadastroQualificação();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+    // Paleta de Cores unificada AcademiaPro
+    private final Color AZUL_ESCURO_NAV = new Color(15, 38, 70);
+    private final Color AZUL_DESTAQUE   = new Color(13, 110, 253);
+    private final Color FUNDO_CLARO     = new Color(244, 246, 249);
+    private final Color BRANCO          = Color.WHITE;
+    private final Color TEXTO_MUTED     = new Color(108, 117, 125);
 
-	/**
-	 * Create the frame.
-	 */
-	public Tela_cadastroQualificação() {
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 900, 590);
-		contentPane = new JPanel();
-		contentPane.setBackground(Color.BLUE);
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		
-		JPanel panel_1 = new JPanel();
-		panel_1.setLayout(null);
-		panel_1.setBackground(Color.WHITE);
-		panel_1.setBounds(225, 103, 509, 455);
-		contentPane.add(panel_1);
-		
-		textTitulo = new JTextField();
-		textTitulo.setColumns(10);
-		textTitulo.setBounds(37, 72, 212, 28);
-		panel_1.add(textTitulo);
-		
-		JLabel lblNewLabel_3 = new JLabel("Nome da Qualificação");
-		lblNewLabel_3.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		lblNewLabel_3.setBounds(37, 36, 181, 21);
-		panel_1.add(lblNewLabel_3);
-		
-		JLabel lblNewLabel_3_5 = new JLabel("Nivel da Qualificação");
-		lblNewLabel_3_5.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		lblNewLabel_3_5.setBounds(311, 168, 165, 21);
-		panel_1.add(lblNewLabel_3_5);
-		
-		JButton btnNewButton = new JButton("Guardar");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String titulo = textTitulo.getText();
-				boolean sucesso;
-				try {
-					QualificacaoController qc = new QualificacaoController();
-					sucesso = qc.cadastrarQualificacao(titulo);
-					if(sucesso) {
-						JOptionPane.showMessageDialog(null, "Todos os dados introduzidos com sucesso");
-					}
-					else {
-						JOptionPane.showMessageDialog(null,"Introduca Invalida dos daos");
-					}
-				}catch(NumberFormatException s) {
-					JOptionPane.showMessageDialog(null,"Intoducao os dados corretamente");
-				}
-				catch(Exception ex) {
-					JOptionPane.showMessageDialog(null,"Intoducao todos os dados");
-				}
-				
-			}
-		});
-		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 13));
-		btnNewButton.setBackground(Color.WHITE);
-		btnNewButton.setBounds(398, 402, 101, 23);
-		panel_1.add(btnNewButton);
-		
-		JButton btnNewButton_1 = new JButton("Cancelar");
-		btnNewButton_1.setForeground(Color.WHITE);
-		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 13));
-		btnNewButton_1.setBackground(Color.BLUE);
-		btnNewButton_1.setBounds(286, 402, 101, 23);
-		panel_1.add(btnNewButton_1);
-		btnNewButton_1.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        dispose(); 
-		    }
-		});
-		
-		JLabel lblNewLabel_3_6 = new JLabel("Módulos Associados");
-		lblNewLabel_3_6.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		lblNewLabel_3_6.setBounds(311, 36, 165, 21);
-		panel_1.add(lblNewLabel_3_6);
-		
-		JLabel lblNewLabel_3_7 = new JLabel("Campo Pertencente");
-		lblNewLabel_3_7.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		lblNewLabel_3_7.setBounds(194, 277, 146, 21);
-		panel_1.add(lblNewLabel_3_7);
-		
-		JLabel lblNewLabel_3_8 = new JLabel("Coordenador da Qualificação");
-		lblNewLabel_3_8.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		lblNewLabel_3_8.setBounds(20, 168, 212, 21);
-		panel_1.add(lblNewLabel_3_8);
-		
-		JComboBox comboCampo = new JComboBox();
-		comboCampo.setBackground(new Color(255, 255, 255));
-		comboCampo.setBounds(174, 317, 187, 26);
-		panel_1.add(comboCampo);
-		
-		JComboBox comboNivel = new JComboBox();
-		comboNivel.setBackground(new Color(255, 255, 255));
-		comboNivel.setBounds(311, 202, 146, 26);
-		panel_1.add(comboNivel);
-		
-		JComboBox comboModulos = new JComboBox();
-		comboModulos.setBackground(new Color(255, 255, 255));
-		comboModulos.setBounds(286, 72, 165, 26);
-		panel_1.add(comboModulos);
-		
-		JComboBox comboCoordenador = new JComboBox();
-		comboCoordenador.setBackground(new Color(255, 255, 255));
-		comboCoordenador.setBounds(30, 201, 192, 26);
-		panel_1.add(comboCoordenador);
-		
-		JLabel lblCadastrarQualificao = new JLabel("Cadastrar Qualificação");
-		lblCadastrarQualificao.setForeground(Color.WHITE);
-		lblCadastrarQualificao.setFont(new Font("Arial Black", Font.BOLD, 24));
-		lblCadastrarQualificao.setBounds(288, 36, 337, 34);
-		contentPane.add(lblCadastrarQualificao);
+    public Tela_cadastroQualificação() {
+        // Alinhado ao plano de design do painel central
+        setLayout(new BorderLayout(0, 15));
+        setBackground(BRANCO);
+        setBorder(new EmptyBorder(20, 20, 20, 20));
 
-	}
+        // --- Barra de Ações Superior (Idêntico ao padrão dos Formadores) ---
+        JPanel panelAcoes = new JPanel(new BorderLayout());
+        panelAcoes.setBackground(BRANCO);
 
+        JPanel panelTituloInterno = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        panelTituloInterno.setBackground(BRANCO);
+        JLabel lblInfo = new JLabel("Preencha os dados abaixo para registar uma nova qualificação no sistema.");
+        lblInfo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        lblInfo.setForeground(TEXTO_MUTED);
+        panelTituloInterno.add(lblInfo);
+        panelAcoes.add(panelTituloInterno, BorderLayout.WEST);
+        
+        add(panelAcoes, BorderLayout.NORTH);
+
+        // --- Formulário Centralizado Customizado ---
+        JPanel panelFormContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        panelFormContainer.setBackground(BRANCO);
+
+        // Grid Layout para organizar os 5 campos (5 linhas, 2 colunas)
+        JPanel panelGridCampos = new JPanel(new GridLayout(5, 2, 20, 20));
+        panelGridCampos.setBackground(BRANCO);
+        panelGridCampos.setPreferredSize(new Dimension(750, 280));
+
+        Font fontLabel = new Font("Segoe UI", Font.BOLD, 14);
+        Font fontText = new Font("Segoe UI", Font.PLAIN, 14);
+
+        // 1. Nome da Qualificação
+        panelGridCampos.add(new JLabel("Nome da Qualificação *") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
+        txtNomeQualificacao = new JTextField();
+        txtNomeQualificacao.setFont(fontText);
+        panelGridCampos.add(txtNomeQualificacao);
+
+        // 2. Módulos Associados
+        panelGridCampos.add(new JLabel("Módulos Associados") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
+        txtModulosAssociados = new JTextField();
+        txtModulosAssociados.setFont(fontText);
+        panelGridCampos.add(txtModulosAssociados);
+
+        // 3. Coordenador da Qualificação
+        panelGridCampos.add(new JLabel("Coordenador") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
+        txtCoordenador = new JTextField();
+        txtCoordenador.setFont(fontText);
+        panelGridCampos.add(txtCoordenador);
+
+        // 4. Nível da Qualificação
+        panelGridCampos.add(new JLabel("Nível da Qualificação *") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
+        txtNivelQualificacao = new JTextField();
+        txtNivelQualificacao.setFont(fontText);
+        panelGridCampos.add(txtNivelQualificacao);
+
+        // 5. Campo Pertencente
+        panelGridCampos.add(new JLabel("Campo Pertencente") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
+        txtCampoPertencente = new JTextField();
+        txtCampoPertencente.setFont(fontText);
+        panelGridCampos.add(txtCampoPertencente);
+
+        panelFormContainer.add(panelGridCampos);
+        add(panelFormContainer, BorderLayout.CENTER);
+
+        // --- Barra de Comando Inferior (Botões) ---
+        JPanel panelBotoesRodape = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 10));
+        panelBotoesRodape.setBackground(BRANCO);
+        panelBotoesRodape.setBorder(new EmptyBorder(10, 0, 0, 0));
+
+        btnLimpar = new JButton("Limpar");
+        btnLimpar.setBackground(BRANCO);
+        btnLimpar.setFont(fontLabel);
+        btnLimpar.setPreferredSize(new Dimension(150, 40));
+        btnLimpar.setBorder(new LineBorder(new Color(220, 224, 230)));
+        btnLimpar.addActionListener(e -> limparCampos());
+
+        btnSalvar = new JButton("Guardar Qualificação");
+        btnSalvar.setBackground(AZUL_DESTAQUE);
+        btnSalvar.setForeground(BRANCO);
+        btnSalvar.setFont(fontLabel);
+        btnSalvar.setPreferredSize(new Dimension(185, 40));
+        btnSalvar.setBorder(null);
+        btnSalvar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                acaoSalvar();
+            }
+        });
+
+        panelBotoesRodape.add(btnLimpar);
+        panelBotoesRodape.add(btnSalvar);
+        
+        add(panelBotoesRodape, BorderLayout.SOUTH);
+    }
+
+    /**
+     * Validação básica e persistência fictícia
+     */
+    private void acaoSalvar() {
+        String nome = txtNomeQualificacao.getText().trim();
+        String modulos = txtModulosAssociados.getText().trim();
+        String coordenador = txtCoordenador.getText().trim();
+        String nivel = txtNivelQualificacao.getText().trim();
+        String campo = txtCampoPertencente.getText().trim();
+
+        if (nome.isEmpty() || nivel.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, preencha os campos obrigatórios (*).", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String resumo = "Qualificação: " + nome + "\nNível: " + nivel + "\nCoordenador: " + coordenador;
+        JOptionPane.showMessageDialog(this, "Qualificação guardada com sucesso!\n\n" + resumo, "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        
+        limparCampos();
+    }
+
+    private void limparCampos() {
+        txtNomeQualificacao.setText("");
+        txtModulosAssociados.setText("");
+        txtCoordenador.setText("");
+        txtNivelQualificacao.setText("");
+        txtCampoPertencente.setText("");
+    }
 }

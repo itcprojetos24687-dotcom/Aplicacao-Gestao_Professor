@@ -1,210 +1,171 @@
 package VIEW;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import controller.TurmaController;
-
+import java.awt.BorderLayout;
 import java.awt.Color;
-import javax.swing.JTextField;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JButton;
-import javax.swing.ImageIcon;
-import javax.swing.SwingConstants;
-import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 import javax.swing.DefaultComboBoxModel;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class Tela_cadastoTurma extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private JTextField textTurma;
-	private JTextField textano_ingresso;
-	JComboBox comboDiretor_turma;
-	JComboBox comboTurno;
-	JComboBox comboQualificacao;
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Tela_cadastoTurma frame = new Tela_cadastoTurma();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+    private static final long serialVersionUID = 1L;
+    
 
-	/**
-	 * Create the frame.
-	 */
-	public Tela_cadastoTurma() {
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 1125, 614);
-		contentPane = new JPanel();
-		contentPane.setBackground(Color.BLUE);
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		
-		JPanel panel_1 = new JPanel();
-		panel_1.setLayout(null);
-		panel_1.setBackground(Color.WHITE);
-		panel_1.setBounds(576, 48, 523, 504);
-		contentPane.add(panel_1);
-		
-		textTurma = new JTextField();
-		textTurma.setColumns(10);
-		textTurma.setBounds(12, 69, 212, 28);
-		panel_1.add(textTurma);
-		
-		JLabel lblNewLabel_3 = new JLabel("Nome da Turma");
-		lblNewLabel_3.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		lblNewLabel_3.setBounds(48, 36, 143, 21);
-		panel_1.add(lblNewLabel_3);
-		
-		JLabel lblNewLabel_3_5 = new JLabel("Ano de Ingresso");
-		lblNewLabel_3_5.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		lblNewLabel_3_5.setBounds(327, 190, 186, 21);
-		panel_1.add(lblNewLabel_3_5);
-		
-		JButton btnNewButton = new JButton("Guardar");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				boolean sucesso;
-				try {
-					String nome = textTurma.getText();
-					JOptionPane.showMessageDialog(null, nome);
-					int ano_ingresso = Integer.parseInt(textano_ingresso.getText());
-					String turno = comboTurno.getSelectedItem().toString();
-					TurmaController tc = new TurmaController();
-					sucesso = tc.cadastrarTurma(nome,ano_ingresso,turno);
-					if(sucesso) {
-						JOptionPane.showMessageDialog(null, "Cadastrado com sucesso");
-					}else {
-						JOptionPane.showMessageDialog(null, "Dados invalidos");
-					}
-				}catch(Exception sq) {
-					sq.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Ocorreu um erro");
-				}
-			}
-		});
-		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 13));
-		btnNewButton.setBackground(Color.WHITE);
-		btnNewButton.setBounds(409, 454, 89, 23);
-		panel_1.add(btnNewButton);
-		
-		JButton btnNewButton_1 = new JButton("Cancelar");
-		btnNewButton_1.setForeground(Color.WHITE);
-		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 13));
-		btnNewButton_1.setBackground(Color.BLUE);
-		btnNewButton_1.setBounds(288, 454, 101, 23);
-		panel_1.add(btnNewButton_1);
-		
-		JLabel lblNewLabel_3_6 = new JLabel("Qualificação Associada");
-		lblNewLabel_3_6.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		lblNewLabel_3_6.setBounds(311, 36, 165, 21);
-		panel_1.add(lblNewLabel_3_6);
-		
-		JLabel lblNewLabel_3_7 = new JLabel("Director de Turma\r\n");
-		lblNewLabel_3_7.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		lblNewLabel_3_7.setBounds(206, 328, 165, 21);
-		panel_1.add(lblNewLabel_3_7);
-		
-		JLabel lblNewLabel_3_8 = new JLabel("Turmo");
-		lblNewLabel_3_8.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		lblNewLabel_3_8.setBounds(79, 190, 62, 21);
-		panel_1.add(lblNewLabel_3_8);
-		
-		textano_ingresso = new JTextField();
-		textano_ingresso.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		textano_ingresso.setColumns(10);
-		textano_ingresso.setBounds(311, 223, 149, 28);
-		panel_1.add(textano_ingresso);
-		
-		 comboTurno = new JComboBox();
-		comboTurno.setBackground(new Color(255, 255, 255));
-		comboTurno.setModel(new DefaultComboBoxModel(new String[] {"Diurno", "Noturno"}));
-		comboTurno.setBounds(36, 222, 111, 26);
-		panel_1.add(comboTurno);
-		
-		comboQualificacao = new JComboBox();
-		comboQualificacao.setBackground(new Color(255, 255, 255));
-		comboQualificacao.setBounds(288, 69, 169, 26);
-		panel_1.add(comboQualificacao);
-		
-		comboDiretor_turma = new JComboBox();
-		comboDiretor_turma.setBackground(new Color(255, 255, 255));
-		comboDiretor_turma.setBounds(187, 376, 156, 26);
-		panel_1.add(comboDiretor_turma);
-		
-		JPanel panel = new JPanel();
-		panel.setLayout(null);
-		panel.setToolTipText("Masculino\r\nFeminino");
-		panel.setBackground(Color.BLUE);
-		panel.setBounds(194, 48, 372, 504);
-		contentPane.add(panel);
-		
-		JLabel lblNewLabel_1 = new JLabel("\r\n");
-		lblNewLabel_1.setIcon(new ImageIcon("C:\\Users\\user\\Downloads\\Screenshot 2026-06-28 163103.png"));
-		lblNewLabel_1.setForeground(Color.WHITE);
-		lblNewLabel_1.setBackground(Color.WHITE);
-		lblNewLabel_1.setBounds(91, 42, 211, 254);
-		panel.add(lblNewLabel_1);
-		
-		JLabel lblNewLabel_2 = new JLabel(" Gestão de Turmas\r\n\r\n");
-		lblNewLabel_2.setVerticalAlignment(SwingConstants.TOP);
-		lblNewLabel_2.setForeground(Color.WHITE);
-		lblNewLabel_2.setFont(new Font("Arial Black", Font.BOLD, 20));
-		lblNewLabel_2.setBackground(Color.WHITE);
-		lblNewLabel_2.setBounds(74, 360, 228, 36);
-		panel.add(lblNewLabel_2);
-		
-		JPanel panel_3 = new JPanel();
-		panel_3.setLayout(null);
-		panel_3.setBackground(Color.BLUE);
-		panel_3.setBounds(37, 48, 133, 504);
-		contentPane.add(panel_3);
-		
-		JButton btnNewButton_2 = new JButton("Cadastro");
-		btnNewButton_2.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		btnNewButton_2.setBackground(Color.WHITE);
-		btnNewButton_2.setBounds(10, 32, 114, 30);
-		panel_3.add(btnNewButton_2);
-		
-		JButton btnNewButton_2_1 = new JButton("Consulta");
-		btnNewButton_2_1.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		btnNewButton_2_1.setBounds(10, 155, 114, 30);
-		panel_3.add(btnNewButton_2_1);
-		
-		JButton btnNewButton_2_2 = new JButton("Actualizar");
-		btnNewButton_2_2.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		btnNewButton_2_2.setBounds(10, 290, 114, 30);
-		panel_3.add(btnNewButton_2_2);
-		
-		JButton btnNewButton_2_3 = new JButton("Remover");
-		btnNewButton_2_3.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		btnNewButton_2_3.setBounds(10, 431, 114, 30);
-		panel_3.add(btnNewButton_2_3);
-		
-		JLabel lblCadastrarTurma = new JLabel("Cadastrar Turma");
-		lblCadastrarTurma.setForeground(Color.WHITE);
-		lblCadastrarTurma.setFont(new Font("Arial Black", Font.BOLD, 24));
-		lblCadastrarTurma.setBounds(34, 3, 309, 34);
-		contentPane.add(lblCadastrarTurma);
+    private JTextField txtNomeTurma;
+    private JComboBox<String> comboTurno, comboQualificacao, comboDiretor;
+    private JSpinner spinnerAnoIngresso;
+    private JButton btnSalvar, btnCancelar;
 
-	}
 
+    private final Color AZUL_ESCURO_NAV = new Color(15, 38, 70);
+    private final Color AZUL_DESTAQUE  = new Color(13, 110, 253);
+    private final Color FUNDO_CLARO     = new Color(244, 246, 249);
+    private final Color BRANCO          = Color.WHITE;
+
+  
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new Tela_cadastoTurma().setVisible(true);
+        });
+    }
+
+    public Tela_cadastoTurma() {
+        setTitle("AcademiaPro - Cadastrar Nova Turma");
+        setSize(600, 550); 
+        setMinimumSize(new Dimension(550, 500));
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+        getContentPane().setLayout(new BorderLayout());
+
+     
+        JPanel panelHeader = new JPanel(new BorderLayout());
+        panelHeader.setBackground(AZUL_ESCURO_NAV);
+        panelHeader.setBorder(new EmptyBorder(15, 25, 15, 25));
+        
+        JLabel lblTitulo = new JLabel("Cadastrar Turma");
+        lblTitulo.setForeground(BRANCO);
+        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        panelHeader.add(lblTitulo, BorderLayout.WEST);
+        
+        getContentPane().add(panelHeader, BorderLayout.NORTH);
+
+   
+        JPanel panelConteudo = new JPanel(new BorderLayout());
+        panelConteudo.setBackground(FUNDO_CLARO);
+        panelConteudo.setBorder(new EmptyBorder(25, 35, 25, 35));
+
+
+        JPanel panelCard = new JPanel(new GridLayout(6, 2, 15, 20));
+        panelCard.setBackground(BRANCO);
+        panelCard.setBorder(new EmptyBorder(25, 25, 25, 25));
+
+        Font fontLabel = new Font("Segoe UI", Font.BOLD, 14);
+        Font fontText = new Font("Segoe UI", Font.PLAIN, 14);
+
+
+        panelCard.add(new JLabel("Nome da Turma:") {{ setFont(fontLabel); }});
+        txtNomeTurma = new JTextField(); 
+        txtNomeTurma.setFont(fontText); 
+        panelCard.add(txtNomeTurma);
+
+
+        panelCard.add(new JLabel("Turno:") {{ setFont(fontLabel); }});
+        comboTurno = new JComboBox<>();
+        comboTurno.setModel(new DefaultComboBoxModel<>(new String[] {"Manhã", "Tarde", "Noite"}));
+        comboTurno.setFont(fontText);
+        panelCard.add(comboTurno);
+
+
+        panelCard.add(new JLabel("Ano de Ingresso:") {{ setFont(fontLabel); }});
+        spinnerAnoIngresso = new JSpinner(new SpinnerNumberModel(2026, 2000, 2100, 1));
+        spinnerAnoIngresso.setFont(fontText);
+      
+        JSpinner.NumberEditor editor = new JSpinner.NumberEditor(spinnerAnoIngresso, "#");
+        spinnerAnoIngresso.setEditor(editor);
+        panelCard.add(spinnerAnoIngresso);
+
+   
+        panelCard.add(new JLabel("Qualificação:") {{ setFont(fontLabel); }});
+        comboQualificacao = new JComboBox<>();
+        comboQualificacao.setModel(new DefaultComboBoxModel<>(new String[] {
+            "Técnico de Programação Web", 
+            "Suporte Informático", 
+            "Administração de Redes", 
+            "Gestão de Sistemas"
+        }));
+        comboQualificacao.setFont(fontText);
+        panelCard.add(comboQualificacao);
+
+   
+        panelCard.add(new JLabel("Diretor de Turma:") {{ setFont(fontLabel); }});
+        comboDiretor = new JComboBox<>();
+        comboDiretor.setModel(new DefaultComboBoxModel<>(new String[] {
+            "Malik Mangue", 
+            "Keany Pessula", 
+            "Edmundo Mapotere"
+        }));
+        comboDiretor.setFont(fontText);
+        panelCard.add(comboDiretor);
+
+  
+        btnCancelar = new JButton("Cancelar");
+        btnCancelar.setBackground(BRANCO);
+        btnCancelar.setFont(fontLabel);
+        btnCancelar.addActionListener(e -> dispose());
+
+        btnSalvar = new JButton("Gravar Turma");
+        btnSalvar.setBackground(AZUL_DESTAQUE);
+        btnSalvar.setForeground(BRANCO);
+        btnSalvar.setFont(fontLabel);
+        btnSalvar.addActionListener(e -> acaoSalvar());
+
+        panelCard.add(btnCancelar);
+        panelCard.add(btnSalvar);
+
+        panelConteudo.add(panelCard, BorderLayout.CENTER);
+        getContentPane().add(panelConteudo, BorderLayout.CENTER);
+    }
+
+    
+    private void acaoSalvar() {
+        String nomeTurma = txtNomeTurma.getText().trim();
+        
+        if (nomeTurma.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, introduza o nome da turma.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String turno = comboTurno.getSelectedItem().toString();
+        int ano = (int) spinnerAnoIngresso.getValue();
+        String qualificacao = comboQualificacao.getSelectedItem().toString();
+        String diretor = comboDiretor.getSelectedItem().toString();
+
+      
+        String resumo = "Turma: " + nomeTurma + "\nTurno: " + turno + "\nAno: " + ano + 
+                        "\nQualificação: " + qualificacao + "\nDiretor: " + diretor;
+                        
+        JOptionPane.showMessageDialog(this, "Turma guardada com sucesso!\n\n" + resumo, "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        limparCampos();
+        dispose();
+    }
+
+    private void limparCampos() {
+        txtNomeTurma.setText("");
+        comboTurno.setSelectedIndex(0);
+        spinnerAnoIngresso.setValue(2026);
+        comboQualificacao.setSelectedIndex(0);
+        comboDiretor.setSelectedIndex(0);
+    }
 }
