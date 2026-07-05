@@ -1,114 +1,58 @@
 package VIEW;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import java.awt.Font;
+import java.awt.BorderLayout;
 import java.awt.Color;
-import javax.swing.JTextField;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
 import javax.swing.JButton;
-import controller.FormadorController;
-public class Tela_Matricula extends JFrame {
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
+public class Tela_Matricula extends JDialog {
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Tela_Matricula frame = new Tela_Matricula();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+    private JTextField txtEstudanteId, txtTurmaId;
+    private JButton btnConfirmar;
 
-	/**
-	 * Create the frame.
-	 */
-	public Tela_Matricula() {
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 885, 495);
-		contentPane = new JPanel();
-		contentPane.setBackground(Color.BLUE);
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		
-		JLabel lblNewLabel = new JLabel("Matrícula");
-		lblNewLabel.setForeground(Color.WHITE);
-		lblNewLabel.setFont(new Font("Arial Black", Font.BOLD, 24));
-		lblNewLabel.setBounds(364, 44, 132, 23);
-		contentPane.add(lblNewLabel);
-		
-		JLabel lblNewLabel_1 = new JLabel("Dados do Formando");
-		lblNewLabel_1.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		lblNewLabel_1.setBounds(239, 99, 135, 23);
-		contentPane.add(lblNewLabel_1);
-		
-		JLabel lblNewLabel_1_1 = new JLabel("Qualificação escolhida");
-		lblNewLabel_1_1.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		lblNewLabel_1_1.setBounds(489, 99, 155, 23);
-		contentPane.add(lblNewLabel_1_1);
-		
-		JLabel lblNewLabel_1_1_1 = new JLabel("Nível da Qualificação ");
-		lblNewLabel_1_1_1.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		lblNewLabel_1_1_1.setBounds(230, 186, 144, 23);
-		contentPane.add(lblNewLabel_1_1_1);
-		
-		JLabel lblNewLabel_1_1_1_1 = new JLabel("Data da Matrícula");
-		lblNewLabel_1_1_1_1.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		lblNewLabel_1_1_1_1.setBounds(489, 186, 155, 23);
-		contentPane.add(lblNewLabel_1_1_1_1);
-		
-		textField = new JTextField();
-		textField.setBounds(211, 136, 163, 20);
-		contentPane.add(textField);
-		textField.setColumns(10);
-		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(481, 133, 163, 20);
-		contentPane.add(textField_1);
-		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(211, 220, 163, 20);
-		contentPane.add(textField_2);
-		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(481, 220, 163, 20);
-		contentPane.add(textField_3);
-		
-		JButton btnNewButton = new JButton("Guardar");
-		btnNewButton.setFont(new Font("Bahnschrift", Font.PLAIN, 12));
-		btnNewButton.setBounds(555, 334, 89, 23);
-		contentPane.add(btnNewButton);
-		
-		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBackground(new Color(0, 128, 255));
-		btnCancelar.setForeground(Color.WHITE);
-		btnCancelar.setFont(new Font("Bahnschrift", Font.PLAIN, 12));
-		btnCancelar.setBounds(441, 333, 89, 23);
-		contentPane.add(btnCancelar);
-		
-		JPanel panel = new JPanel();
-		panel.setBounds(190, 78, 486, 298);
-		contentPane.add(panel);
+    public Tela_Matricula(JFrame pai, boolean modal) {
+        super(pai, modal);
+        setTitle("Vincular Nova Matrícula");
+        setSize(450, 300);
+        setLocationRelativeTo(pai); // Centraliza sobre o painel principal
+        setResizable(false);
+        getContentPane().setLayout(new BorderLayout());
 
-	}
+        JPanel painelCampos = new JPanel(new GridLayout(3, 1, 10, 15));
+        painelCampos.setBorder(new EmptyBorder(20, 20, 20, 20));
+        painelCampos.setBackground(Color.WHITE);
+
+        Font fLabel = new Font("Segoe UI", Font.BOLD, 13);
+
+        painelCampos.add(new JLabel("ID / Código do Estudante:") {{ setFont(fLabel); }});
+        txtEstudanteId = new JTextField(); painelCampos.add(txtEstudanteId);
+
+        painelCampos.add(new JLabel("Código da Turma:") {{ setFont(fLabel); }});
+        txtTurmaId = new JTextField(); painelCampos.add(txtTurmaId);
+
+        getContentPane().add(painelCampos, BorderLayout.CENTER);
+
+        // Barra inferior de confirmação
+        JPanel barraBotoes = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+        barraBotoes.setBackground(new Color(244, 246, 249));
+
+        JButton btnFechar = new JButton("Cancelar");
+        btnFechar.addActionListener(e -> dispose());
+        
+        btnConfirmar = new JButton("Efetivar Matrícula");
+        btnConfirmar.setBackground(new Color(13, 110, 253));
+        btnConfirmar.setForeground(Color.WHITE);
+
+        barraBotoes.add(btnFechar);
+        barraBotoes.add(btnConfirmar);
+        getContentPane().add(barraBotoes, BorderLayout.SOUTH);
+    }
 }
