@@ -1,6 +1,8 @@
 package VIEW;
 
 import model.*;
+
+import dao.ExceptionDao;
 import controller.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -35,8 +37,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import java.util.ArrayList;
 
-public class Tela_Utilizadores extends JFrame {
+public class Tela_Utilizadores extends JFrame implements ActionListener {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
@@ -59,13 +62,20 @@ public class Tela_Utilizadores extends JFrame {
     private final Color BRANCO1        = Color.WHITE;
     private final Color CINZA_HOVER   = new Color(225, 225, 225);
 
-    private JTextField campoNomeCompleto;
-    private JTextField campoNomeOperador;
-    private JTextField campoSenha;
-    private JComboBox<String> comboPerfil;
-    private JTextField campoEmail;
-    
+//    private JTextField campoNomeOperador = new JTextField();
+//    private JTextField campoNomeCompleto = new JTextField();
+//    private JTextField  campoSenha = new JTextField();
+    private JTextField campoNomeOperador ;
+    private JTextField campoNomeCompleto ;
+    private JTextField  campoSenha ;
+    private JComboBox<Perfil> comboPerfil;
+    private JTextField campoEmail = new JTextField();
+    private ArrayList<Usuario> usuarios;
+    private ArrayList<Perfil> perfis;
+    private UsuarioController uc  = new UsuarioController();
     private JDialog d;
+    private int idUser = 0;
+    private JButton botaoGerarSenha;
 
     /**
      * Launch the application.
@@ -87,7 +97,7 @@ public class Tela_Utilizadores extends JFrame {
      * Create the frame.
      */
     public Tela_Utilizadores() {
-        setTitle("AcademiaPro - Gestão de Utilizadores e Permissões");
+        setTitle(" Gestão de Utilizadores e Permissões");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
         setMinimumSize(new Dimension(1100, 680));
         setSize(1100, 700);
@@ -99,7 +109,10 @@ public class Tela_Utilizadores extends JFrame {
         contentPane.setLayout(new BorderLayout(0, 25));
         setContentPane(contentPane);
 
-
+        campoNomeOperador = new JTextField();
+        campoNomeCompleto = new JTextField();
+        campoSenha = new JTextField();
+        
         JPanel panelHeader = new JPanel(new BorderLayout());
         panelHeader.setBackground(new Color(0, 0, 64));
 
@@ -144,6 +157,10 @@ public class Tela_Utilizadores extends JFrame {
         JButton btnExcluir = new JButton(" Eliminar");
         estilizarBotao(btnExcluir, VERMELHO_DANGER, BRANCO, 110, 36);
         panelAcoesEsquerda.add(btnExcluir);
+        
+        JButton btnResetarSenha = new JButton("Resetar Senha");
+        estilizarBotao(btnResetarSenha, VERDE_SUCCESS,BRANCO,160,36);
+        panelAcoesEsquerda.add(btnResetarSenha);
 
         panelBarraSuperior.add(panelAcoesEsquerda, BorderLayout.WEST);
 
@@ -161,6 +178,32 @@ public class Tela_Utilizadores extends JFrame {
 
         panelBarraSuperior.add(panelPesquisaDireita, BorderLayout.EAST);
         panelCardInterno.add(panelBarraSuperior, BorderLayout.NORTH);
+        btnPesquisar.addActionListener(new ActionListener() {
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        		String nome = txtPesquisar.getText();
+        		DefaultTableModel model = (DefaultTableModel) tableUtilizadores.getModel();
+        		model.setRowCount(0);
+        		try {
+        			ArrayList<Usuario> usuarios = new UsuarioController().listarUsuario(nome);
+        			for(Usuario u : usuarios) {
+        				model.addRow(new Object[] {u.getCodigo(),
+                                                   u.getUsername(),
+                                                   u.getNome_completo(),
+                                                   u.getEmail(),
+                                                   u.getPerfil().getNome(),
+                                                   
+                                                   
+        				});
+        				
+        				
+        			}
+        		}catch(Exception s) {
+        			JOptionPane.showMessageDialog(null, "Erro ao listar");
+        			s.printStackTrace();
+        		}
+        	}
+        });
 
 
         JScrollPane scrollPane = new JScrollPane();
@@ -181,15 +224,14 @@ public class Tela_Utilizadores extends JFrame {
         header.setBackground(new Color(248, 249, 250));
         header.setForeground(TEXTO_DARK);
         header.setPreferredSize(new Dimension(100, 38));
-
+        
         tableUtilizadores.setModel(new DefaultTableModel(
             new Object[][] {
-                {"1", "admin.malik", "Malik Mangue", "Malikmang@gmail.com", "Administrador", "Ativo"},
-                {"2", "KPessula", "Keany Pessula", "Keanypessul@gmail.com", "Gestor", "Ativo"},
-                {"3", "ED Mapotere", "Edmundo Mapotere", "EDMapotere@gmail.com", "Professor", "Ativo"},
+                
+                
             },
             new String[] {
-                "ID", "Username", "Nome Completo", "Email", "Perfil / Função", "Estado"
+                "ID", "Username", "Nome Completo", "Email","Perfil",
             }
         ));
         scrollPane.setViewportView(tableUtilizadores);
@@ -201,42 +243,91 @@ public class Tela_Utilizadores extends JFrame {
         btnNovo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	
-            	 d = criarDialog();
+            	 try {
+					d = criarDialog();
+				 } catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				 }
+            	 
             	 d.setVisible(true);
+            	 
             	
-                JOptionPane.showMessageDialog(null, "Abrir formulário de criação de utilizador.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                //JOptionPane.showMessageDialog(null, "Abrir formulário de criação de utilizador.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
         btnEditar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int linha = tableUtilizadores.getSelectedRow();
-                if (linha == -1) {
-                    JOptionPane.showMessageDialog(null, "Selecione um utilizador na tabela para editar.", "Aviso", JOptionPane.WARNING_MESSAGE);
-                } else {
-                    String username = tableUtilizadores.getValueAt(linha, 1).toString();
-                    JOptionPane.showMessageDialog(null, "A editar as permissões de: " + username, "Editar", JOptionPane.INFORMATION_MESSAGE);
-                }
+            	Integer id = (Integer) tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(),0);
+            	String username = (String) tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(),1);
+            	String nome = (String) tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(),2);
+            	String email = (String) tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(),3);
+            	String Perfil = (String) tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(),4);
+            	//Integer id = (Integer) tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(),0);
+            	//JOptionPane.showMessageDialog(null, id + username + nome + email + Perfil);
+            	
+            	try {
+            		
+            		int linha = tableUtilizadores.getSelectedRow();
+            		if (linha == -1) {
+            			JOptionPane.showMessageDialog(null, "Selecione um utilizador na tabela para editar.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            		} else {
+            			//String username = tableUtilizadores.getValueAt(linha, 1).toString();
+            			//JOptionPane.showMessageDialog(null, "A editar as permissões de: " + username, "Editar", JOptionPane.INFORMATION_MESSAGE);
+            			d = criarDialog();
+            			Tela_Utilizadores.this.buscarUsuario(id,username,nome,email,Perfil);
+            			d.setVisible(true);
+            		}
+            	}catch(ExceptionDao a) {
+            		new ExceptionDao("Erro ao editar"+a);
+            	}
+            	
             }
         });
+        
 
         btnExcluir.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int linha = tableUtilizadores.getSelectedRow();
-                if (linha == -1) {
-                    JOptionPane.showMessageDialog(null, "Selecione um utilizador para eliminar.", "Aviso", JOptionPane.WARNING_MESSAGE);
-                } else {
-                    int confirmacao = JOptionPane.showConfirmDialog(null, "Tem a certeza que deseja remover esta conta de acesso?", "Confirmar Remoção", JOptionPane.YES_NO_OPTION);
-                    if (confirmacao == JOptionPane.YES_OPTION) {
-                       
-                    }
+                Integer codigo = (Integer) tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(),0);
+                boolean sucesso;
+                try {
+                	
+                	if (linha == -1) {
+                		JOptionPane.showMessageDialog(null, "Selecione um utilizador para eliminar.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                	} else {
+                		int confirmacao = JOptionPane.showConfirmDialog(null, "Tem a certeza que deseja remover esta conta de acesso?", "Confirmar Remoção", JOptionPane.YES_NO_OPTION);
+                		if (confirmacao == JOptionPane.YES_OPTION) {
+                			sucesso = uc.apagarUsuario(codigo);
+                			if(sucesso) {
+                				JOptionPane.showMessageDialog(null, "Usuario eliminado com sucesso");
+                			}
+                			else{
+                				JOptionPane.showMessageDialog(null,"Falha ao eliminar usuario");
+                			}
+                		}
+                	}
+                }catch(Exception s) {
+                	s.printStackTrace();
                 }
             }
         });
     }
 
    
-    private void estilizarBotao(JButton botao, Color fundo, Color texto, int largura, int altura) {
+    public void buscarUsuario(Integer id, String username, String nome, String email, String perfil) throws ExceptionDao{
+		this.idUser = id;
+		campoNomeCompleto.setText(nome);
+		campoNomeOperador.setText(username);
+		campoEmail.setText(email);
+		campoSenha.setEditable(false);
+		botaoGerarSenha.setEnabled(false);
+		
+		
+		
+	}
+	private void estilizarBotao(JButton botao, Color fundo, Color texto, int largura, int altura) {
         botao.setPreferredSize(new Dimension(largura, altura));
         botao.setFont(new Font("Segoe UI", Font.BOLD, 13));
         botao.setBackground(fundo);
@@ -255,7 +346,15 @@ public class Tela_Utilizadores extends JFrame {
             }
         });
     }
-    private JDialog criarDialog() {
+	private JDialog DialogResetar()throws ExceptionDao{
+		JDialog d = new JDialog();
+		d.setTitle("Resetar Senha");
+		d.setSize(400,450);
+		d.setLocationRelativeTo(null);
+		d.setResizable(true);
+		return d;
+	}
+    private JDialog criarDialog() throws ExceptionDao {
     	d = new JDialog();
     	d.setTitle("Cadastro de Utilizador");
         d.setSize(650, 400);
@@ -277,7 +376,7 @@ public class Tela_Utilizadores extends JFrame {
         gbc.gridx = 0; gbc.gridy = 0;
         gbc.weightx = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        painelPrincipal.add(criarLabel("Nome completo:"), gbc);
+        painelPrincipal.add(criarLabel("Nome:"), gbc);
 
         gbc.gridx = 0; gbc.gridy = 1;
         gbc.weightx = 0.5; // coluna esquerda cresce
@@ -290,8 +389,20 @@ public class Tela_Utilizadores extends JFrame {
 
         gbc.gridx = 1; gbc.gridy = 1;
         gbc.weightx = 0.5; // coluna direita também cresce
-        comboPerfil = new JComboBox<>(new String[]{"Administrador", "Operador", "Supervisor"});
+        try {
+        	PerfilController pc = new PerfilController();
+        	perfis = pc.listarPerfil();
+        	comboPerfil = new JComboBox<Perfil>();
+        	for(Perfil p: perfis) {
+        		comboPerfil.addItem(p);
+        	}
+        	
+        }catch(Exception q) {
+        	q.printStackTrace();
+        }
         painelPrincipal.add(comboPerfil, gbc);
+        
+        //comboPerfil = new JComboBox<>(new String[]{"Administrador", "Operador", "Supervisor"});
 
         // ================= LINHA 2: Nome do Operador | Email =================
         gbc.gridx = 0; gbc.gridy = 2;
@@ -324,7 +435,7 @@ public class Tela_Utilizadores extends JFrame {
         campoSenha = new JTextField();
         painelSenha.add(campoSenha, BorderLayout.CENTER);
 
-        JButton botaoGerarSenha = criarBotaoNeutro("Gerar senha");
+        botaoGerarSenha = criarBotaoNeutro("Gerar senha");
         botaoGerarSenha.addActionListener(e -> campoSenha.setText(gerarSenhaAleatoria(10)));
         painelSenha.add(botaoGerarSenha, BorderLayout.EAST);
 
@@ -363,10 +474,18 @@ public class Tela_Utilizadores extends JFrame {
             	String username = campoNomeOperador.getText();
             	String senha =  campoSenha.getText();
             	String email = campoEmail.getText();
+            	Perfil p = (Perfil)comboPerfil.getSelectedItem();
+            	//int idPerfil = p.getId();
             	
+            	 
             	
-            	UsuarioController uc = new UsuarioController();
-            	sucesso = uc.cadastrarUsuario(nome,username,senha,email);
+            	if(this.idUser == 0) {
+            		sucesso = uc.cadastrarUsuario(nome,username,senha,email, p);
+            		
+            	}else {
+            		sucesso = uc.atualizarUsuario(this.idUser,nome, username, email,p);
+            		this.idUser = 0;
+            	}
             	if(sucesso) {
             		JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso");
             	}
@@ -381,7 +500,7 @@ public class Tela_Utilizadores extends JFrame {
         	// aqui entra a lógica de gravação
         	
         	
-            JOptionPane.showMessageDialog(d, "Registo guardado com sucesso!");
+            //JOptionPane.showMessageDialog(d, "Registo guardado com sucesso!");
         });
 
         painelBotoes.add(botaoSair);
@@ -459,14 +578,19 @@ public class Tela_Utilizadores extends JFrame {
     }
 
     private String gerarSenhaAleatoria(int tamanho) {
-        String caracteres = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%";
-        SecureRandom random = new SecureRandom();
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < tamanho; i++) {
-            sb.append(caracteres.charAt(random.nextInt(caracteres.length())));
-        }
-        return sb.toString();
+       String senhaGerada = campoNomeCompleto.getText() +"123";
+        
+        return senhaGerada.toString();
     }
+
+    
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
     	
     	
     }
