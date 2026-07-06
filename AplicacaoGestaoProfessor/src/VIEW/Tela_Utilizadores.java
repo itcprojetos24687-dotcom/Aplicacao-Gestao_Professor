@@ -157,6 +157,10 @@ public class Tela_Utilizadores extends JFrame implements ActionListener {
         JButton btnExcluir = new JButton(" Eliminar");
         estilizarBotao(btnExcluir, VERMELHO_DANGER, BRANCO, 110, 36);
         panelAcoesEsquerda.add(btnExcluir);
+        
+        JButton btnResetarSenha = new JButton("Resetar Senha");
+        estilizarBotao(btnResetarSenha, VERDE_SUCCESS,BRANCO,160,36);
+        panelAcoesEsquerda.add(btnResetarSenha);
 
         panelBarraSuperior.add(panelAcoesEsquerda, BorderLayout.WEST);
 
@@ -342,6 +346,14 @@ public class Tela_Utilizadores extends JFrame implements ActionListener {
             }
         });
     }
+	private JDialog DialogResetar()throws ExceptionDao{
+		JDialog d = new JDialog();
+		d.setTitle("Resetar Senha");
+		d.setSize(400,450);
+		d.setLocationRelativeTo(null);
+		d.setResizable(true);
+		return d;
+	}
     private JDialog criarDialog() throws ExceptionDao {
     	d = new JDialog();
     	d.setTitle("Cadastro de Utilizador");
@@ -571,6 +583,7 @@ public class Tela_Utilizadores extends JFrame implements ActionListener {
         return senhaGerada.toString();
     }
 
+    
 
 	@Override
 	public void actionPerformed(ActionEvent e) {

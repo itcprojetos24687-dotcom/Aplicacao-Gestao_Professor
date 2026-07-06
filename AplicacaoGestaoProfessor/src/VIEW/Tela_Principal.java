@@ -110,6 +110,16 @@ public class Tela_Principal {
         btnUtilizadores.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnUtilizadores.setFocusPainted(false);
         
+        JButton btnAcessoLogs = new JButton("Acessar logs");
+        btnUtilizadores.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnUtilizadores.setForeground(BRANCO);
+        btnUtilizadores.setBackground(new Color(25, 52, 88));
+        btnUtilizadores.setBorder(new LineBorder(new Color(40, 75, 120), 1, true));
+        btnUtilizadores.setPreferredSize(new Dimension(150, 30));
+        btnUtilizadores.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnUtilizadores.setFocusPainted(false);
+        
+        
         btnUtilizadores.addActionListener(e -> {
             try {
                 Tela_Utilizadores telaUtilizadores = new Tela_Utilizadores();
@@ -126,6 +136,10 @@ public class Tela_Principal {
         
         if (nivelAcesso.equalsIgnoreCase("Administrador")) {
             panelTopoDireita.add(btnUtilizadores);
+            panelTopoDireita.add(btnAcessoLogs);
+        }
+        if(nivelAcesso.equalsIgnoreCase("Auditor")) {
+        	panelTopoDireita.add(btnAcessoLogs);
         }
         
         panelTopo.add(panelTopoDireita, BorderLayout.EAST);
@@ -165,7 +179,7 @@ public class Tela_Principal {
         //String[] menus = {"Dashboard", "Formações", "Inscrições","Qualificacoes", "Formadores", "Cadastros ▾"};
 
         // "Inscrições" firme e forte na barra lateral
-        String[] menus = {"Dashboard", "Formações", "Formadores", "Inscrições", "Cadastros ▾"};
+        String[] menus = {"Dashboard", "Formações", "Formadores", "Inscrições", "Cadastros ▾",};
 
         
         for (String menu : menus) {

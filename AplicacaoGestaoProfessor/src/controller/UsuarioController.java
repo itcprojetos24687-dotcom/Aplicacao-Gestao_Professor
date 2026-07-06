@@ -41,6 +41,19 @@ public class UsuarioController {
 
 		return false;
 	}
+	public boolean atualizarUsuario(int idUser,String nome, String username, String email,Perfil p)throws ExceptionDao{
+		if(idUser >0 && 
+		   nome != null && nome.length()>0 && 
+		   username != null && username.length()>0 
+		   && email != null && email.length()>0 &&
+		   p != null) {
+			Usuario u = new Usuario();
+			u.atualizarUsuario(u);
+			return true;
+			
+		}
+		return false;
+	}
 
 	public ArrayList<Usuario> listarUsuario(String username) throws ExceptionDao {
 		return new Usuario().listarUsuario(username);
@@ -101,7 +114,7 @@ public class UsuarioController {
 
 		return false;
 	}
-	public 
+	
 
 //	public Usuario iniciarSessao(String username, String password)
 //	throws ExceptionDao {

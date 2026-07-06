@@ -362,6 +362,7 @@ public class Tela_login extends JFrame {
 	                	String nova = new String(novaSenhaField.getPassword());
 	                	String confirm = new String(confirmarSenhaField.getPassword());
 	                	UsuarioController uc = new UsuarioController();
+	                	
 	                	sucesso = uc.autenticar(senhaAtual);
 	                	if(sucesso) {
 	                		
@@ -374,7 +375,7 @@ public class Tela_login extends JFrame {
 	                			return;
 	                		}
 	                		
-	                		uc.redifinirSenha(senhaAtual, confirm);
+	                		uc.redifinirSenha(confirm, senhaAtual);
 	                		JOptionPane.showMessageDialog(Tela_login.this, "Senha alterada com sucesso!");
 	                	}
 	                	else {
