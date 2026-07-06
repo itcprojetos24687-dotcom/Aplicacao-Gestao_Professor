@@ -5,7 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
+import javax.swing.BoxLayout;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JButton;
@@ -21,7 +21,6 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.DefaultComboBoxModel;
 
-// Alterado de JFrame para JPanel para encaixar dinamicamente no painel central da Tela Principal
 public class Tela_Incrição extends JPanel {
 
     private static final long serialVersionUID = 1L;
@@ -32,15 +31,12 @@ public class Tela_Incrição extends JPanel {
     private JTable tabelaHistorico;
     private DefaultTableModel modeloTabela;
 
-    // Paleta de Cores Alinhada com a Tela_Principal
     private final Color AZUL_ESCURO_NAV = new Color(15, 38, 70);
     private final Color AZUL_DESTAQUE   = new Color(13, 110, 253);
-    private final Color FUNDO_CLARO     = new Color(244, 246, 249);
     private final Color BRANCO          = Color.WHITE;
-    private final Color TEXTO_MUTED     = new Color(108, 117, 125);
 
     public Tela_Incrição() {
-        // Define o layout e cor de fundo do container principal
+   
         setLayout(new BorderLayout(0, 15));
         setBackground(BRANCO);
         setBorder(new EmptyBorder(15, 15, 15, 15));
@@ -48,58 +44,59 @@ public class Tela_Incrição extends JPanel {
         Font fontLabel = new Font("Segoe UI", Font.BOLD, 13);
         Font fontText = new Font("Segoe UI", Font.PLAIN, 13);
 
-        // --- PAINEL DO FORMULÁRIO (ESTILO CARD) ---
-        JPanel panelForm = new JPanel(new GridLayout(5, 2, 15, 12));
+       
+        JPanel panelForm = new JPanel();
+        panelForm.setLayout(new BoxLayout(panelForm, BoxLayout.Y_AXIS));
         panelForm.setBackground(BRANCO);
-        
-        panelForm.add(new JLabel("Nome do Formando:") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
-        txtNomeFormando = new JTextField(); 
-        txtNomeFormando.setFont(fontText);
-        panelForm.add(txtNomeFormando);
 
-        panelForm.add(new JLabel("Módulo:") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
+        panelForm.add(criarLinhaFormulario("Nome do Formando:", txtNomeFormando = new JTextField(), fontLabel, fontText));
+        
         comboModulo = new JComboBox<>(new DefaultComboBoxModel<>(new String[] {
             "Programação Orientada a Objetos", "Bases de Dados", "Desenvolvimento Web", "Redes de Computadores"
         }));
         comboModulo.setBackground(BRANCO);
-        comboModulo.setFont(fontText);
-        panelForm.add(comboModulo);
+        panelForm.add(criarLinhaFormulario("Módulo:", comboModulo, fontLabel, fontText));
 
-        panelForm.add(new JLabel("Data de Inscrição:") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
         txtDataInscricao = new JTextField(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
-        txtDataInscricao.setFont(fontText);
-        panelForm.add(txtDataInscricao);
+        panelForm.add(criarLinhaFormulario("Data de Inscrição:", txtDataInscricao, fontLabel, fontText));
 
-        panelForm.add(new JLabel("Semestre:") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
         comboSemestre = new JComboBox<>(new DefaultComboBoxModel<>(new String[] {
             "Primeiro semestre", "Segundo semestre"
         }));
         comboSemestre.setBackground(BRANCO);
-        comboSemestre.setFont(fontText);
-        panelForm.add(comboSemestre);
+        panelForm.add(criarLinhaFormulario("Semestre:", comboSemestre, fontLabel, fontText));
 
-        // --- BOTÕES DE AÇÃO ---
+        
+        JPanel panelBotoesContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+        panelBotoesContainer.setBackground(BRANCO);
+       
+        panelBotoesContainer.setBorder(new EmptyBorder(0, 0, 0, 0)); 
+
         btnLimpar = new JButton("Limpar Campos");
         btnLimpar.setBackground(BRANCO);
+        btnLimpar.setForeground(AZUL_ESCURO_NAV);
         btnLimpar.setFont(fontLabel);
-        btnLimpar.setPreferredSize(new Dimension(120, 35));
+        btnLimpar.setPreferredSize(new Dimension(225, 38));
+        btnLimpar.setBorder(new LineBorder(Color.LIGHT_GRAY, 1));
         btnLimpar.addActionListener(e -> limparCampos());
-        panelForm.add(btnLimpar);
 
         btnGravar = new JButton("Gravar Inscrição");
         btnGravar.setBackground(AZUL_DESTAQUE);
         btnGravar.setForeground(BRANCO);
         btnGravar.setFont(fontLabel);
-        btnGravar.setPreferredSize(new Dimension(140, 35));
+        btnGravar.setPreferredSize(new Dimension(225, 38));
+        btnGravar.setBorder(null);
         btnGravar.addActionListener(e -> acaoSalvar());
-        panelForm.add(btnGravar);
 
+        panelBotoesContainer.add(btnLimpar);
+        panelBotoesContainer.add(btnGravar);
+        
+        panelForm.add(panelBotoesContainer);
         add(panelForm, BorderLayout.NORTH);
 
-        // --- SEÇÃO DO HISTÓRICO / TABELA ---
         JPanel panelHistorico = new JPanel(new BorderLayout(0, 8));
         panelHistorico.setBackground(BRANCO);
-        panelHistorico.setBorder(new EmptyBorder(10, 0, 0, 0));
+        panelHistorico.setBorder(new EmptyBorder(15, 0, 0, 0));
         
         JLabel lblHistorico = new JLabel("Histórico de Inscrições Recentes");
         lblHistorico.setFont(new Font("Segoe UI", Font.BOLD, 14));
@@ -115,7 +112,7 @@ public class Tela_Incrição extends JPanel {
         );
 
         tabelaHistorico = new JTable(modeloTabela);
-        tabelaHistorico.setRowHeight(35); // Mantendo o padrão alto e elegante da tabela de formadores
+        tabelaHistorico.setRowHeight(35); 
         tabelaHistorico.setFont(fontText);
         tabelaHistorico.getTableHeader().setFont(fontLabel);
         tabelaHistorico.getTableHeader().setBackground(new Color(248, 249, 250));
@@ -124,6 +121,26 @@ public class Tela_Incrição extends JPanel {
         panelHistorico.add(scroll, BorderLayout.CENTER);
 
         add(panelHistorico, BorderLayout.CENTER);
+    }
+
+   
+    private JPanel criarLinhaFormulario(String textoLabel, javax.swing.JComponent componente, Font fontLabel, Font fontComponente) {
+        JPanel linha = new JPanel(new BorderLayout(10, 0));
+        linha.setBackground(BRANCO);
+        linha.setBorder(new EmptyBorder(4, 0, 4, 0));
+
+        JLabel label = new JLabel(textoLabel);
+        label.setFont(fontLabel);
+        label.setForeground(AZUL_ESCURO_NAV);
+        label.setPreferredSize(new Dimension(150, 35)); // Largura fixa para alinhar todas as labels à esquerda
+
+        componente.setFont(fontComponente);
+        componente.setPreferredSize(new Dimension(componente.getPreferredSize().width, 35));
+
+        linha.add(label, BorderLayout.WEST);
+        linha.add(componente, BorderLayout.CENTER);
+
+        return linha;
     }
 
     private void acaoSalvar() {
@@ -137,7 +154,7 @@ public class Tela_Incrição extends JPanel {
             return;
         }
 
-        // Insere no topo da tabela
+ 
         modeloTabela.insertRow(0, new Object[]{nome, modulo, data, semestre});
         
         JOptionPane.showMessageDialog(this, "Inscrição efetuada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
