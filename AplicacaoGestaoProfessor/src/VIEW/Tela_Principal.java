@@ -40,7 +40,7 @@ public class Tela_Principal {
 
     private final Color AZUL_ESCURO_NAV = new Color(15, 38, 70);
     private final Color AZUL_DESTAQUE   = new Color(13, 110, 253);
-    private final Color FUNDO_CLARO     = new Color(244, 246, 249);
+    private final Color FUNDO_CLARO      = new Color(244, 246, 249);
     private final Color BRANCO          = Color.WHITE;
     private final Color TEXTO_MUTED     = new Color(108, 117, 125);
 
@@ -62,7 +62,7 @@ public class Tela_Principal {
 
     private void initialize() {
         frame = new JFrame();
-        frame.setTitle("AcademiaPro - Sistema de Gestão de Formação");
+        frame.setTitle("SGP - Sistema de Gestão de Formação");
         frame.setBounds(100, 100, 1280, 720);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null); 
@@ -86,7 +86,7 @@ public class Tela_Principal {
         lblAdmin.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         panelTopoDireita.add(lblAdmin);
 
-        JButton btnUtilizadores = new JButton("⚙ Gerir Utilizadores");
+        JButton btnUtilizadores = new JButton(" Gerir Utilizadores");
         btnUtilizadores.setFont(new Font("Segoe UI", Font.BOLD, 12));
         btnUtilizadores.setForeground(BRANCO);
         btnUtilizadores.setBackground(new Color(25, 52, 88));
@@ -125,18 +125,21 @@ public class Tela_Principal {
 
         JPanel painelDashboard = criarPainelDashboard();
         JPanel painelFormadores = criarPainelFormadores();
-        Tela_Incrição painelInscricoes = new Tela_Incrição(); 
+        Tela_Incrição painelFormularioInscricao = new Tela_Incrição(); 
+        JPanel painelListaInscricoes = criarPainelListaInscricoes(); 
 
         panelConteudoDinamico.add(painelDashboard, "Dashboard");
         panelConteudoDinamico.add(painelFormadores, "Formadores");
         panelConteudoDinamico.add(criarPainelFormacoes(), "Formações");
-        panelConteudoDinamico.add(painelInscricoes, "Inscrições");
+        panelConteudoDinamico.add(painelListaInscricoes, "Inscrições"); 
+        panelConteudoDinamico.add(painelFormularioInscricao, "FormularioInscricao");
 
-        String[] menus = {"Dashboard", "Formações", "Inscrições", "Formadores", "Cadastros ▾"};
+        // "Inscrições" firme e forte na barra lateral
+        String[] menus = {"Dashboard", "Formações", "Formadores", "Inscrições", "Cadastros ▾"};
         
         for (String menu : menus) {
             if (nivelAcesso.equalsIgnoreCase("Formador")) {
-                if (menu.equals("Cadastros ▾") || menu.equals("Formadores")) {
+                if (menu.equals("Cadastros ▾") || menu.equals("Formadores") || menu.equals("Inscrições")) {
                     continue;
                 }
             }
@@ -168,21 +171,22 @@ public class Tela_Principal {
                     {"Professores", "Tela_cadastroProfessor"},
                     {"Turmas", "Tela_cadastoTurma"},
                     {"Qualificações", "Tela_cadastroQualificação"},
-                    {"Inscrições", "Tela_Incrição"}
+                    {"Níveis", "Tela_cadastroNivel"},
+                    {"Nova Inscrição", "FormularioInscricao"} // Restaurado no Dropdown!
                 };
 
                 for (String[] item : itensDropdown) {
-                    if (nivelAcesso.equalsIgnoreCase("Secretaria") && item[0].equals("Professores")) {
+                    if (nivelAcesso.equalsIgnoreCase("Secretaria") && (item[0].equals("Professores") || item[0].equals("Níveis de Acesso"))) {
                         continue;
                     }
 
                     JMenuItem menuItem = new JMenuItem(item[0]);
                     menuItem.setFont(new Font("Segoe UI", Font.PLAIN, 13));
                     menuItem.addActionListener(e -> {
-                        if (item[0].equals("Inscrições")) {
-                            cardLayout.show(panelConteudoDinamico, "Inscrições");
-                            lblTituloPagina.setText("Inscrições");
-                            lblSubtituloPagina.setText("Gestão de Inscrições do Sistema");
+                        if (item[0].equals("Nova Inscrição")) {
+                            cardLayout.show(panelConteudoDinamico, "FormularioInscricao");
+                            lblTituloPagina.setText("Efetuar Inscrição");
+                            lblSubtituloPagina.setText("Formulário de Novas Inscrições e Histórico Recente");
                         } else {
                             abrirJanelaLegada(item[1]);
                         }
@@ -197,7 +201,7 @@ public class Tela_Principal {
                 btnMenu.setBorder(null);
             }
 
-            if (menu.equals("Dashboard") || menu.equals("Formadores") || menu.equals("Inscrições") || menu.equals("Formações")) {
+            if (menu.equals("Dashboard") || menu.equals("Formadores") || menu.equals("Formações") || menu.equals("Inscrições")) {
                 btnMenu.addActionListener(e -> {
                     cardLayout.show(panelConteudoDinamico, menu);
                     lblTituloPagina.setText(menu);
@@ -268,7 +272,7 @@ public class Tela_Principal {
 
         painel.add(painelCardsIndicadores, BorderLayout.NORTH);
 
-        JLabel lblBemVindo = new JLabel("Seja bem-vindo ao painel de controle da AcademiaPro.", SwingConstants.CENTER);
+        JLabel lblBemVindo = new JLabel("Seja bem-vindo ao painel de controle da S.G.P.", SwingConstants.CENTER);
         lblBemVindo.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         lblBemVindo.setForeground(TEXTO_MUTED);
         painel.add(lblBemVindo, BorderLayout.CENTER);
@@ -294,6 +298,8 @@ public class Tela_Principal {
         JButton btnFiltrar = new JButton("Filtrar");
         btnFiltrar.setPreferredSize(new Dimension(90, 35));
         btnFiltrar.setBackground(BRANCO);
+        btnFiltrar.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        btnFiltrar.setBorder(new LineBorder(Color.LIGHT_GRAY, 1));
         panelPesquisa.add(btnFiltrar);
         panelAcoes.add(panelPesquisa, BorderLayout.WEST);
 
@@ -305,16 +311,20 @@ public class Tela_Principal {
         btnNovo.setForeground(BRANCO);
         btnNovo.setFont(new Font("Segoe UI", Font.BOLD, 13));
         btnNovo.setPreferredSize(new Dimension(150, 35));
+        btnNovo.setBorder(null);
 
         JButton btnEditar = new JButton("Editar");
         btnEditar.setBackground(BRANCO);
+        btnEditar.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         btnEditar.setPreferredSize(new Dimension(90, 35));
+        btnEditar.setBorder(new LineBorder(Color.LIGHT_GRAY, 1));
 
         JButton btnEliminar = new JButton("Eliminar");
         btnEliminar.setBackground(new Color(248, 215, 218));
         btnEliminar.setForeground(new Color(114, 28, 36));
         btnEliminar.setFont(new Font("Segoe UI", Font.BOLD, 13));
         btnEliminar.setPreferredSize(new Dimension(100, 35));
+        btnEliminar.setBorder(new LineBorder(new Color(245, 198, 203), 1));
 
         if (nivelAcesso.equalsIgnoreCase("Administrador")) {
             panelBotoesCrud.add(btnNovo);
@@ -353,9 +363,92 @@ public class Tela_Principal {
         table.setRowHeight(35);
         table.setModel(new DefaultTableModel(
             new Object[][] {
-                {"12345", "Malik", "Mangue", "Masculino", "Malikmang@gmail.com", "876543211", "Programação web", "Ativo"}
-            },
+                {"12345", "Malik", "Mangue", "Masculino", "Malikmang@gmail.com", "876543211", "Programação web", "Ativo"},
+                {"43211", "Kenny", "Pessula", "Masculino", "keanypes@gmail.com", "857643212", "Programação web", "Ativo"}            },
             new String[] { "Código", "Nome", "Apelido", "Sexo", "Email", "Telefone", "Área de Atuação", "Estado" }
+        ));
+        scrollPane.setViewportView(table);
+        painel.add(scrollPane, BorderLayout.CENTER);
+
+        return painel;
+    }
+
+    // --- PAINEL DE LISTAGEM DE INSCRIÇÕES COM FILTRO E EDITAR ---
+    private JPanel criarPainelListaInscricoes() {
+        JPanel painel = new JPanel(new BorderLayout(0, 15));
+        painel.setBackground(BRANCO);
+        painel.setBorder(new EmptyBorder(15, 15, 15, 15));
+
+        JPanel panelAcoes = new JPanel(new BorderLayout());
+        panelAcoes.setBackground(BRANCO);
+
+        // Barra de Pesquisa (Esquerda)
+        JPanel panelPesquisa = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        panelPesquisa.setBackground(BRANCO);
+
+        JTextField txtPesquisarInscricao = new JTextField();
+        txtPesquisarInscricao.setPreferredSize(new Dimension(250, 35));
+        panelPesquisa.add(txtPesquisarInscricao);
+
+        JButton btnFiltrar = new JButton("Filtrar");
+        btnFiltrar.setPreferredSize(new Dimension(90, 35));
+        btnFiltrar.setBackground(BRANCO);
+        btnFiltrar.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        btnFiltrar.setBorder(new LineBorder(Color.LIGHT_GRAY, 1));
+        panelPesquisa.add(btnFiltrar);
+        panelAcoes.add(panelPesquisa, BorderLayout.WEST);
+
+        // Botões CRUD (Direita)
+        JPanel panelBotoesCrud = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
+        panelBotoesCrud.setBackground(BRANCO);
+
+        JButton btnNovaInscricao = new JButton("+ Nova Inscrição");
+        btnNovaInscricao.setBackground(AZUL_DESTAQUE);
+        btnNovaInscricao.setForeground(BRANCO);
+        btnNovaInscricao.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnNovaInscricao.setPreferredSize(new Dimension(150, 35));
+        btnNovaInscricao.setBorder(null);
+        btnNovaInscricao.addActionListener(e -> {
+            cardLayout.show(panelConteudoDinamico, "FormularioInscricao");
+            lblTituloPagina.setText("Efetuar Inscrição");
+            lblSubtituloPagina.setText("Formulário de Novas Inscrições e Histórico Recente");
+        });
+
+        JButton btnEditar = new JButton("Editar");
+        btnEditar.setBackground(BRANCO);
+        btnEditar.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        btnEditar.setPreferredSize(new Dimension(90, 35));
+        btnEditar.setBorder(new LineBorder(Color.LIGHT_GRAY, 1));
+
+        JButton btnEliminar = new JButton("Eliminar");
+        btnEliminar.setBackground(new Color(248, 215, 218));
+        btnEliminar.setForeground(new Color(114, 28, 36));
+        btnEliminar.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnEliminar.setPreferredSize(new Dimension(100, 35));
+        btnEliminar.setBorder(new LineBorder(new Color(245, 198, 203), 1));
+
+        if (nivelAcesso.equalsIgnoreCase("Administrador")) {
+            panelBotoesCrud.add(btnNovaInscricao);
+            panelBotoesCrud.add(btnEditar);
+            panelBotoesCrud.add(btnEliminar);
+        } else if (nivelAcesso.equalsIgnoreCase("Secretaria")) {
+            panelBotoesCrud.add(btnEditar);
+        }
+
+        panelAcoes.add(panelBotoesCrud, BorderLayout.EAST);
+        painel.add(panelAcoes, BorderLayout.NORTH);
+
+        // Tabela de Inscrições realizadas
+        JScrollPane scrollPane = new JScrollPane();
+        JTable table = new JTable();
+        table.setRowHeight(35);
+        table.setModel(new DefaultTableModel(
+            new Object[][] {
+                {"INC-001", "Lucas Silva", "Bases de Dados", "02/07/2026", "Primeiro semestre", "Confirmada"},
+                {"INC-002", "Maria Santos", "Desenvolvimento Web", "01/07/2026", "Segundo semestre", "Pendente"},
+                {"INC-003", "Kenny Pessula", "Programação Web", "05/07/2026", "Primeiro semestre", "Confirmada"}
+            },
+            new String[] { "Nº Inscrição", "Formando", "Módulo / Curso", "Data", "Semestre", "Estado" }
         ));
         scrollPane.setViewportView(table);
         painel.add(scrollPane, BorderLayout.CENTER);
@@ -398,6 +491,7 @@ public class Tela_Principal {
             if(nomeClasse.equals("Tela_cadastroProfessor")) new Tela_cadastroProfessor().setVisible(true);
             else if(nomeClasse.equals("Tela_cadastoTurma")) new Tela_cadastoTurma().setVisible(true);
             else if(nomeClasse.equals("Tela_cadastroQualificação")) new Tela_cadastroQualificação().setVisible(true);
+            else if(nomeClasse.equals("Tela_cadastroNivel")) new Tela_cadastroNivel().setVisible(true);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(frame, "Erro ao abrir a janela.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
