@@ -1,6 +1,8 @@
 package VIEW;
 
 import java.awt.EventQueue;
+import model.*;
+import controller.*;
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.BorderLayout;
@@ -43,25 +45,33 @@ public class Tela_Principal {
     private final Color FUNDO_CLARO     = new Color(244, 246, 249);
     private final Color BRANCO          = Color.WHITE;
     private final Color TEXTO_MUTED     = new Color(108, 117, 125);
+    private Tela_login tela_login;
 
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                Tela_Principal window = new Tela_Principal("Administrador");
-                window.frame.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
+//    public static void main(String[] args) {
+//        EventQueue.invokeLater(() -> {
+//            try {
+//                Tela_Principal window = new Tela_Principal();
+//                window.frame.setVisible(true);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        });
+//    }
 
-    public Tela_Principal(String nivelAcesso) {
-        this.nivelAcesso = nivelAcesso != null ? nivelAcesso : "Secretaria";
+    public Tela_Principal(Perfil p,Tela_login tela_login) {
+    	this.tela_login = tela_login;
+        this.nivelAcesso = p.getNome();
         initialize();
+        
+        
     }
-
+    public void abrir() {
+    	if(frame != null) {
+    		frame.setVisible(true);
+    	}
+    }
     private void initialize() {
-        frame = new JFrame();
+    	frame = new JFrame();
         frame.setTitle("AcademiaPro - Sistema de Gestão de Formação");
         frame.setBounds(100, 100, 1280, 720);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -126,13 +136,17 @@ public class Tela_Principal {
         JPanel painelDashboard = criarPainelDashboard();
         JPanel painelFormadores = criarPainelFormadores();
         Tela_Incrição painelInscricoes = new Tela_Incrição(); 
+        Tela_Utilizadores tl = new Tela_Utilizadores();
+        Tela_cadastroQualificação TQ = new Tela_cadastroQualificação();
 
         panelConteudoDinamico.add(painelDashboard, "Dashboard");
         panelConteudoDinamico.add(painelFormadores, "Formadores");
         panelConteudoDinamico.add(criarPainelFormacoes(), "Formações");
         panelConteudoDinamico.add(painelInscricoes, "Inscrições");
+        panelConteudoDinamico.add(TQ, "Qualificacoes");
+        //panelConteudoDinamico.add(tl, "Utilizadores");
 
-        String[] menus = {"Dashboard", "Formações", "Inscrições", "Formadores", "Cadastros ▾"};
+        String[] menus = {"Dashboard", "Formações", "Inscrições","Qualificacoes", "Formadores", "Cadastros ▾"};
         
         for (String menu : menus) {
             if (nivelAcesso.equalsIgnoreCase("Formador")) {
@@ -186,6 +200,7 @@ public class Tela_Principal {
                         } else {
                             abrirJanelaLegada(item[1]);
                         }
+                        
                     });
                     menuPopupCadastros.add(menuItem);
                 }
@@ -197,7 +212,7 @@ public class Tela_Principal {
                 btnMenu.setBorder(null);
             }
 
-            if (menu.equals("Dashboard") || menu.equals("Formadores") || menu.equals("Inscrições") || menu.equals("Formações")) {
+            if (menu.equals("Dashboard")|| menu.equals("Qualificacoes") ||menu.equals("Formadores") || menu.equals("Inscrições") || menu.equals("Formações")) {
                 btnMenu.addActionListener(e -> {
                     cardLayout.show(panelConteudoDinamico, menu);
                     lblTituloPagina.setText(menu);
@@ -398,11 +413,12 @@ public class Tela_Principal {
             if(nomeClasse.equals("Tela_cadastroProfessor")) new Tela_cadastroProfessor().setVisible(true);
             else if(nomeClasse.equals("Tela_cadastoTurma")) new Tela_cadastoTurma().setVisible(true);
             else if(nomeClasse.equals("Tela_cadastroQualificação")) new Tela_cadastroQualificação().setVisible(true);
+            else if(nomeClasse.equals("Tela_Utilizadores")) new Tela_Utilizadores().setVisible(true);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(frame, "Erro ao abrir a janela.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
-
+    
     private void fecharAplicacao() {
         int resposta = JOptionPane.showConfirmDialog(null, "Tens a certeza que queres sair?", "Confirmação", JOptionPane.YES_NO_OPTION);
         if (resposta == JOptionPane.YES_OPTION) {

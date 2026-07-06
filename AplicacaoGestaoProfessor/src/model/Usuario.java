@@ -11,17 +11,21 @@ public class Usuario {
 	private String username;
 	private String password;
 	private String email;
-	private int idPerfil;
+	private Perfil perfil;
 
 	public Usuario() {
 	}
 
-	public Usuario(String nome_completo,String username, String password,String email,int idPerfil) {
+	public Usuario(String username,String password) {
+		this.username = username;
+		this.password = password;
+	}
+	public Usuario(String nome_completo,String username, String password,String email,Perfil perfil) {
 		this.nome_completo = nome_completo;
 		this.username = username;
 		this.password = password;
 		this.email = email;
-		this.idPerfil = idPerfil;
+		this.perfil = perfil;
 	}
 
 	public int getCodigo() {
@@ -48,9 +52,7 @@ public class Usuario {
 		this.password = password;
 	}
 
-	public Usuario login(Usuario u) throws ExceptionDao {
-		return new UsuarioDao().login(username, password);
-	}
+
 
 	public String getNome_completo() {
 		return nome_completo;
@@ -68,14 +70,16 @@ public class Usuario {
 		this.email = email;
 	}
 
-	public int getIdPerfil() {
-		return idPerfil;
+//	public int getIdPerfil() {
+//		return idPerfil;
+//	}
+//
+//	public void setIdPerfil(int idPerfil) {
+//		this.idPerfil = idPerfil;
+//	}
+	public Usuario login(String username,String password)throws ExceptionDao {
+		 return new UsuarioDao().login(username,password);
 	}
-
-	public void setIdPerfil(int idPerfil) {
-		this.idPerfil = idPerfil;
-	}
-
 	public void cadastrarUsuario(Usuario usuario) throws ExceptionDao {
 		new UsuarioDao().cadastrarUsuario(usuario);
 	}
@@ -87,17 +91,23 @@ public class Usuario {
 	public ArrayList<Usuario> obterTodosUsuarios() throws ExceptionDao {
 		return new UsuarioDao().obterTodosUsuarios();
 	}
+	
+//	public Usuario obterUsuarioPorCodigo(int codigo) throws ExceptionDao {
+//		return new UsuarioDao().obterUsuarioPorCodigo(codigo);
+//	}
 
-	public Usuario obterUsuarioPorCodigo(int codigo) throws ExceptionDao {
-		return new UsuarioDao().obterUsuarioPorCodigo(codigo);
+	public Usuario autenticar(String password)throws ExceptionDao {
+	 return new UsuarioDao().autenticar(password);
+}
+	public void refinirSenha(String novapassword,String antigapassword)throws ExceptionDao{
+		new UsuarioDao().refinirSenha(novapassword,antigapassword);
+	}
+	public Perfil getPerfil() {
+		return perfil;
 	}
 
-	public boolean autenticarUsuario(String username, String password) throws ExceptionDao {
-		Usuario u = this.login(username, password);
-		if (u != null) {
-			return u.getPassword().equals(password);
-		}
-		return false;
+	public void setPerfil(Perfil perfil) {
+		this.perfil = perfil;
 	}
 
 	public void atualizarUsuario(Usuario usuario) throws ExceptionDao {

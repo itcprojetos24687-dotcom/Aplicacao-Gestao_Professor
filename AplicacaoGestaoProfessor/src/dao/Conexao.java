@@ -18,23 +18,23 @@ public class Conexao {
 		final String driver = "com.mysql.cj.jdbc.Driver";
 		final String url = "jdbc:mysql://localhost:3306/GestaoProfessor";
 		final String user = "root";
-		final String senha = "846533793";
+		final String senha = "Malikdb123!";
 		
 		//Carregando o driver com a classe class
 		try {
 			Class.forName(driver);
-			JOptionPane.showMessageDialog(null, "Driver carregado com sucessso");
+			//JOptionPane.showMessageDialog(null, "Driver carregado com sucessso");
 		}catch(ClassNotFoundException e) {
-			JOptionPane.showMessageDialog(null, "Class nao encontrada");
+			//JOptionPane.showMessageDialog(null, "Class nao encontrada");
 			System.out.print(e.getMessage());
 		}
 		
 		//Estabelenco conexao com a base dados
 		try {
 			con = DriverManager.getConnection(url,user,senha);
-			JOptionPane.showMessageDialog(null, "Conexao Estabelecida");
+			//JOptionPane.showMessageDialog(null, "Conexao Estabelecida");
 		}catch(SQLException f) {
-			JOptionPane.showMessageDialog(null, "Class nao encontrada");
+			//JOptionPane.showMessageDialog(null, "Class nao encontrada");
 			System.out.print(f.getMessage());
 		}
 		return con;
