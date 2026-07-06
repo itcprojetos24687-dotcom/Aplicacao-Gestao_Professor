@@ -1,19 +1,22 @@
 package model;
+
 import java.util.ArrayList;
 import dao.*;
-public class Turma  {
+
+public class Turma {
 	private int codigo;
 	private String nome;
 	private int ano_ingresso;
 	private String turno;
 	private ArrayList<Licao> licoes;
 	private Diretor_Turma diretor_turma;
-	
+
 	public Turma() {
-		
+
 	}
+
 	public Turma(String nome, int ano_ingresso, String turno) {
-		nome = nome;
+		this.nome = nome;
 		this.ano_ingresso = ano_ingresso;
 		this.turno = turno;
 	}
@@ -21,37 +24,54 @@ public class Turma  {
 	public int getCodigo() {
 		return codigo;
 	}
-
 	public void setCodigo(int codigo) {
 		this.codigo = codigo;
 	}
-
 	public String getNome() {
 		return nome;
 	}
-
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-
 	public int getAno_ingresso() {
 		return ano_ingresso;
 	}
-
 	public void setAno_ingresso(int ano_ingresso) {
 		this.ano_ingresso = ano_ingresso;
 	}
-
 	public String getTurno() {
 		return turno;
 	}
-
 	public void setTurno(String turno) {
 		this.turno = turno;
 	}
-	
-	public void cadastrarTurma(Turma turma) {
+	public ArrayList<Licao> getLicoes() {
+		return licoes;
+	}
+	public void setLicoes(ArrayList<Licao> licoes) {
+		this.licoes = licoes;
+	}
+	public Diretor_Turma getDiretor_turma() {
+		return diretor_turma;
+	}
+	public void setDiretor_turma(Diretor_Turma diretor_turma) {
+		this.diretor_turma = diretor_turma;
+	}
+
+	public void cadastrarTurma(Turma turma) throws ExceptionDao {
 		new TurmaDao().cadastrarTurma(turma);
+	}
+
+	public ArrayList<Turma> listarTurma(String nome) throws ExceptionDao {
+		return new TurmaDao().listarTurma(nome);
+	}
+
+	public void atualizarTurma(Turma turma) throws ExceptionDao {
+		new TurmaDao().atualizarTurma(turma);
+	}
+
+	public void apagarTurma(Turma turma) throws ExceptionDao {
+		new TurmaDao().apagarTurma(turma);
 	}
 
 	@Override
@@ -59,7 +79,5 @@ public class Turma  {
 		return "Turma [codigo=" + codigo + ", nome_turma=" + nome + ", ano_ingresso=" + ano_ingresso
 				+ ", turno=" + turno + "]";
 	}
-	
-	
-	
+
 }

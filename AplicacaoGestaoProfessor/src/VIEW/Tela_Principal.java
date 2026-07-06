@@ -4,7 +4,9 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.Dimension;
 import java.awt.Cursor;
 import java.awt.event.KeyEvent;
@@ -13,6 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -23,12 +26,22 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.JRadioButton;
+import javax.swing.JToggleButton;
 
 public class Tela_Principal {
 
     private JFrame frame;
     private JTable table;
     private JTextField txtPesquisarProfessor;
+
+    private JTextField txtTituloQualificacao;
+    private JComboBox<String> cbCampoQualificacao;
+    private JComboBox<String> cbNivelQualificacao;
+    private JComboBox<String> cbCoordenadorQualificacao;
+
+    private CardLayout cardLayout;
+    private JPanel panelCardContainer;
     
     private final Color AZUL_ESCURO_NAV = new Color(15, 38, 70);
     private final Color AZUL_DESTAQUE  = new Color(13, 110, 253);
@@ -105,6 +118,16 @@ public class Tela_Principal {
             btnMenu.setCursor(new Cursor(Cursor.HAND_CURSOR));
             panelMenuLateral.add(btnMenu);
         }
+
+        JButton btnNewButton = new JButton("Gestao_Qualificacao");
+        btnNewButton.setPreferredSize(new Dimension(200, 40));
+        btnNewButton.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        btnNewButton.setForeground(BRANCO);
+        btnNewButton.setBackground(AZUL_ESCURO_NAV);
+        btnNewButton.setBorder(null);
+        btnNewButton.setFocusPainted(false);
+        btnNewButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        panelMenuLateral.add(btnNewButton);
         
 
         JButton btnSairLateral = new JButton("Sair do Sistema");
@@ -147,12 +170,17 @@ public class Tela_Principal {
         panelConteudo.add(panelHeaderConteudo, BorderLayout.NORTH);
 
 
+        cardLayout = new CardLayout();
+        panelCardContainer = new JPanel(cardLayout);
+        panelConteudo.add(panelCardContainer, BorderLayout.CENTER);
+
+
         JPanel panelCard = new JPanel();
         panelCard.setBackground(BRANCO);
         panelCard.setBorder(new LineBorder(new Color(230, 233, 237), 1, true));
         panelCard.setLayout(new BorderLayout(0, 15));
         panelCard.setBorder(new EmptyBorder(15, 15, 15, 15));
-        panelConteudo.add(panelCard, BorderLayout.CENTER);
+        panelCardContainer.add(panelCard, "lista");
 
 
         JPanel panelAcoes = new JPanel();
@@ -226,8 +254,78 @@ public class Tela_Principal {
             }
         ));
         scrollPane.setViewportView(table);
+        
+        JToggleButton tglbtnNewToggleButton = new JToggleButton("New toggle button");
+        panelCard.add(tglbtnNewToggleButton, BorderLayout.SOUTH);
 
-  
+        JPanel panelCadastroQualificacao = new JPanel();
+        panelCadastroQualificacao.setBackground(BRANCO);
+        panelCadastroQualificacao.setBorder(new EmptyBorder(15, 15, 15, 15));
+        panelCadastroQualificacao.setLayout(new BorderLayout(0, 15));
+        panelCardContainer.add(panelCadastroQualificacao, "cadastro");
+
+        JPanel panelFormQualificacao = new JPanel();
+        panelFormQualificacao.setBackground(BRANCO);
+        panelFormQualificacao.setLayout(new GridLayout(4, 2, 10, 15));
+        panelFormQualificacao.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        JLabel lblTitulo = new JLabel("Título da Qualificação:");
+        lblTitulo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        panelFormQualificacao.add(lblTitulo);
+
+        txtTituloQualificacao = new JTextField();
+        txtTituloQualificacao.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        panelFormQualificacao.add(txtTituloQualificacao);
+
+        JLabel lblCampo = new JLabel("Campo:");
+        lblCampo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        panelFormQualificacao.add(lblCampo);
+
+        cbCampoQualificacao = new JComboBox<>();
+        cbCampoQualificacao.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        panelFormQualificacao.add(cbCampoQualificacao);
+
+        JLabel lblNivel = new JLabel("Nível:");
+        lblNivel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        panelFormQualificacao.add(lblNivel);
+
+        cbNivelQualificacao = new JComboBox<>();
+        cbNivelQualificacao.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        panelFormQualificacao.add(cbNivelQualificacao);
+
+        JLabel lblCoordenador = new JLabel("Coordenador:");
+        lblCoordenador.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        panelFormQualificacao.add(lblCoordenador);
+
+        cbCoordenadorQualificacao = new JComboBox<>();
+        cbCoordenadorQualificacao.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        panelFormQualificacao.add(cbCoordenadorQualificacao);
+
+        panelCadastroQualificacao.add(panelFormQualificacao, BorderLayout.NORTH);
+
+        JPanel panelBotoesCadastro = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
+        panelBotoesCadastro.setBackground(BRANCO);
+
+        JButton btnSalvarQualificacao = new JButton("Salvar");
+        btnSalvarQualificacao.setBackground(AZUL_DESTAQUE);
+        btnSalvarQualificacao.setForeground(BRANCO);
+        btnSalvarQualificacao.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnSalvarQualificacao.setPreferredSize(new Dimension(100, 35));
+        panelBotoesCadastro.add(btnSalvarQualificacao);
+
+        JButton btnCancelarQualificacao = new JButton("Cancelar");
+        btnCancelarQualificacao.setBackground(BRANCO);
+        btnCancelarQualificacao.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        btnCancelarQualificacao.setPreferredSize(new Dimension(100, 35));
+        btnCancelarQualificacao.addActionListener(e -> cardLayout.show(panelCardContainer, "lista"));
+        panelBotoesCadastro.add(btnCancelarQualificacao);
+
+        panelCadastroQualificacao.add(panelBotoesCadastro, BorderLayout.SOUTH);
+
+
+        btnNewButton.addActionListener(e -> cardLayout.show(panelCardContainer, "cadastro"));
+
+
         JMenuBar menuBarFixo = new JMenuBar();
         frame.setJMenuBar(menuBarFixo);
 

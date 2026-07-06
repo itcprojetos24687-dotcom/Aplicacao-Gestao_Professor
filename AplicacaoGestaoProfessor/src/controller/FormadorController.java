@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import servico.FormadorServico;
 public class FormadorController {
 	static Scanner sc = new Scanner(System.in);
-	
+
 	public boolean cadastrarFormador(String nome, String apelido, String email, String genero, String estadoCivil,int contacto, double salario)
 
 	throws ExceptionDao{
@@ -42,7 +42,7 @@ public class FormadorController {
 			formador.setCodigo(codigo);
 			formador.apagarFormador(formador);
 			return true;
-			
+
 		}
 		return false;
 	}
@@ -58,7 +58,6 @@ public class FormadorController {
 			throw new ExceptionDao("Erro ao apagar Professor"+e);
 		}
 	}*/
-	
-	
-}
 
+
+}
