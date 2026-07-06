@@ -101,6 +101,7 @@ public class UsuarioController {
 
 		return false;
 	}
+	public 
 
 //	public Usuario iniciarSessao(String username, String password)
 //	throws ExceptionDao {
