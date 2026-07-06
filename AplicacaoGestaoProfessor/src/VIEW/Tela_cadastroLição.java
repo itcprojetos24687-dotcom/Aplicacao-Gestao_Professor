@@ -1,132 +1,160 @@
 package VIEW;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
+import java.awt.BorderLayout;
 import java.awt.Color;
-import javax.swing.JTextField;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
-import javax.swing.JLabel;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
-public class Tela_cadastroLição extends JFrame {
+public class Tela_cadastroLição extends JPanel {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
+    private static final long serialVersionUID = 1L;
+    
+    // Componentes de Entrada de Dados com nomes limpos e intuitivos
+    private JTextField txtModuloAula;
+    private JTextField txtTurmaParticipante;
+    private JTextField txtModulosAssociados;
+    private JTextField txtDataAula;
+    private JTextField txtHoraAula;
+    private JButton btnSalvar, btnLimpar;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Tela_cadastroLição frame = new Tela_cadastroLição();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+    // Paleta de Cores unificada AcademiaPro
+    private final Color AZUL_ESCURO_NAV = new Color(15, 38, 70);
+    private final Color AZUL_DESTAQUE   = new Color(13, 110, 253);
+    private final Color BRANCO          = Color.WHITE;
+    private final Color TEXTO_MUTED     = new Color(108, 117, 125);
 
-	/**
-	 * Create the frame.
-	 */
-	public Tela_cadastroLição() {
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 900, 590);
-		contentPane = new JPanel();
-		contentPane.setBackground(Color.BLUE);
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		
-		JPanel panel_1 = new JPanel();
-		panel_1.setLayout(null);
-		panel_1.setBackground(Color.WHITE);
-		panel_1.setBounds(184, 83, 509, 424);
-		contentPane.add(panel_1);
-		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(10, 60, 212, 28);
-		panel_1.add(textField);
-		
-		textField_1 = new JTextField();
-		textField_1.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		textField_1.setColumns(10);
-		textField_1.setBounds(10, 282, 212, 28);
-		panel_1.add(textField_1);
-		
-		JLabel lblNewLabel_3 = new JLabel("Modulo da aula");
-		lblNewLabel_3.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		lblNewLabel_3.setBounds(24, 36, 152, 21);
-		panel_1.add(lblNewLabel_3);
-		
-		JLabel lblNewLabel_3_5 = new JLabel("Hora da Aula\r\n");
-		lblNewLabel_3_5.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		lblNewLabel_3_5.setBounds(286, 149, 165, 21);
-		panel_1.add(lblNewLabel_3_5);
-		
-		JButton btnNewButton = new JButton("Guardar");
-		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 13));
-		btnNewButton.setBackground(Color.WHITE);
-		btnNewButton.setBounds(397, 365, 101, 23);
-		panel_1.add(btnNewButton);
-		
-		JButton btnNewButton_1 = new JButton("Cancelar");
-		btnNewButton_1.setForeground(Color.WHITE);
-		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 13));
-		btnNewButton_1.setBackground(Color.BLUE);
-		btnNewButton_1.setBounds(286, 365, 101, 23);
-		panel_1.add(btnNewButton_1);
-		
-		JLabel lblNewLabel_3_6 = new JLabel("Módulos Associados");
-		lblNewLabel_3_6.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		lblNewLabel_3_6.setBounds(24, 252, 165, 21);
-		panel_1.add(lblNewLabel_3_6);
-		
-		JLabel lblNewLabel_3_7 = new JLabel("Data da Aula\r\n");
-		lblNewLabel_3_7.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		lblNewLabel_3_7.setBounds(286, 36, 146, 21);
-		panel_1.add(lblNewLabel_3_7);
-		
-		JLabel lblNewLabel_3_8 = new JLabel("Turma Participante");
-		lblNewLabel_3_8.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		lblNewLabel_3_8.setBounds(20, 149, 198, 21);
-		panel_1.add(lblNewLabel_3_8);
-		
-		textField_2 = new JTextField();
-		textField_2.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		textField_2.setColumns(10);
-		textField_2.setBounds(286, 60, 212, 28);
-		panel_1.add(textField_2);
-		
-		textField_3 = new JTextField();
-		textField_3.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		textField_3.setColumns(10);
-		textField_3.setBounds(286, 181, 212, 28);
-		panel_1.add(textField_3);
-		
-		textField_4 = new JTextField();
-		textField_4.setColumns(10);
-		textField_4.setBounds(10, 181, 212, 28);
-		panel_1.add(textField_4);
-		
-		JLabel lblCadastrarLio = new JLabel("Cadastrar Lição");
-		lblCadastrarLio.setForeground(Color.WHITE);
-		lblCadastrarLio.setFont(new Font("Arial Black", Font.BOLD, 24));
-		lblCadastrarLio.setBounds(314, 38, 245, 34);
-		contentPane.add(lblCadastrarLio);
+    public Tela_cadastroLição() {
+        // Alinhado ao plano de design do painel central responsivo
+        setLayout(new BorderLayout(0, 15));
+        setBackground(BRANCO);
+        setBorder(new EmptyBorder(20, 20, 20, 20));
 
-	}
+        // --- Barra de Ações Superior (Idêntico ao padrão do sistema) ---
+        JPanel panelAcoes = new JPanel(new BorderLayout());
+        panelAcoes.setBackground(BRANCO);
 
+        JPanel panelTituloInterno = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        panelTituloInterno.setBackground(BRANCO);
+        JLabel lblInfo = new JLabel("Preencha os dados abaixo para registar um novo sumário/lição no sistema.");
+        lblInfo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        lblInfo.setForeground(TEXTO_MUTED);
+        panelTituloInterno.add(lblInfo);
+        panelAcoes.add(panelTituloInterno, BorderLayout.WEST);
+        
+        add(panelAcoes, BorderLayout.NORTH);
+
+        // --- Área do Formulário Customizado ---
+        JPanel panelFormContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        panelFormContainer.setBackground(BRANCO);
+
+        // Grid Layout estruturado (5 linhas, 2 colunas)
+        JPanel panelGridCampos = new JPanel(new GridLayout(5, 2, 20, 20));
+        panelGridCampos.setBackground(BRANCO);
+        panelGridCampos.setPreferredSize(new Dimension(750, 280));
+
+        Font fontLabel = new Font("Segoe UI", Font.BOLD, 14);
+        Font fontText = new Font("Segoe UI", Font.PLAIN, 14);
+
+        // 1. Módulo da Aula
+        panelGridCampos.add(new JLabel("Módulo da Aula *") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
+        txtModuloAula = new JTextField();
+        txtModuloAula.setFont(fontText);
+        panelGridCampos.add(txtModuloAula);
+
+        // 2. Data da Aula
+        panelGridCampos.add(new JLabel("Data da Aula *") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
+        txtDataAula = new JTextField();
+        txtDataAula.setFont(fontText);
+        panelGridCampos.add(txtDataAula);
+
+        // 3. Turma Participante
+        panelGridCampos.add(new JLabel("Turma Participante *") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
+        txtTurmaParticipante = new JTextField();
+        txtTurmaParticipante.setFont(fontText);
+        panelGridCampos.add(txtTurmaParticipante);
+
+        // 4. Hora da Aula
+        panelGridCampos.add(new JLabel("Hora da Aula *") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
+        txtHoraAula = new JTextField();
+        txtHoraAula.setFont(fontText);
+        panelGridCampos.add(txtHoraAula);
+
+        // 5. Módulos Associados
+        panelGridCampos.add(new JLabel("Módulos Associados") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
+        txtModulosAssociados = new JTextField();
+        txtModulosAssociados.setFont(fontText);
+        panelGridCampos.add(txtModulosAssociados);
+
+        panelFormContainer.add(panelGridCampos);
+        add(panelFormContainer, BorderLayout.CENTER);
+
+        // --- Barra de Comando Inferior (Botões) ---
+        JPanel panelBotoesRodape = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 10));
+        panelBotoesRodape.setBackground(BRANCO);
+        panelBotoesRodape.setBorder(new EmptyBorder(10, 0, 0, 0));
+
+        btnLimpar = new JButton("Limpar Campos");
+        btnLimpar.setBackground(BRANCO);
+        btnLimpar.setFont(fontLabel);
+        btnLimpar.setPreferredSize(new Dimension(150, 40));
+        btnLimpar.setBorder(new LineBorder(new Color(220, 224, 230)));
+        btnLimpar.addActionListener(e -> limparCampos());
+
+        btnSalvar = new JButton("Guardar Lição");
+        btnSalvar.setBackground(AZUL_DESTAQUE);
+        btnSalvar.setForeground(BRANCO);
+        btnSalvar.setFont(fontLabel);
+        btnSalvar.setPreferredSize(new Dimension(185, 40));
+        btnSalvar.setBorder(null);
+        btnSalvar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                acaoSalvar();
+            }
+        });
+
+        panelBotoesRodape.add(btnLimpar);
+        panelBotoesRodape.add(btnSalvar);
+        
+        add(panelBotoesRodape, BorderLayout.SOUTH);
+    }
+
+    /**
+     * Validação básica e salvamento simulado
+     */
+    private void acaoSalvar() {
+        String modulo = txtModuloAula.getText().trim();
+        String data = txtDataAula.getText().trim();
+        String turma = txtTurmaParticipante.getText().trim();
+        String hora = txtHoraAula.getText().trim();
+        txtModulosAssociados.getText().trim();
+
+        if (modulo.isEmpty() || data.isEmpty() || turma.isEmpty() || hora.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, preencha os campos obrigatórios (*).", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String resumo = "Módulo: " + modulo + "\nTurma: " + turma + "\nData/Hora: " + data + " às " + hora;
+        JOptionPane.showMessageDialog(this, "Lição guardada com sucesso!\n\n" + resumo, "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        
+        limparCampos();
+    }
+
+    private void limparCampos() {
+        txtModuloAula.setText("");
+        txtDataAula.setText("");
+        txtTurmaParticipante.setText("");
+        txtHoraAula.setText("");
+        txtModulosAssociados.setText("");
+    }
 }

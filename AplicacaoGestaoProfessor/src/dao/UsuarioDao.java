@@ -7,7 +7,7 @@ import model.Usuario;
 
 public class UsuarioDao {
 
-	public Usuario iniciarSessao(String username, String password) throws ExceptionDao {
+	public Usuario login(String username, String password) throws ExceptionDao {
 
 		String sql = "select * from Usuario where username=? and password=?";
 		Connection con = null;
@@ -57,7 +57,7 @@ public class UsuarioDao {
 
 	public void cadastrarUsuario(Usuario usuario) throws ExceptionDao {
 
-		String sql = "insert into Usuario(username, password) values(?,?)";
+		String sql = "insert into Usuario(nome_completo, username, password, email, idPerfil) values(?,?,?,?,?)";
 		Connection con = null;
 		PreparedStatement insertUsuario = null;
 
@@ -65,9 +65,13 @@ public class UsuarioDao {
 
 			con = new Conexao().getConnection();
 			insertUsuario = con.prepareStatement(sql);
-			insertUsuario.setString(1, usuario.getUsername());
-			insertUsuario.setString(2, usuario.getPassword());
+			insertUsuario.setString(1, usuario.getNome_completo());
+			insertUsuario.setString(2, usuario.getUsername());
+			insertUsuario.setString(3, usuario.getPassword());
+			insertUsuario.setString(4, usuario.getEmail());
+			insertUsuario.setInt(5, usuario.getIdPerfil());
 			insertUsuario.execute();
+			
 
 		} catch (SQLException e) {
 			throw new ExceptionDao("Erro ao inserir dados :" + e);

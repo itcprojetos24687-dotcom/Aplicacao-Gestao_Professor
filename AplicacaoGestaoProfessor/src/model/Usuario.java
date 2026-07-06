@@ -7,15 +7,21 @@ import dao.ExceptionDao;
 
 public class Usuario {
 	private int codigo;
+	private String nome_completo;
 	private String username;
 	private String password;
+	private String email;
+	private int idPerfil;
 
 	public Usuario() {
 	}
 
-	public Usuario(String username, String password) {
+	public Usuario(String nome_completo,String username, String password,String email,int idPerfil) {
+		this.nome_completo = nome_completo;
 		this.username = username;
 		this.password = password;
+		this.email = email;
+		this.idPerfil = idPerfil;
 	}
 
 	public int getCodigo() {
@@ -42,8 +48,32 @@ public class Usuario {
 		this.password = password;
 	}
 
-	public Usuario iniciarSessao(String username, String password) throws ExceptionDao {
-		return new UsuarioDao().iniciarSessao(username, password);
+	public Usuario login(Usuario u) throws ExceptionDao {
+		return new UsuarioDao().login(username, password);
+	}
+
+	public String getNome_completo() {
+		return nome_completo;
+	}
+
+	public void setNome_completo(String nome_completo) {
+		this.nome_completo = nome_completo;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public int getIdPerfil() {
+		return idPerfil;
+	}
+
+	public void setIdPerfil(int idPerfil) {
+		this.idPerfil = idPerfil;
 	}
 
 	public void cadastrarUsuario(Usuario usuario) throws ExceptionDao {
@@ -63,7 +93,7 @@ public class Usuario {
 	}
 
 	public boolean autenticarUsuario(String username, String password) throws ExceptionDao {
-		Usuario u = this.iniciarSessao(username, password);
+		Usuario u = this.login(username, password);
 		if (u != null) {
 			return u.getPassword().equals(password);
 		}

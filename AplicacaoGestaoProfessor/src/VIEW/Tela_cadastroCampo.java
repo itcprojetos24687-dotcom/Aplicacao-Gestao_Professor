@@ -5,24 +5,19 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import controller.CampoController;
-
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
 import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class Tela_cadastroCampo extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textField;
+	private JTextField textField_1;
+	private JTextField textField_2;
 
 	/**
 	 * Launch the application.
@@ -66,38 +61,26 @@ public class Tela_cadastroCampo extends JFrame {
 		
 		textField = new JTextField();
 		textField.setColumns(10);
-		textField.setBounds(113, 117, 212, 21);
+		textField.setBounds(10, 93, 212, 21);
 		panel_1.add(textField);
+		
+		textField_1 = new JTextField();
+		textField_1.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		textField_1.setColumns(10);
+		textField_1.setBounds(111, 217, 306, 78);
+		panel_1.add(textField_1);
 		
 		JLabel lblNewLabel_3 = new JLabel("Nome do Campo");
 		lblNewLabel_3.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		lblNewLabel_3.setBounds(148, 76, 140, 21);
+		lblNewLabel_3.setBounds(44, 47, 140, 21);
 		panel_1.add(lblNewLabel_3);
 		
+		JLabel lblNewLabel_3_1 = new JLabel("Descrição do Campo\r\n");
+		lblNewLabel_3_1.setFont(new Font("Bahnschrift", Font.BOLD, 14));
+		lblNewLabel_3_1.setBounds(196, 185, 140, 21);
+		panel_1.add(lblNewLabel_3_1);
+		
 		JButton btnNewButton = new JButton("Guardar");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				boolean sucesso;
-				try {
-					String nome = textField.getText();
-					CampoController cc = new CampoController();
-					sucesso =cc.cadastrarCampo(nome);
-					if(sucesso) {
-						JOptionPane.showMessageDialog(null, "Dados guardados com sucesso");
-					}
-					else {
-						JOptionPane.showMessageDialog(null, "Introducao invalida, Tente Novamente");
-					}
-					
-				}catch(NumberFormatException ex) {
-					JOptionPane.showMessageDialog(null,"Introduca todos os dados corretamente"+ex);
-				}catch(Exception s) {
-					JOptionPane.showMessageDialog(null, "Introduca todo os dados" +s);
-				}
-				
-				
-			}
-		});
 		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnNewButton.setBackground(Color.WHITE);
 		btnNewButton.setBounds(392, 337, 101, 23);
@@ -109,6 +92,17 @@ public class Tela_cadastroCampo extends JFrame {
 		btnNewButton_1.setBackground(Color.BLUE);
 		btnNewButton_1.setBounds(281, 337, 101, 23);
 		panel_1.add(btnNewButton_1);
+		
+		JLabel lblNewLabel_3_6 = new JLabel("Área do Campo");
+		lblNewLabel_3_6.setFont(new Font("Bahnschrift", Font.BOLD, 14));
+		lblNewLabel_3_6.setBounds(323, 47, 120, 21);
+		panel_1.add(lblNewLabel_3_6);
+		
+		textField_2 = new JTextField();
+		textField_2.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		textField_2.setColumns(10);
+		textField_2.setBounds(281, 93, 212, 21);
+		panel_1.add(textField_2);
 
 	}
 

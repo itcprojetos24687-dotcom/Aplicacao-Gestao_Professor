@@ -9,25 +9,29 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Dimension;
 import java.awt.Cursor;
-import java.awt.event.KeyEvent;
-
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JMenuBar;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.JRadioButton;
-import javax.swing.JToggleButton;
+import javax.swing.SwingConstants;
+import javax.swing.border.TitledBorder;
+
+import controller.QualificacaoController;
+import dao.ExceptionDao;
+import model.Qualificacao;
 
 public class Tela_Principal {
 
@@ -39,30 +43,42 @@ public class Tela_Principal {
     private JComboBox<String> cbCampoQualificacao;
     private JComboBox<String> cbNivelQualificacao;
     private JComboBox<String> cbCoordenadorQualificacao;
+    
+    private JTable tableQualificacoes;
+    private DefaultTableModel modelQualificacoes;
 
     private CardLayout cardLayout;
     private JPanel panelCardContainer;
+    private JPanel panelConteudoDinamico;
     
+    private JLabel lblTituloPagina;
+    private JLabel lblSubtituloPagina;
+    
+    private String nivelAcesso;
+
     private final Color AZUL_ESCURO_NAV = new Color(15, 38, 70);
-    private final Color AZUL_DESTAQUE  = new Color(13, 110, 253);
+    private final Color AZUL_DESTAQUE   = new Color(13, 110, 253);
     private final Color FUNDO_CLARO     = new Color(244, 246, 249);
     private final Color BRANCO          = Color.WHITE;
     private final Color TEXTO_MUTED     = new Color(108, 117, 125);
 
+    // Controller para Qualificacao
+    private QualificacaoController qualificacaoController;
+
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    Tela_Principal window = new Tela_Principal();
-                    window.frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        EventQueue.invokeLater(() -> {
+            try {
+                Tela_Principal window = new Tela_Principal("Administrador");
+                window.frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }
 
-    public Tela_Principal() {
+    public Tela_Principal(String nivelAcesso) {
+        this.nivelAcesso = nivelAcesso != null ? nivelAcesso : "Secretaria";
+        this.qualificacaoController = new QualificacaoController();
         initialize();
     }
 
@@ -71,64 +87,161 @@ public class Tela_Principal {
         frame.setTitle("AcademiaPro - Sistema de Gestão de Formação");
         frame.setBounds(100, 100, 1280, 720);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null); 
         frame.getContentPane().setLayout(new BorderLayout());
-        
 
-        JPanel panelTopo = new JPanel();
+        JPanel panelTopo = new JPanel(new BorderLayout());
         panelTopo.setBackground(AZUL_ESCURO_NAV);
         panelTopo.setPreferredSize(new Dimension(1280, 50));
-        panelTopo.setLayout(new BorderLayout());
         panelTopo.setBorder(new EmptyBorder(0, 20, 0, 20));
-        
-        JLabel lblTituloApp = new JLabel(" Sistema de Gestão de Professores");
+
+        JLabel lblTituloApp = new JLabel("SGP - Painel de Controle");
         lblTituloApp.setForeground(BRANCO);
         lblTituloApp.setFont(new Font("Segoe UI", Font.BOLD, 16));
         panelTopo.add(lblTituloApp, BorderLayout.WEST);
-        
-        JLabel lblAdmin = new JLabel("Administrador");
+
+        JPanel panelTopoDireita = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 10));
+        panelTopoDireita.setBackground(AZUL_ESCURO_NAV);
+
+        JLabel lblAdmin = new JLabel("Olá, " + nivelAcesso);
         lblAdmin.setForeground(BRANCO);
         lblAdmin.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        panelTopo.add(lblAdmin, BorderLayout.EAST);
+        panelTopoDireita.add(lblAdmin);
+
+        JButton btnUtilizadores = new JButton("⚙ Gerir Utilizadores");
+        btnUtilizadores.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnUtilizadores.setForeground(BRANCO);
+        btnUtilizadores.setBackground(new Color(25, 52, 88));
+        btnUtilizadores.setBorder(new LineBorder(new Color(40, 75, 120), 1, true));
+        btnUtilizadores.setPreferredSize(new Dimension(150, 30));
+        btnUtilizadores.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnUtilizadores.setFocusPainted(false);
         
+        btnUtilizadores.addActionListener(e -> {
+            try {
+                Tela_Utilizadores telaUtilizadores = new Tela_Utilizadores();
+                telaUtilizadores.setVisible(true);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(frame, "Erro ao abrir a Gestão de Utilizadores.", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        btnUtilizadores.addMouseListener(new MouseAdapter() {
+            @Override public void mouseEntered(MouseEvent e) { btnUtilizadores.setBackground(new Color(35, 68, 110)); }
+            @Override public void mouseExited(MouseEvent e) { btnUtilizadores.setBackground(new Color(25, 52, 88)); }
+        });
+        
+        if (nivelAcesso.equalsIgnoreCase("Administrador")) {
+            panelTopoDireita.add(btnUtilizadores);
+        }
+        
+        panelTopo.add(panelTopoDireita, BorderLayout.EAST);
         frame.getContentPane().add(panelTopo, BorderLayout.NORTH);
 
-
-        JPanel panelMenuLateral = new JPanel();
+        JPanel panelMenuLateral = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 8));
         panelMenuLateral.setBackground(AZUL_ESCURO_NAV);
         panelMenuLateral.setPreferredSize(new Dimension(220, 670));
-        panelMenuLateral.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
+
+        cardLayout = new CardLayout();
+        panelConteudoDinamico = new JPanel(cardLayout);
+        panelCardContainer = new JPanel(new CardLayout());
+
+        JPanel painelDashboard = criarPainelDashboard();
+        JPanel painelFormadores = criarPainelFormadores();
+        Tela_Incrição painelInscricoes = new Tela_Incrição(); 
+        JPanel painelQualificacoes = criarPainelQualificacoes();
+
+        panelConteudoDinamico.add(painelDashboard, "Dashboard");
+        panelConteudoDinamico.add(painelFormadores, "Formadores");
+        panelConteudoDinamico.add(criarPainelFormacoes(), "Formações");
+        panelConteudoDinamico.add(painelInscricoes, "Inscrições");
+        panelConteudoDinamico.add(painelQualificacoes, "Qualificacoes");
+
+        String[] menus = {"Dashboard", "Formações", "Inscrições", "Formadores", "Cadastros", "Qualificacoes "};
         
-  
-        String[] menus = {"Dashboard", "Formações", "Participantes", "Formadores", "Turmas", "Configurações"};
         for (String menu : menus) {
+            if (nivelAcesso.equalsIgnoreCase("Formador")) {
+                if (menu.equals("Cadastros ▾") || menu.equals("Formadores")) {
+                    continue;
+                }
+            }
+
             JButton btnMenu = new JButton(menu);
             btnMenu.setPreferredSize(new Dimension(200, 40));
             btnMenu.setFont(new Font("Segoe UI", Font.PLAIN, 14));
             btnMenu.setForeground(BRANCO);
-            
-        
-            if (menu.equals("Formadores")) {
-                btnMenu.setBackground(AZUL_DESTAQUE);
-                btnMenu.setBorder(new LineBorder(AZUL_DESTAQUE));
-            } else {
-                btnMenu.setBackground(AZUL_ESCURO_NAV);
-                btnMenu.setBorder(null);
-            }
             btnMenu.setFocusPainted(false);
             btnMenu.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+            final Color corPadraoFundo;
+            final Color corHoverFundo;
+
+            if (menu.equals("Dashboard")) {
+                corPadraoFundo = AZUL_DESTAQUE; 
+                corHoverFundo = new Color(11, 94, 215);
+                btnMenu.setBackground(corPadraoFundo);
+                btnMenu.setBorder(new LineBorder(corPadraoFundo));
+            } else if (menu.equals("Cadastros ▾")) {
+                corPadraoFundo = new Color(25, 52, 88);
+                corHoverFundo = new Color(35, 68, 110);
+                btnMenu.setBackground(corPadraoFundo);
+                btnMenu.setFont(new Font("Segoe UI", Font.BOLD, 14));
+                btnMenu.setBorder(new LineBorder(new Color(40, 75, 120)));
+
+                JPopupMenu menuPopupCadastros = new JPopupMenu();
+                String[][] itensDropdown = {
+                    {"Professores", "Tela_cadastroProfessor"},
+                    {"Turmas", "Tela_cadastoTurma"},
+                    {"Qualificações", "Tela_cadastroQualificação"},
+                    {"Inscrições", "Tela_Incrição"}
+                };
+
+                for (String[] item : itensDropdown) {
+                    if (nivelAcesso.equalsIgnoreCase("Secretaria") && item[0].equals("Professores")) {
+                        continue;
+                    }
+
+                    JMenuItem menuItem = new JMenuItem(item[0]);
+                    menuItem.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+                    menuItem.addActionListener(e -> {
+                        if (item[0].equals("Inscrições")) {
+                            cardLayout.show(panelConteudoDinamico, "Inscrições");
+                            lblTituloPagina.setText("Inscrições");
+                            lblSubtituloPagina.setText("Gestão de Inscrições do Sistema");
+                        } else {
+                            abrirJanelaLegada(item[1]);
+                        }
+                    });
+                    menuPopupCadastros.add(menuItem);
+                }
+                btnMenu.addActionListener(e -> menuPopupCadastros.show(btnMenu, btnMenu.getWidth(), 0));
+            } else {
+                corPadraoFundo = AZUL_ESCURO_NAV;
+                corHoverFundo = new Color(25, 52, 88);
+                btnMenu.setBackground(corPadraoFundo);
+                btnMenu.setBorder(null);
+            }
+
+            if (menu.equals("Dashboard") || menu.equals("Formadores") || menu.equals("Inscrições") || menu.equals("Formações") || menu.trim().equals("Qualificacoes")) {
+                btnMenu.addActionListener(e -> {
+                    String menuKey = menu.trim();
+                    if (menuKey.equals("Qualificacoes")) {
+                        menuKey = "Qualificacoes";
+                        carregarQualificacoes();
+                    }
+                    cardLayout.show(panelConteudoDinamico, menuKey);
+                    lblTituloPagina.setText(menuKey);
+                    lblSubtituloPagina.setText("Gestão de " + menuKey + " do Sistema");
+                });
+            }
+
+            btnMenu.addMouseListener(new MouseAdapter() {
+                @Override public void mouseEntered(MouseEvent e) { btnMenu.setBackground(corHoverFundo); }
+                @Override public void mouseExited(MouseEvent e) { btnMenu.setBackground(corPadraoFundo); }
+            });
+
             panelMenuLateral.add(btnMenu);
         }
-
-        JButton btnNewButton = new JButton("Gestao_Qualificacao");
-        btnNewButton.setPreferredSize(new Dimension(200, 40));
-        btnNewButton.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        btnNewButton.setForeground(BRANCO);
-        btnNewButton.setBackground(AZUL_ESCURO_NAV);
-        btnNewButton.setBorder(null);
-        btnNewButton.setFocusPainted(false);
-        btnNewButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        panelMenuLateral.add(btnNewButton);
-        
 
         JButton btnSairLateral = new JButton("Sair do Sistema");
         btnSairLateral.setPreferredSize(new Dimension(200, 40));
@@ -136,44 +249,33 @@ public class Tela_Principal {
         btnSairLateral.setForeground(BRANCO);
         btnSairLateral.setFont(new Font("Segoe UI", Font.BOLD, 12));
         btnSairLateral.setBorder(null);
+        btnSairLateral.setFocusPainted(false);
+        btnSairLateral.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnSairLateral.addActionListener(e -> fecharAplicacao());
         panelMenuLateral.add(btnSairLateral);
-        
         frame.getContentPane().add(panelMenuLateral, BorderLayout.WEST);
 
+        JPanel panelPrincipalContainer = new JPanel(new BorderLayout(0, 20));
+        panelPrincipalContainer.setBackground(FUNDO_CLARO);
+        panelPrincipalContainer.setBorder(new EmptyBorder(25, 30, 25, 30));
 
-        JPanel panelConteudo = new JPanel();
-        panelConteudo.setBackground(FUNDO_CLARO);
-        panelConteudo.setBorder(new EmptyBorder(25, 30, 25, 30));
-        panelConteudo.setLayout(new BorderLayout(0, 20));
-        frame.getContentPane().add(panelConteudo, BorderLayout.CENTER);
-
-
-        JPanel panelHeaderConteudo = new JPanel();
+        JPanel panelHeaderConteudo = new JPanel(new BorderLayout());
         panelHeaderConteudo.setBackground(FUNDO_CLARO);
-        panelHeaderConteudo.setLayout(new BorderLayout());
-        
-        JLabel lblTituloPagina = new JLabel("Formadores");
+
+        JPanel agrupadorTextoHeader = new JPanel(new BorderLayout());
+        agrupadorTextoHeader.setBackground(FUNDO_CLARO);
+
+        lblTituloPagina = new JLabel("Dashboard");
         lblTituloPagina.setFont(new Font("Segoe UI", Font.BOLD, 28));
         lblTituloPagina.setForeground(AZUL_ESCURO_NAV);
-        
-        JLabel lblSubtituloPagina = new JLabel("Gestão de Formadores");
+
+        lblSubtituloPagina = new JLabel("Visão Geral do Sistema");
         lblSubtituloPagina.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         lblSubtituloPagina.setForeground(TEXTO_MUTED);
-        
-        JPanel agrupador = new JPanel();
-        agrupador.setBackground(FUNDO_CLARO);
-        agrupador.setLayout(new BorderLayout());
-        agrupador.add(lblTituloPagina, BorderLayout.NORTH);
-        agrupador.add(lblSubtituloPagina, BorderLayout.SOUTH);
-        panelHeaderConteudo.add(agrupador, BorderLayout.WEST);
-        panelConteudo.add(panelHeaderConteudo, BorderLayout.NORTH);
 
-
-        cardLayout = new CardLayout();
-        panelCardContainer = new JPanel(cardLayout);
-        panelConteudo.add(panelCardContainer, BorderLayout.CENTER);
-
+        agrupadorTextoHeader.add(lblTituloPagina, BorderLayout.NORTH);
+        agrupadorTextoHeader.add(lblSubtituloPagina, BorderLayout.SOUTH);
+        panelHeaderConteudo.add(agrupadorTextoHeader, BorderLayout.WEST);
 
         JPanel panelCard = new JPanel();
         panelCard.setBackground(BRANCO);
@@ -181,172 +283,312 @@ public class Tela_Principal {
         panelCard.setLayout(new BorderLayout(0, 15));
         panelCard.setBorder(new EmptyBorder(15, 15, 15, 15));
         panelCardContainer.add(panelCard, "lista");
+        panelPrincipalContainer.add(panelHeaderConteudo, BorderLayout.NORTH);
+        panelPrincipalContainer.add(panelConteudoDinamico, BorderLayout.CENTER);
 
+        frame.getContentPane().add(panelPrincipalContainer, BorderLayout.CENTER);
+        
+        carregarQualificacoes();
+    }
 
-        JPanel panelAcoes = new JPanel();
+    private JPanel criarPainelDashboard() {
+        JPanel painel = new JPanel(new BorderLayout(0, 20));
+        painel.setBackground(BRANCO);
+        painel.setBorder(new EmptyBorder(20, 20, 20, 20));
+
+        JPanel painelCardsIndicadores = new JPanel(new GridLayout(1, 4, 15, 0));
+        painelCardsIndicadores.setBackground(BRANCO);
+
+        painelCardsIndicadores.add(criarCardMetrica("Formadores Ativos", "3", new Color(13, 110, 253)));
+        painelCardsIndicadores.add(criarCardMetrica("Turmas em Andamento", "5", new Color(25, 135, 84)));
+        painelCardsIndicadores.add(criarCardMetrica("Total de Inscrições", "3", new Color(241, 196, 15)));
+        painelCardsIndicadores.add(criarCardMetrica("Cursos Ofertados", "8", new Color(111, 66, 193)));
+
+        painel.add(painelCardsIndicadores, BorderLayout.NORTH);
+
+        JLabel lblBemVindo = new JLabel("Seja bem-vindo ao painel de controle da AcademiaPro.", SwingConstants.CENTER);
+        lblBemVindo.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        lblBemVindo.setForeground(TEXTO_MUTED);
+        painel.add(lblBemVindo, BorderLayout.CENTER);
+
+        return painel;
+    }
+
+    private JPanel criarPainelFormacoes() {
+        JPanel painel = new JPanel(new BorderLayout(0, 15));
+        painel.setBackground(BRANCO);
+        painel.setBorder(new EmptyBorder(15, 15, 15, 15));
+
+        JPanel panelAcoes = new JPanel(new BorderLayout());
         panelAcoes.setBackground(BRANCO);
-        panelAcoes.setLayout(new BorderLayout());
 
-      
         JPanel panelPesquisa = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
         panelPesquisa.setBackground(BRANCO);
-        
-        txtPesquisarProfessor = new JTextField();
-        txtPesquisarProfessor.setPreferredSize(new Dimension(250, 35));
-        txtPesquisarProfessor.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        panelPesquisa.add(txtPesquisarProfessor);
-        
+
+        JTextField txtPesquisarCurso = new JTextField();
+        txtPesquisarCurso.setPreferredSize(new Dimension(250, 35));
+        panelPesquisa.add(txtPesquisarCurso);
+
         JButton btnFiltrar = new JButton("Filtrar");
         btnFiltrar.setPreferredSize(new Dimension(90, 35));
         btnFiltrar.setBackground(BRANCO);
-        btnFiltrar.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         panelPesquisa.add(btnFiltrar);
-        
         panelAcoes.add(panelPesquisa, BorderLayout.WEST);
 
-     
         JPanel panelBotoesCrud = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
         panelBotoesCrud.setBackground(BRANCO);
 
-        JButton btnNovo = new JButton("+ Novo");
+        JButton btnNovo = new JButton("+ Nova Formação");
         btnNovo.setBackground(AZUL_DESTAQUE);
         btnNovo.setForeground(BRANCO);
         btnNovo.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btnNovo.setPreferredSize(new Dimension(100, 35));
-        btnNovo.addActionListener(e -> new Tela_cadastroProfessor().setVisible(true));
-        panelBotoesCrud.add(btnNovo);
+        btnNovo.setPreferredSize(new Dimension(150, 35));
 
         JButton btnEditar = new JButton("Editar");
         btnEditar.setBackground(BRANCO);
-        btnEditar.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         btnEditar.setPreferredSize(new Dimension(90, 35));
-        panelBotoesCrud.add(btnEditar);
 
         JButton btnEliminar = new JButton("Eliminar");
         btnEliminar.setBackground(new Color(248, 215, 218));
         btnEliminar.setForeground(new Color(114, 28, 36));
         btnEliminar.setFont(new Font("Segoe UI", Font.BOLD, 13));
         btnEliminar.setPreferredSize(new Dimension(100, 35));
-        panelBotoesCrud.add(btnEliminar);
+
+        if (nivelAcesso.equalsIgnoreCase("Administrador")) {
+            panelBotoesCrud.add(btnNovo);
+            panelBotoesCrud.add(btnEditar);
+            panelBotoesCrud.add(btnEliminar);
+        } else if (nivelAcesso.equalsIgnoreCase("Secretaria")) {
+            panelBotoesCrud.add(btnEditar);
+        }
 
         panelAcoes.add(panelBotoesCrud, BorderLayout.EAST);
-        panelCard.add(panelAcoes, BorderLayout.NORTH);
+        painel.add(panelAcoes, BorderLayout.NORTH);
 
-   
         JScrollPane scrollPane = new JScrollPane();
-        panelCard.add(scrollPane, BorderLayout.CENTER);
-
-        table = new JTable();
-        table.setRowHeight(35); 
-        table.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
-        table.getTableHeader().setBackground(new Color(248, 249, 250));
-        
-     
+        JTable table = new JTable();
+        table.setRowHeight(35);
         table.setModel(new DefaultTableModel(
             new Object[][] {
-                {"12345", "Malik", " Mangue", "Maculino", "Malikmang@gmail.com", "876543211", "Programação web", "Ativo"},
-                {"24788", "Keany", " Pessula", "Maculino", "Keanypessul@gmail.com", "844425235","Suporte Informático", "Ativo"},
-                {"54321", "Edmundo"," Mapotere", "Maculino", "EDMapotere@gmail.com","854328716", "Redes", "Ativo"},
+                {"FOR-001", "Programação Web Full Stack", "240 horas", "Profissionalizante", "Ativo"},
+                {"FOR-002", "Suporte Informático e Hardware", "120 horas", "Técnico", "Ativo"},
             },
-            new String[] {
-                "Código", "Nome", "Apelido", "Sexo", "Email", "Telefone", "Área de Atuação", "Estado"
-            }
+            new String[] { "Código", "Nome da Formação", "Carga Horária", "Tipo de Curso", "Estado" }
         ));
         scrollPane.setViewportView(table);
         
-        JToggleButton tglbtnNewToggleButton = new JToggleButton("New toggle button");
-        panelCard.add(tglbtnNewToggleButton, BorderLayout.SOUTH);
+        painel.add(scrollPane, BorderLayout.CENTER);
 
-        JPanel panelCadastroQualificacao = new JPanel();
-        panelCadastroQualificacao.setBackground(BRANCO);
-        panelCadastroQualificacao.setBorder(new EmptyBorder(15, 15, 15, 15));
-        panelCadastroQualificacao.setLayout(new BorderLayout(0, 15));
-        panelCardContainer.add(panelCadastroQualificacao, "cadastro");
+        return painel;
+    }
 
-        JPanel panelFormQualificacao = new JPanel();
-        panelFormQualificacao.setBackground(BRANCO);
-        panelFormQualificacao.setLayout(new GridLayout(4, 2, 10, 15));
-        panelFormQualificacao.setBorder(new EmptyBorder(10, 10, 10, 10));
+    private JPanel criarPainelFormadores() {
+        JPanel painel = new JPanel(new BorderLayout(0, 15));
+        painel.setBackground(BRANCO);
+        painel.setBorder(new EmptyBorder(15, 15, 15, 15));
 
-        JLabel lblTitulo = new JLabel("Título da Qualificação:");
-        lblTitulo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        panelFormQualificacao.add(lblTitulo);
+        JScrollPane scrollPane = new JScrollPane();
+        JTable table = new JTable();
+        table.setRowHeight(35);
+        table.setModel(new DefaultTableModel(
+            new Object[][] {
+                {"12345", "Malik", "Mangue", "Masculino", "Malikmang@gmail.com", "876543211", "Programação web", "Ativo"}
+            },
+            new String[] { "Código", "Nome", "Apelido", "Sexo", "Email", "Telefone", "Área de Atuação", "Estado" }
+        ));
+        scrollPane.setViewportView(table);
+        painel.add(scrollPane, BorderLayout.CENTER);
+
+        return painel;
+    }
+
+    private JPanel criarPainelQualificacoes() {
+        JPanel painelQualificacoes = new JPanel(new BorderLayout(10, 15));
+        painelQualificacoes.setBackground(BRANCO);
+        painelQualificacoes.setBorder(new EmptyBorder(15, 15, 15, 15));
+
+        JPanel panelCadastro = new JPanel();
+        panelCadastro.setBackground(BRANCO);
+        panelCadastro.setBorder(new TitledBorder(new LineBorder(new Color(200, 200, 200)), "Cadastro de Qualificação", TitledBorder.LEFT, TitledBorder.TOP, new Font("Segoe UI", Font.BOLD, 14), AZUL_ESCURO_NAV));
+        panelCadastro.setLayout(new GridLayout(4, 2, 10, 15));
+        panelCadastro.setBorder(new EmptyBorder(15, 15, 15, 15));
+
+        JLabel lblTituloQualificacao = new JLabel("Título da Qualificação:");
+        lblTituloQualificacao.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        panelCadastro.add(lblTituloQualificacao);
 
         txtTituloQualificacao = new JTextField();
         txtTituloQualificacao.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        panelFormQualificacao.add(txtTituloQualificacao);
+        panelCadastro.add(txtTituloQualificacao);
 
-        JLabel lblCampo = new JLabel("Campo:");
-        lblCampo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        panelFormQualificacao.add(lblCampo);
+        JLabel lblCampoQualificacao = new JLabel("Campo:");
+        lblCampoQualificacao.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        panelCadastro.add(lblCampoQualificacao);
 
-        cbCampoQualificacao = new JComboBox<>();
+        cbCampoQualificacao = new JComboBox<>(new String[]{"Selecione", "Informática", "Gestão", "Recursos Humanos", "Marketing", "Finanças", "Engenharia", "Saúde"});
         cbCampoQualificacao.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        panelFormQualificacao.add(cbCampoQualificacao);
+        panelCadastro.add(cbCampoQualificacao);
 
-        JLabel lblNivel = new JLabel("Nível:");
-        lblNivel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        panelFormQualificacao.add(lblNivel);
+        JLabel lblNivelQualificacao = new JLabel("Nível:");
+        lblNivelQualificacao.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        panelCadastro.add(lblNivelQualificacao);
 
-        cbNivelQualificacao = new JComboBox<>();
+        cbNivelQualificacao = new JComboBox<>(new String[]{"Selecione", "Cv3", "Cv4", "Cv5"});
         cbNivelQualificacao.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        panelFormQualificacao.add(cbNivelQualificacao);
+        panelCadastro.add(cbNivelQualificacao);
 
-        JLabel lblCoordenador = new JLabel("Coordenador:");
-        lblCoordenador.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        panelFormQualificacao.add(lblCoordenador);
+        JLabel lblCoordenadorQualificacao = new JLabel("Coordenador:");
+        lblCoordenadorQualificacao.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        panelCadastro.add(lblCoordenadorQualificacao);
 
-        cbCoordenadorQualificacao = new JComboBox<>();
+        cbCoordenadorQualificacao = new JComboBox<>(new String[]{"Selecione", "Fernando Langa", "Barbione Augosto", "Sheila Momade"});
         cbCoordenadorQualificacao.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        panelFormQualificacao.add(cbCoordenadorQualificacao);
+        panelCadastro.add(cbCoordenadorQualificacao);
 
-        panelCadastroQualificacao.add(panelFormQualificacao, BorderLayout.NORTH);
+        JPanel panelSuperior = new JPanel(new BorderLayout());
+        panelSuperior.setBackground(BRANCO);
+        panelSuperior.add(panelCadastro, BorderLayout.NORTH);
 
-        JPanel panelBotoesCadastro = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
-        panelBotoesCadastro.setBackground(BRANCO);
+        JPanel panelBotoesQualificacao = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
+        panelBotoesQualificacao.setBackground(BRANCO);
 
-        JButton btnSalvarQualificacao = new JButton("Salvar");
-        btnSalvarQualificacao.setBackground(AZUL_DESTAQUE);
-        btnSalvarQualificacao.setForeground(BRANCO);
-        btnSalvarQualificacao.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btnSalvarQualificacao.setPreferredSize(new Dimension(100, 35));
-        panelBotoesCadastro.add(btnSalvarQualificacao);
+        JButton btnLimparCampos = new JButton("Limpar Campos");
+        btnLimparCampos.setBackground(new Color(255, 193, 7));
+        btnLimparCampos.setForeground(AZUL_ESCURO_NAV);
+        btnLimparCampos.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnLimparCampos.setPreferredSize(new Dimension(150, 40));
+        btnLimparCampos.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnLimparCampos.addActionListener(e -> limparCamposQualificacao());
 
-        JButton btnCancelarQualificacao = new JButton("Cancelar");
-        btnCancelarQualificacao.setBackground(BRANCO);
-        btnCancelarQualificacao.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        btnCancelarQualificacao.setPreferredSize(new Dimension(100, 35));
-        btnCancelarQualificacao.addActionListener(e -> cardLayout.show(panelCardContainer, "lista"));
-        panelBotoesCadastro.add(btnCancelarQualificacao);
+        JButton btnGravarQualificacao = new JButton("Gravar Qualificação");
+        btnGravarQualificacao.setBackground(new Color(40, 167, 69));
+        btnGravarQualificacao.setForeground(BRANCO);
+        btnGravarQualificacao.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnGravarQualificacao.setPreferredSize(new Dimension(180, 40));
+        btnGravarQualificacao.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnGravarQualificacao.addActionListener(e -> gravarQualificacao());
 
-        panelCadastroQualificacao.add(panelBotoesCadastro, BorderLayout.SOUTH);
+        panelBotoesQualificacao.add(btnLimparCampos);
+        panelBotoesQualificacao.add(btnGravarQualificacao);
 
+        panelSuperior.add(panelBotoesQualificacao, BorderLayout.SOUTH);
 
-        btnNewButton.addActionListener(e -> cardLayout.show(panelCardContainer, "cadastro"));
+        String[] colunas = {"Código", "Título", "Campo", "Nível", "Coordenador", "Estado"};
+        modelQualificacoes = new DefaultTableModel(colunas, 0);
+        tableQualificacoes = new JTable(modelQualificacoes);
+        tableQualificacoes.setRowHeight(35);
+        tableQualificacoes.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
+        tableQualificacoes.getTableHeader().setBackground(AZUL_ESCURO_NAV);
+        tableQualificacoes.getTableHeader().setForeground(BRANCO);
 
+        JScrollPane scrollPaneQualificacoes = new JScrollPane(tableQualificacoes);
+        scrollPaneQualificacoes.setBorder(new TitledBorder(new LineBorder(new Color(200, 200, 200)), "Lista de Qualificações", TitledBorder.LEFT, TitledBorder.TOP, new Font("Segoe UI", Font.BOLD, 14), AZUL_ESCURO_NAV));
 
-        JMenuBar menuBarFixo = new JMenuBar();
-        frame.setJMenuBar(menuBarFixo);
+        painelQualificacoes.add(panelSuperior, BorderLayout.NORTH);
+        painelQualificacoes.add(scrollPaneQualificacoes, BorderLayout.CENTER);
 
-        JMenu mnFile = new JMenu("Ficheiro");
-        menuBarFixo.add(mnFile);
+        return painelQualificacoes;
+    }
 
-        JMenuItem mntmSair = new JMenuItem("Sair");
-        mntmSair.setMnemonic(KeyEvent.VK_S);
-        mntmSair.addActionListener(e -> fecharAplicacao());
-        mnFile.add(mntmSair);
+    private void carregarQualificacoes() {
+        try {
+            modelQualificacoes.setRowCount(0);
+            java.util.ArrayList<Qualificacao> lista = qualificacaoController.listarQualificacao("");
+            
+            if (lista != null && !lista.isEmpty()) {
+                for (Qualificacao q : lista) {
+                    modelQualificacoes.addRow(new Object[]{
+                        q.getCodigo(),
+                        q.getTitulo(),
+                        "Informática",
+                        "Cv4",
+                        "Fernando Langa",
+                        "Ativo"
+                    });
+                }
+            }
+        } catch (ExceptionDao e) {
+            JOptionPane.showMessageDialog(frame, "Erro ao carregar qualificações: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
-        JMenu mnCadastros = new JMenu("Cadastros");
-        menuBarFixo.add(mnCadastros);
+    private void gravarQualificacao() {
+        String titulo = txtTituloQualificacao.getText().trim();
+        String campo = (String) cbCampoQualificacao.getSelectedItem();
+        String nivel = (String) cbNivelQualificacao.getSelectedItem();
+        String coordenador = (String) cbCoordenadorQualificacao.getSelectedItem();
 
-        JMenuItem mntmProfessores = new JMenuItem("Professores");
-        mntmProfessores.addActionListener(e -> new Tela_cadastroProfessor().setVisible(true));
-        mnCadastros.add(mntmProfessores);
+        if (titulo.isEmpty()) {
+            JOptionPane.showMessageDialog(frame, "Por favor, preencha o título da qualificação.", "Campo Obrigatório", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-        JMenuItem mntmTurmas = new JMenuItem("Turmas");
-        mntmTurmas.addActionListener(e -> new Tela_cadastoTurma().setVisible(true));
-        mnCadastros.add(mntmTurmas);
+        if (campo.equals("Selecione") || nivel.equals("Selecione") || coordenador.equals("Selecione")) {
+            JOptionPane.showMessageDialog(frame, "Por favor, selecione todas as opções.", "Campos Obrigatórios", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            boolean resultado = qualificacaoController.cadastrarQualificacao(titulo);
+            
+            if (resultado) {
+                carregarQualificacoes();
+                limparCamposQualificacao();
+                JOptionPane.showMessageDialog(frame, "Qualificação gravada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(frame, "Erro ao gravar qualificação. Verifique os dados.", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (ExceptionDao e) {
+            JOptionPane.showMessageDialog(frame, "Erro ao gravar qualificação: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void limparCamposQualificacao() {
+        txtTituloQualificacao.setText("");
+        cbCampoQualificacao.setSelectedIndex(0);
+        cbNivelQualificacao.setSelectedIndex(0);
+        cbCoordenadorQualificacao.setSelectedIndex(0);
+        txtTituloQualificacao.requestFocus();
+    }
+
+    private JPanel criarCardMetrica(String titulo, String valor, Color corDestaque) {
+        JPanel card = new JPanel(new BorderLayout());
+        card.setBackground(FUNDO_CLARO);
+        card.setBorder(new LineBorder(new Color(220, 224, 230), 1, true));
+        card.setPreferredSize(new Dimension(180, 90));
+
+        JPanel linhaDecorativa = new JPanel();
+        linhaDecorativa.setBackground(corDestaque);
+        linhaDecorativa.setPreferredSize(new Dimension(5, 90));
+        card.add(linhaDecorativa, BorderLayout.WEST);
+
+        JPanel infoPanel = new JPanel(new GridLayout(2, 1, 0, 5));
+        infoPanel.setBackground(FUNDO_CLARO);
+        infoPanel.setBorder(new EmptyBorder(10, 15, 10, 15));
+
+        JLabel lblTitulo = new JLabel(titulo);
+        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        lblTitulo.setForeground(TEXTO_MUTED);
+
+        JLabel lblValor = new JLabel(valor);
+        lblValor.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        lblValor.setForeground(AZUL_ESCURO_NAV);
+
+        infoPanel.add(lblTitulo);
+        infoPanel.add(lblValor);
+        card.add(infoPanel, BorderLayout.CENTER);
+
+        return card;
+    }
+
+    private void abrirJanelaLegada(String nomeClasse) {
+        try {
+            if(nomeClasse.equals("Tela_cadastroProfessor")) new Tela_cadastroProfessor().setVisible(true);
+            else if(nomeClasse.equals("Tela_cadastoTurma")) new Tela_cadastoTurma().setVisible(true);
+            else if(nomeClasse.equals("Tela_cadastroQualificação")) new Tela_cadastroQualificação().setVisible(true);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(frame, "Erro ao abrir a janela.", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void fecharAplicacao() {

@@ -9,13 +9,24 @@ public class UsuarioController {
 
 	static Scanner sc = new Scanner(System.in);
 
-	public boolean cadastrarUsuario(String username, String password)
+	public boolean login(String username,String password) throws ExceptionDao{
+		if(username != null && username.length()>0 && password != null && password.length()>0) {
+			Usuario u = new Usuario(username,password);
+			u.login(u);
+			return true;
+		}
+		return false;
+	}
+	public boolean cadastrarUsuario(String nome_completo,String username, String password,String email,int perfil)
 	throws ExceptionDao {
 
-		if (username != null && username.length() > 0 &&
-			password != null && password.length() > 0) {
+		if (nome_completo != null && nome_completo.length()>0 &&
+			username != null && username.length() > 0 &&
+			password != null && password.length() > 0 &&
+			email != null && email.length()> 0 &&
+			perfil > 0) {
 
-			Usuario usuario = new Usuario(username, password);
+			Usuario usuario = new Usuario(nome_completo,username, password,email,perfil);
 			usuario.cadastrarUsuario(usuario);
 			return true;
 		}
@@ -89,8 +100,8 @@ public class UsuarioController {
 		if (username != null && username.length() > 0 &&
 			password != null && password.length() > 0) {
 
-			Usuario usuario = new Usuario();
-			return usuario.iniciarSessao(username, password);
+			Usuario usuario = new Usuario(username, password);
+			return usuario.login(usuario);
 		}
 
 		return null;
