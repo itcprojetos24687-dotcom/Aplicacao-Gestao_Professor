@@ -1,6 +1,11 @@
 package controller;
 
 import java.util.ArrayList;
+<<<<<<< HEAD
+=======
+import dao.*;
+
+>>>>>>> branch 'master' of https://github.com/itcprojetos24687-dotcom/Aplicacao-Gestao_Professor.git
 import java.util.Scanner;
 import javax.swing.JOptionPane;
 import dao.ExceptionDao;
@@ -21,6 +26,24 @@ public class UsuarioController {
 		return false;
 	}
 
+	public Usuario login(String username,String password) throws ExceptionDao{
+		if(username != null && username.length()>0 && password != null && password.length()>0) {
+			
+		return new Usuario().login(username,password);
+			
+
+		}
+		return null;
+
+	}
+	public void alterarPrimeiroAcesso(Usuario u) throws ExceptionDao {
+		u.setPrimeiroAcesso(false);
+		new UsuarioDao().alterarPrimeiroAcesso(u);
+	}
+	public boolean cadastrarUsuario(String nome_completo,String username, String password,String email,Perfil perfil, boolean primeiroAcesso)
+	throws Exception {
+
+
 	public boolean cadastrarUsuario(String nome_completo, String username, String password, String email, Perfil perfil)
 			throws ExceptionDao {
 
@@ -30,14 +53,38 @@ public class UsuarioController {
 			email != null && email.length() > 0 &&
 			perfil != null) {
 
+
 			Usuario usuario = new Usuario(nome_completo, username, password, email, perfil);
+
+			Usuario usuario = new Usuario(nome_completo,username, password,email,perfil, primeiroAcesso);
 			usuario.cadastrarUsuario(usuario);
+			FicheiroDefault.criarFicheiro(usuario);
 			return true;
 		}
 
 		return false;
 	}
+	public boolean atualizarUsuario(int idUser,Perfil p)throws ExceptionDao{
+		if(idUser >0 &&
+		   p != null) {
+			Usuario u = new Usuario();
+			u.setCodigo(idUser);
+			u.setPerfil(p);
+			u.atualizarUsuario(u);
+			return true;
+			
+		}
+		return false;
+	}
 
+	public static boolean resetarSenha(String senhaResetada, int codigo)throws ExceptionDao {
+		if(senhaResetada != null && codigo > 0) {
+			new UsuarioDao().resetarSenha(senhaResetada,codigo);
+			
+			return true;
+		}
+		return false;
+	}
 	public ArrayList<Usuario> listarUsuario(String username) throws ExceptionDao {
 		return new Usuario().listarUsuario(username);
 	}
@@ -46,14 +93,44 @@ public class UsuarioController {
 		return new Usuario().obterTodosUsuarios();
 	}
 
+
 	public boolean autenticar(String password) throws ExceptionDao {
 		if (password != null && password.length() > 0) {
 			Usuario ul = new Usuario().autenticar(password);
 			if (ul != null) {
 				return true;
 			}
+
+//	public Usuario obterUsuarioPorCodigo(int codigo) throws ExceptionDao {
+//
+//		if (codigo != 0) {
+//			return new Usuario().obterUsuarioPorCodigo(codigo);
+//		}
+//
+//		return null;
+//	}
+
+//	public boolean autenticarUsuario(String username, String password)
+//	throws ExceptionDao {
+//
+//		if (username != null && username.length() > 0 &&
+//			password != null && password.length() > 0) {
+//
+//			return new Usuario().autenticarUsuario(username, password);
+//		}
+//
+//		return false;
+//	}
+
+	public Usuario autenticar(String password) throws ExceptionDao{
+		if(password != null && password.length()>0) {
+			
+			return new Usuario().autenticar(password);
+			
+
 		}
-		return false;
+		return null;
+		
 	}
 
 	public void redifinirSenha(String novapassword, String antigapassword) throws ExceptionDao {
@@ -69,6 +146,7 @@ public class UsuarioController {
 		}
 		return false;
 	}
+
 
 	public boolean atualizarUsuario(int idUser, String nome, String username, String email, Perfil p) throws ExceptionDao {
 		if (idUser != 0 && 

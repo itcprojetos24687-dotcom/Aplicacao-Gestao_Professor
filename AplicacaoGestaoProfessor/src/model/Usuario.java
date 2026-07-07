@@ -12,6 +12,7 @@ public class Usuario {
 	private String password;
 	private String email;
 	private Perfil perfil;
+	private boolean primeiroAcesso;
 
 	public Usuario() {
 	}
@@ -20,23 +21,40 @@ public class Usuario {
 		this.username = username;
 		this.password = password;
 	}
+	public Usuario(String nome_completo,String username, String password,String email,Perfil perfil,boolean primeiro) {
+		this.nome_completo = nome_completo;
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		this.perfil = perfil;
+		primeiroAcesso = primeiro;
+	}
 	public Usuario(String nome_completo,String username, String password,String email,Perfil perfil) {
 		this.nome_completo = nome_completo;
 		this.username = username;
 		this.password = password;
 		this.email = email;
 		this.perfil = perfil;
+		
+	}
+	
+	public boolean isPrimeiroAcesso() {
+		return primeiroAcesso;
+	}
+
+	public void setPrimeiroAcesso(boolean primeiroAcesso) {
+		this.primeiroAcesso = primeiroAcesso;
 	}
 
 	public int getCodigo() {
 		return codigo;
-	}
+	}	
 
-	public void setCodigo(int codigo) {
+	public void setCodigo(int codigo) {	
 		this.codigo = codigo;
-	}
+	}	
 
-	public String getUsername() {
+	public String getUsername() {	
 		return username;
 	}
 

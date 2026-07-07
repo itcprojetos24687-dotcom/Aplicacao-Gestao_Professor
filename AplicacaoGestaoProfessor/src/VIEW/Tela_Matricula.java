@@ -6,53 +6,106 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-public class Tela_Matricula extends JDialog {
+public class Tela_Matricula extends JPanel {
 
+    private static final long serialVersionUID = 1L;
+    
     private JTextField txtEstudanteId, txtTurmaId;
-    private JButton btnConfirmar;
+    private JButton btnConfirmar, btnCancelar;
 
-    public Tela_Matricula(JFrame pai, boolean modal) {
-        super(pai, modal);
-        setTitle("Vincular Nova Matrícula");
-        setSize(450, 300);
-        setLocationRelativeTo(pai); // Centraliza sobre o painel principal
-        setResizable(false);
-        getContentPane().setLayout(new BorderLayout());
+    private final Color AZUL_DESTAQUE   = new Color(13, 110, 253);
+    private final Color FUNDO_CLARO      = new Color(244, 246, 249);
+    private final Color BRANCO          = Color.WHITE;
 
-        JPanel painelCampos = new JPanel(new GridLayout(3, 1, 10, 15));
-        painelCampos.setBorder(new EmptyBorder(20, 20, 20, 20));
-        painelCampos.setBackground(Color.WHITE);
 
-        Font fLabel = new Font("Segoe UI", Font.BOLD, 13);
+    public interface OnMatriculaCadastradaListener {
+        void onMatriculaCadastrada(String numMatricula, String aluno, String turma, String sala, String data);
+        void onCancelar();
+    }
 
-        painelCampos.add(new JLabel("ID / Código do Estudante:") {{ setFont(fLabel); }});
-        txtEstudanteId = new JTextField(); painelCampos.add(txtEstudanteId);
+    private OnMatriculaCadastradaListener listener;
 
-        painelCampos.add(new JLabel("Código da Turma:") {{ setFont(fLabel); }});
-        txtTurmaId = new JTextField(); painelCampos.add(txtTurmaId);
+    public Tela_Matricula(OnMatriculaCadastradaListener listener) {
+        this.listener = listener;
 
-        getContentPane().add(painelCampos, BorderLayout.CENTER);
+        setLayout(new BorderLayout());
+        setBackground(FUNDO_CLARO);
+        setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        // Barra inferior de confirmação
+        JPanel panelCard = new JPanel(new GridLayout(3, 1, 10, 15));
+        panelCard.setBackground(BRANCO);
+        panelCard.setBorder(new EmptyBorder(25, 25, 25, 25));
+
+        Font fontLabel = new Font("Segoe UI", Font.BOLD, 14);
+        Font fontText = new Font("Segoe UI", Font.PLAIN, 14);
+
+        panelCard.add(new JLabel("Nome ou Código do Aluno:") {{ setFont(fontLabel); }});
+        txtEstudanteId = new JTextField(); 
+        txtEstudanteId.setFont(fontText); 
+        panelCard.add(txtEstudanteId);
+
+        panelCard.add(new JLabel("Código da Turma:") {{ setFont(fontLabel); }});
+        txtTurmaId = new JTextField(); 
+        txtTurmaId.setFont(fontText); 
+        panelCard.add(txtTurmaId);
+
+        // Barra de botões alinhada
         JPanel barraBotoes = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
-        barraBotoes.setBackground(new Color(244, 246, 249));
+        barraBotoes.setBackground(BRANCO);
 
-        JButton btnFechar = new JButton("Cancelar");
-        btnFechar.addActionListener(e -> dispose());
-        
-        btnConfirmar = new JButton("Efetivar Matrícula");
-        btnConfirmar.setBackground(new Color(13, 110, 253));
-        btnConfirmar.setForeground(Color.WHITE);
+        btnCancelar = new JButton("Cancelar");
+        btnCancelar.setFont(fontLabel);
+        btnCancelar.setBackground(BRANCO);
+        btnCancelar.addActionListener(e -> {
+            limparCampos();
+            if (listener != null) listener.onCancelar();
+        });
 
-        barraBotoes.add(btnFechar);
+        btnConfirmar = new JButton("Efectuar Matrícula");
+        btnConfirmar.setBackground(AZUL_DESTAQUE);
+        btnConfirmar.setForeground(BRANCO);
+        btnConfirmar.setFont(fontLabel);
+        btnConfirmar.addActionListener(e -> acaoSalvar());
+
+        barraBotoes.add(btnCancelar);
         barraBotoes.add(btnConfirmar);
-        getContentPane().add(barraBotoes, BorderLayout.SOUTH);
+
+        JPanel containerCentral = new JPanel(new BorderLayout(0, 20));
+        containerCentral.setBackground(BRANCO);
+        containerCentral.setBorder(new EmptyBorder(10, 10, 10, 10));
+        containerCentral.add(panelCard, BorderLayout.CENTER);
+        containerCentral.add(barraBotoes, BorderLayout.SOUTH);
+
+        add(containerCentral, BorderLayout.CENTER);
+    }
+
+    private void acaoSalvar() {
+        String aluno = txtEstudanteId.getText().trim();
+        String turma = txtTurmaId.getText().trim();
+
+        if (aluno.isEmpty() || turma.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, preencha todos os campos da matrícula.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        JOptionPane.showMessageDialog(this, "Matrícula efetivada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+
+        if (listener != null) {
+            String dataCorrente = "07/07/2026";
+            listener.onMatriculaCadastrada("MAT-TMP", aluno, turma, "Sala Definida", dataCorrente);
+        }
+
+        limparCampos();
+    }
+
+    private void limparCampos() {
+        txtEstudanteId.setText("");
+        txtTurmaId.setText("");
     }
 }

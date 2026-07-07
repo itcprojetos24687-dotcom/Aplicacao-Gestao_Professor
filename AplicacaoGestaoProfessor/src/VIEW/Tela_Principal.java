@@ -1,8 +1,6 @@
 package VIEW;
 
 import java.awt.EventQueue;
-import model.*;
-import controller.*;
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.BorderLayout;
@@ -40,34 +38,84 @@ public class Tela_Principal {
     
     private String nivelAcesso;
 
+    private DefaultTableModel modeloInscricoes;
+    private DefaultTableModel modeloMatriculas;
+    private DefaultTableModel modeloTurmas;
+    private DefaultTableModel modeloFormadores;
+    private DefaultTableModel modeloFormacoes;
+    private DefaultTableModel modeloSalas;
+
     private final Color AZUL_ESCURO_NAV = new Color(15, 38, 70);
     private final Color AZUL_DESTAQUE   = new Color(13, 110, 253);
     private final Color FUNDO_CLARO      = new Color(244, 246, 249);
     private final Color BRANCO          = Color.WHITE;
     private final Color TEXTO_MUTED     = new Color(108, 117, 125);
-    private Tela_login tela_login;
 
+    public static void main(String[] args) {
+        EventQueue.invokeLater(() -> {
+            try {
+                Tela_Principal window = new Tela_Principal("Administrador");
+                window.frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
 
-    public Tela_Principal(Perfil p,Tela_login tela_login) {
-    	this.tela_login = tela_login;
-        this.nivelAcesso = p.getNome();
+    public Tela_Principal(String nivelAcesso) {
+        this.nivelAcesso = nivelAcesso != null ? nivelAcesso : "Secretaria";
+        inicializarModelos();
         initialize();
-        
-        
     }
-    public void abrir() {
-    	if(frame != null) {
-    		frame.setVisible(true);
-    	}
+
+    private void inicializarModelos() {
+        modeloInscricoes = new DefaultTableModel(
+            new Object[][] {
+                {"INC-001", "Lucas Silva", "Bases de Dados", "02/07/2026", "Primeiro semestre", "Confirmada"},
+                {"INC-002", "Maria Santos", "Desenvolvimento Web", "01/07/2026", "Segundo semestre", "Pendente"}
+            },
+            new String[] { "Nº Inscrição", "Formando", "Módulo / Curso", "Data", "Semestre", "Estado" }
+        );
+
+        modeloMatriculas = new DefaultTableModel(
+            new Object[][] {
+                {"MAT-101", "Ana Martins", "Turma A", "Sala 03", "06/07/2026"}
+            },
+            new String[] { "Nº Matrícula", "Aluno", "Turma", "Sala Alocada", "Data Matrícula" }
+        );
+
+        modeloTurmas = new DefaultTableModel(
+            new Object[][] {
+                {"TURMA-A", "Programação Web", "Laboral", "Malik Mangue"}
+            },
+            new String[] { "Código Turma", "Curso/Formação", "Regime", "Formador Alocado" }
+        );
+
+        modeloFormadores = new DefaultTableModel(
+            new Object[][] {
+                {"12345", "Malik", "Mangue", "Masculino", "Malikmang@gmail.com", "876543211", "Programação web", "Ativo"}
+            },
+            new String[] { "Código", "Nome", "Apelido", "Sexo", "Email", "Telefone", "Área de Atuação", "Estado" }
+        );
+
+        modeloFormacoes = new DefaultTableModel(
+            new Object[][] {
+                {"FOR-001", "Programação Web Full Stack", "240 horas", "Profissionalizante", "Ativo"}
+            },
+            new String[] { "Código", "Nome da Formação", "Carga Horária", "Tipo de Curso", "Estado" }
+        );
+
+        modeloSalas = new DefaultTableModel(
+            new Object[][] {
+                {"Sala 01", "Bloco A", "30 Lugares", "Laboratório de Informática"}
+            },
+            new String[] { "Identificação", "Localização", "Capacidade", "Tipo de Sala" }
+        );
     }
+
     private void initialize() {
-
-    	frame = new JFrame();
-        frame.setTitle("AcademiaPro - Sistema de Gestão de Formação");
-
         frame = new JFrame();
         frame.setTitle("SGP - Sistema de Gestão de Formação");
-
         frame.setBounds(100, 100, 1280, 720);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null); 
@@ -91,6 +139,7 @@ public class Tela_Principal {
         lblAdmin.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         panelTopoDireita.add(lblAdmin);
 
+        // CONFIGURAÇÃO DO BOTÃO GERIR UTILIZADORES
         JButton btnUtilizadores = new JButton(" Gerir Utilizadores");
         btnUtilizadores.setFont(new Font("Segoe UI", Font.BOLD, 12));
         btnUtilizadores.setForeground(BRANCO);
@@ -102,16 +151,10 @@ public class Tela_Principal {
         
         btnUtilizadores.addActionListener(e -> {
             try {
-                Tela_Utilizadores telaUtilizadores = new Tela_Utilizadores();
-                telaUtilizadores.setVisible(true);
+                new Tela_Utilizadores().setVisible(true);
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(frame, "Erro ao abrir a Gestão de Utilizadores.", "Erro", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(frame, "Não foi possível abrir a gestão de utilizadores.", "Erro", JOptionPane.ERROR_MESSAGE);
             }
-        });
-
-        btnUtilizadores.addMouseListener(new MouseAdapter() {
-            @Override public void mouseEntered(MouseEvent e) { btnUtilizadores.setBackground(new Color(35, 68, 110)); }
-            @Override public void mouseExited(MouseEvent e) { btnUtilizadores.setBackground(new Color(25, 52, 88)); }
         });
         
         if (nivelAcesso.equalsIgnoreCase("Administrador")) {
@@ -128,41 +171,61 @@ public class Tela_Principal {
         cardLayout = new CardLayout();
         panelConteudoDinamico = new JPanel(cardLayout);
 
-        JPanel painelDashboard = criarPainelDashboard();
-        JPanel painelFormadores = criarPainelFormadores();
-
-        Tela_Incrição painelInscricoes = new Tela_Incrição(); 
-        Tela_Utilizadores tl = new Tela_Utilizadores();
-        Tela_cadastroQualificação TQ = new Tela_cadastroQualificação();
-
-        Tela_Incrição painelFormularioInscricao = new Tela_Incrição(); 
-        JPanel painelListaInscricoes = criarPainelListaInscricoes(); 
-
-
-        panelConteudoDinamico.add(painelDashboard, "Dashboard");
-        panelConteudoDinamico.add(painelFormadores, "Formadores");
+        panelConteudoDinamico.add(criarPainelDashboard(), "Dashboard");
         panelConteudoDinamico.add(criarPainelFormacoes(), "Formações");
+        panelConteudoDinamico.add(criarPainelFormadores(), "Formadores");
+        panelConteudoDinamico.add(criarPainelListaInscricoes(), "Inscrições"); 
+        panelConteudoDinamico.add(new Tela_Incrição(), "FormularioInscricao");
+        panelConteudoDinamico.add(criarPainelMatriculas(), "Matrículas");
+        panelConteudoDinamico.add(criarPainelSalas(), "Salas");
+        panelConteudoDinamico.add(criarPainelTurmas(), "Turmas");
 
-        panelConteudoDinamico.add(painelInscricoes, "Inscrições");
-        panelConteudoDinamico.add(TQ, "Qualificacoes");
-        //panelConteudoDinamico.add(tl, "Utilizadores");
+     
+        Tela_cadastoTurma painelCadastroTurma = new Tela_cadastoTurma(new Tela_cadastoTurma.OnTurmaCadastradaListener() {
+            @Override
+            public void onTurmaCadastrada(String codigo, String curso, String regime, String formador) {
+                modeloTurmas.addRow(new Object[]{codigo, curso, regime, formador});
+                cardLayout.show(panelConteudoDinamico, "Turmas");
+                lblTituloPagina.setText("Turmas");
+                lblSubtituloPagina.setText("Gestão de Turmas do Sistema");
+            }
+            @Override public void onCancelar() { cardLayout.show(panelConteudoDinamico, "Turmas"); }
+        });
+        panelConteudoDinamico.add(painelCadastroTurma, "FormularioCadastroTurma");
 
-        panelConteudoDinamico.add(painelListaInscricoes, "Inscrições"); 
-        panelConteudoDinamico.add(painelFormularioInscricao, "FormularioInscricao");
+      
+        Tela_Matricula painelCadastroMatricula = new Tela_Matricula(new Tela_Matricula.OnMatriculaCadastradaListener() {
+            @Override
+            public void onMatriculaCadastrada(String numMatricula, String aluno, String turma, String sala, String data) {
+                String idGerado = "MAT-" + (100 + modeloMatriculas.getRowCount() + 1);
+                modeloMatriculas.addRow(new Object[]{idGerado, aluno, turma, sala, data});
+                cardLayout.show(panelConteudoDinamico, "Matrículas");
+                lblTituloPagina.setText("Matrículas");
+                lblSubtituloPagina.setText("Gestão de Matrículas do Sistema");
+            }
+            @Override public void onCancelar() { cardLayout.show(panelConteudoDinamico, "Matrículas"); }
+        });
+        panelConteudoDinamico.add(painelCadastroMatricula, "FormularioCadastroMatricula");
 
+    
+        Tela_cadastroProfessor painelCadastroProfessor = new Tela_cadastroProfessor(new Tela_cadastroProfessor.OnProfessorCadastradoListener() {
+            @Override
+            public void onProfessorCadastrado(String codigo, String nome, String apelido, String sexo, String email, String telefone, String area, String estado) {
+                String idGerado = "PRF-" + (10000 + modeloFormadores.getRowCount() + 1);
+                modeloFormadores.addRow(new Object[]{idGerado, nome, apelido, sexo, email, telefone, area, estado});
+                cardLayout.show(panelConteudoDinamico, "Formadores");
+                lblTituloPagina.setText("Formadores");
+                lblSubtituloPagina.setText("Gestão de Formadores do Sistema");
+            }
+            @Override public void onCancelar() { cardLayout.show(panelConteudoDinamico, "Formadores"); }
+        });
+        panelConteudoDinamico.add(painelCadastroProfessor, "FormularioCadastroProfessor");
 
-
-        //String[] menus = {"Dashboard", "Formações", "Inscrições","Qualificacoes", "Formadores", "Cadastros ▾"};
-
-        // "Inscrições" firme e forte na barra lateral
-        String[] menus = {"Dashboard", "Formações", "Formadores", "Inscrições", "Cadastros ▾"};
-
+        String[] menus = {"Dashboard", "Formações", "Formadores", "Inscrições", "Matrículas", "Salas", "Turmas", "Cadastros ▾"};
         
         for (String menu : menus) {
-            if (nivelAcesso.equalsIgnoreCase("Formador")) {
-                if (menu.equals("Cadastros ▾") || menu.equals("Formadores") || menu.equals("Inscrições")) {
-                    continue;
-                }
+            if (nivelAcesso.equalsIgnoreCase("Formador") && (menu.equals("Cadastros ▾") || menu.equals("Formadores") || menu.equals("Inscrições") || menu.equals("Matrículas") || menu.equals("Salas"))) {
+                continue;
             }
 
             JButton btnMenu = new JButton(menu);
@@ -188,33 +251,53 @@ public class Tela_Principal {
                 btnMenu.setBorder(new LineBorder(new Color(40, 75, 120)));
 
                 JPopupMenu menuPopupCadastros = new JPopupMenu();
-                String[][] itensDropdown = {
-                    {"Professores", "Tela_cadastroProfessor"},
-                    {"Turmas", "Tela_cadastoTurma"},
-                    {"Qualificações", "Tela_cadastroQualificação"},
-                    {"Níveis", "Tela_cadastroNivel"},
-                    {"Nova Inscrição", "FormularioInscricao"} // Restaurado no Dropdown!
-                };
+                
+                JMenuItem itemProfessores = new JMenuItem("Professores");
+                JMenuItem itemQualificacoes = new JMenuItem("Qualificações");
+                JMenuItem itemNiveis = new JMenuItem("Níveis");
+                
+                JMenuItem itemDropdownInscricao = new JMenuItem("Inscrição");
+                JMenuItem itemDropdownMatricula = new JMenuItem("Matrícula");
+                JMenuItem itemDropdownTurma = new JMenuItem("Turma");
 
-                for (String[] item : itensDropdown) {
-                    if (nivelAcesso.equalsIgnoreCase("Secretaria") && (item[0].equals("Professores") || item[0].equals("Níveis de Acesso"))) {
-                        continue;
-                    }
+                // Redirecionamento correto para o painel embutido de Professores
+                itemProfessores.addActionListener(e -> {
+                    cardLayout.show(panelConteudoDinamico, "FormularioCadastroProfessor");
+                    lblTituloPagina.setText("Cadastrar Professor / Formador");
+                    lblSubtituloPagina.setText("Insira os dados do novo docente para listagem automática");
+                });
 
-                    JMenuItem menuItem = new JMenuItem(item[0]);
-                    menuItem.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-                    menuItem.addActionListener(e -> {
-                        if (item[0].equals("Nova Inscrição")) {
-                            cardLayout.show(panelConteudoDinamico, "FormularioInscricao");
-                            lblTituloPagina.setText("Efetuar Inscrição");
-                            lblSubtituloPagina.setText("Formulário de Novas Inscrições e Histórico Recente");
-                        } else {
-                            abrirJanelaLegada(item[1]);
-                        }
-                        
-                    });
-                    menuPopupCadastros.add(menuItem);
+                itemQualificacoes.addActionListener(e -> abrirJanelaLegada("Tela_cadastroQualificação"));
+                itemNiveis.addActionListener(e -> abrirJanelaLegada("Tela_cadastroNivel"));
+
+                itemDropdownInscricao.addActionListener(e -> {
+                    cardLayout.show(panelConteudoDinamico, "Inscrições");
+                    lblTituloPagina.setText("Inscrições");
+                    lblSubtituloPagina.setText("Gestão de Inscrições do Sistema");
+                });
+
+                itemDropdownMatricula.addActionListener(e -> {
+                    cardLayout.show(panelConteudoDinamico, "FormularioCadastroMatricula");
+                    lblTituloPagina.setText("Efetivar Matrícula");
+                    lblSubtituloPagina.setText("Insira as credenciais para realizar uma nova matrícula");
+                });
+
+                itemDropdownTurma.addActionListener(e -> {
+                    cardLayout.show(panelConteudoDinamico, "FormularioCadastroTurma");
+                    lblTituloPagina.setText("Cadastrar Turma");
+                    lblSubtituloPagina.setText("Insira os dados da nova turma para listagem automática");
+                });
+
+                if (!nivelAcesso.equalsIgnoreCase("Secretaria")) {
+                    menuPopupCadastros.add(itemProfessores);
+                    menuPopupCadastros.add(itemNiveis);
                 }
+                menuPopupCadastros.add(itemQualificacoes);
+                menuPopupCadastros.addSeparator();
+                menuPopupCadastros.add(itemDropdownInscricao);
+                menuPopupCadastros.add(itemDropdownMatricula);
+                menuPopupCadastros.add(itemDropdownTurma);
+
                 btnMenu.addActionListener(e -> menuPopupCadastros.show(btnMenu, btnMenu.getWidth(), 0));
             } else {
                 corPadraoFundo = AZUL_ESCURO_NAV;
@@ -223,11 +306,7 @@ public class Tela_Principal {
                 btnMenu.setBorder(null);
             }
 
-
-            //if (menu.equals("Dashboard")|| menu.equals("Qualificacoes") ||menu.equals("Formadores") || menu.equals("Inscrições") || menu.equals("Formações")) {
-
-            if (menu.equals("Dashboard") || menu.equals("Formadores") || menu.equals("Formações") || menu.equals("Inscrições")) {
-
+            if (!menu.equals("Cadastros ▾")) {
                 btnMenu.addActionListener(e -> {
                     cardLayout.show(panelConteudoDinamico, menu);
                     lblTituloPagina.setText(menu);
@@ -306,20 +385,16 @@ public class Tela_Principal {
         return painel;
     }
 
-    private JPanel criarPainelFormacoes() {
-        JPanel painel = new JPanel(new BorderLayout(0, 15));
-        painel.setBackground(BRANCO);
-        painel.setBorder(new EmptyBorder(15, 15, 15, 15));
-
+    private JPanel criarPainelBarraFerramentas(String rotuloBotaoNovo, DefaultTableModel modeloReferencia, String nomeCardView) {
         JPanel panelAcoes = new JPanel(new BorderLayout());
         panelAcoes.setBackground(BRANCO);
 
         JPanel panelPesquisa = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
         panelPesquisa.setBackground(BRANCO);
 
-        JTextField txtPesquisarCurso = new JTextField();
-        txtPesquisarCurso.setPreferredSize(new Dimension(250, 35));
-        panelPesquisa.add(txtPesquisarCurso);
+        JTextField txtPesquisar = new JTextField();
+        txtPesquisar.setPreferredSize(new Dimension(250, 35));
+        panelPesquisa.add(txtPesquisar);
 
         JButton btnFiltrar = new JButton("Filtrar");
         btnFiltrar.setPreferredSize(new Dimension(90, 35));
@@ -332,12 +407,28 @@ public class Tela_Principal {
         JPanel panelBotoesCrud = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
         panelBotoesCrud.setBackground(BRANCO);
 
-        JButton btnNovo = new JButton("+ Nova Formação");
+        JButton btnNovo = new JButton(rotuloBotaoNovo);
         btnNovo.setBackground(AZUL_DESTAQUE);
         btnNovo.setForeground(BRANCO);
         btnNovo.setFont(new Font("Segoe UI", Font.BOLD, 13));
         btnNovo.setPreferredSize(new Dimension(150, 35));
         btnNovo.setBorder(null);
+
+        btnNovo.addActionListener(e -> {
+            if(nomeCardView.equals("Inscrições")) {
+                cardLayout.show(panelConteudoDinamico, "FormularioInscricao");
+            } else if(nomeCardView.equals("Turmas")) {
+                cardLayout.show(panelConteudoDinamico, "FormularioCadastroTurma");
+            } else if(nomeCardView.equals("Matrículas")) {
+                cardLayout.show(panelConteudoDinamico, "FormularioCadastroMatricula");
+            } else if(nomeCardView.equals("Formadores")) {
+                cardLayout.show(panelConteudoDinamico, "FormularioCadastroProfessor");
+            } else {
+                Object[] novaLinha = new Object[modeloReferencia.getColumnCount()];
+                novaLinha[0] = "NOVO";
+                modeloReferencia.addRow(novaLinha);
+            }
+        });
 
         JButton btnEditar = new JButton("Editar");
         btnEditar.setBackground(BRANCO);
@@ -357,25 +448,27 @@ public class Tela_Principal {
             panelBotoesCrud.add(btnEditar);
             panelBotoesCrud.add(btnEliminar);
         } else if (nivelAcesso.equalsIgnoreCase("Secretaria")) {
+            if(!nomeCardView.equals("Formadores") && !nomeCardView.equals("Salas")) {
+                panelBotoesCrud.add(btnNovo);
+            }
             panelBotoesCrud.add(btnEditar);
         }
 
         panelAcoes.add(panelBotoesCrud, BorderLayout.EAST);
-        painel.add(panelAcoes, BorderLayout.NORTH);
+        return panelAcoes;
+    }
+
+    private JPanel criarPainelFormacoes() {
+        JPanel painel = new JPanel(new BorderLayout(0, 15));
+        painel.setBackground(BRANCO);
+        painel.setBorder(new EmptyBorder(15, 15, 15, 15));
+        painel.add(criarPainelBarraFerramentas("+ Nova Formação", modeloFormacoes, "Formações"), BorderLayout.NORTH);
 
         JScrollPane scrollPane = new JScrollPane();
-        JTable table = new JTable();
+        JTable table = new JTable(modeloFormacoes);
         table.setRowHeight(35);
-        table.setModel(new DefaultTableModel(
-            new Object[][] {
-                {"FOR-001", "Programação Web Full Stack", "240 horas", "Profissionalizante", "Ativo"},
-                {"FOR-002", "Suporte Informático e Hardware", "120 horas", "Técnico", "Ativo"},
-            },
-            new String[] { "Código", "Nome da Formação", "Carga Horária", "Tipo de Curso", "Estado" }
-        ));
         scrollPane.setViewportView(table);
         painel.add(scrollPane, BorderLayout.CENTER);
-
         return painel;
     }
 
@@ -383,102 +476,69 @@ public class Tela_Principal {
         JPanel painel = new JPanel(new BorderLayout(0, 15));
         painel.setBackground(BRANCO);
         painel.setBorder(new EmptyBorder(15, 15, 15, 15));
+        painel.add(criarPainelBarraFerramentas("+ Novo Formador", modeloFormadores, "Formadores"), BorderLayout.NORTH);
 
         JScrollPane scrollPane = new JScrollPane();
-        JTable table = new JTable();
+        JTable table = new JTable(modeloFormadores);
         table.setRowHeight(35);
-        table.setModel(new DefaultTableModel(
-            new Object[][] {
-                {"12345", "Malik", "Mangue", "Masculino", "Malikmang@gmail.com", "876543211", "Programação web", "Ativo"},
-                {"43211", "Kenny", "Pessula", "Masculino", "keanypes@gmail.com", "857643212", "Programação web", "Ativo"}            },
-            new String[] { "Código", "Nome", "Apelido", "Sexo", "Email", "Telefone", "Área de Atuação", "Estado" }
-        ));
         scrollPane.setViewportView(table);
         painel.add(scrollPane, BorderLayout.CENTER);
-
         return painel;
     }
 
-    // --- PAINEL DE LISTAGEM DE INSCRIÇÕES COM FILTRO E EDITAR ---
     private JPanel criarPainelListaInscricoes() {
         JPanel painel = new JPanel(new BorderLayout(0, 15));
         painel.setBackground(BRANCO);
         painel.setBorder(new EmptyBorder(15, 15, 15, 15));
+        painel.add(criarPainelBarraFerramentas("+ Nova Inscrição", modeloInscricoes, "Inscrições"), BorderLayout.NORTH);
 
-        JPanel panelAcoes = new JPanel(new BorderLayout());
-        panelAcoes.setBackground(BRANCO);
-
-        // Barra de Pesquisa (Esquerda)
-        JPanel panelPesquisa = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
-        panelPesquisa.setBackground(BRANCO);
-
-        JTextField txtPesquisarInscricao = new JTextField();
-        txtPesquisarInscricao.setPreferredSize(new Dimension(250, 35));
-        panelPesquisa.add(txtPesquisarInscricao);
-
-        JButton btnFiltrar = new JButton("Filtrar");
-        btnFiltrar.setPreferredSize(new Dimension(90, 35));
-        btnFiltrar.setBackground(BRANCO);
-        btnFiltrar.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        btnFiltrar.setBorder(new LineBorder(Color.LIGHT_GRAY, 1));
-        panelPesquisa.add(btnFiltrar);
-        panelAcoes.add(panelPesquisa, BorderLayout.WEST);
-
-        // Botões CRUD (Direita)
-        JPanel panelBotoesCrud = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
-        panelBotoesCrud.setBackground(BRANCO);
-
-        JButton btnNovaInscricao = new JButton("+ Nova Inscrição");
-        btnNovaInscricao.setBackground(AZUL_DESTAQUE);
-        btnNovaInscricao.setForeground(BRANCO);
-        btnNovaInscricao.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btnNovaInscricao.setPreferredSize(new Dimension(150, 35));
-        btnNovaInscricao.setBorder(null);
-        btnNovaInscricao.addActionListener(e -> {
-            cardLayout.show(panelConteudoDinamico, "FormularioInscricao");
-            lblTituloPagina.setText("Efetuar Inscrição");
-            lblSubtituloPagina.setText("Formulário de Novas Inscrições e Histórico Recente");
-        });
-
-        JButton btnEditar = new JButton("Editar");
-        btnEditar.setBackground(BRANCO);
-        btnEditar.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        btnEditar.setPreferredSize(new Dimension(90, 35));
-        btnEditar.setBorder(new LineBorder(Color.LIGHT_GRAY, 1));
-
-        JButton btnEliminar = new JButton("Eliminar");
-        btnEliminar.setBackground(new Color(248, 215, 218));
-        btnEliminar.setForeground(new Color(114, 28, 36));
-        btnEliminar.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btnEliminar.setPreferredSize(new Dimension(100, 35));
-        btnEliminar.setBorder(new LineBorder(new Color(245, 198, 203), 1));
-
-        if (nivelAcesso.equalsIgnoreCase("Administrador")) {
-            panelBotoesCrud.add(btnNovaInscricao);
-            panelBotoesCrud.add(btnEditar);
-            panelBotoesCrud.add(btnEliminar);
-        } else if (nivelAcesso.equalsIgnoreCase("Secretaria")) {
-            panelBotoesCrud.add(btnEditar);
-        }
-
-        panelAcoes.add(panelBotoesCrud, BorderLayout.EAST);
-        painel.add(panelAcoes, BorderLayout.NORTH);
-
-        // Tabela de Inscrições realizadas
         JScrollPane scrollPane = new JScrollPane();
-        JTable table = new JTable();
+        JTable table = new JTable(modeloInscricoes);
         table.setRowHeight(35);
-        table.setModel(new DefaultTableModel(
-            new Object[][] {
-                {"INC-001", "Lucas Silva", "Bases de Dados", "02/07/2026", "Primeiro semestre", "Confirmada"},
-                {"INC-002", "Maria Santos", "Desenvolvimento Web", "01/07/2026", "Segundo semestre", "Pendente"},
-                {"INC-003", "Kenny Pessula", "Programação Web", "05/07/2026", "Primeiro semestre", "Confirmada"}
-            },
-            new String[] { "Nº Inscrição", "Formando", "Módulo / Curso", "Data", "Semestre", "Estado" }
-        ));
         scrollPane.setViewportView(table);
         painel.add(scrollPane, BorderLayout.CENTER);
+        return painel;
+    }
 
+    private JPanel criarPainelMatriculas() {
+        JPanel painel = new JPanel(new BorderLayout(0, 15));
+        painel.setBackground(BRANCO);
+        painel.setBorder(new EmptyBorder(15, 15, 15, 15));
+        painel.add(criarPainelBarraFerramentas("+ Nova Matrícula", modeloMatriculas, "Matrículas"), BorderLayout.NORTH);
+
+        JScrollPane scrollPane = new JScrollPane();
+        JTable table = new JTable(modeloMatriculas);
+        table.setRowHeight(35);
+        scrollPane.setViewportView(table);
+        painel.add(scrollPane, BorderLayout.CENTER);
+        return painel;
+    }
+
+    private JPanel criarPainelSalas() {
+        JPanel painel = new JPanel(new BorderLayout(0, 15));
+        painel.setBackground(BRANCO);
+        painel.setBorder(new EmptyBorder(15, 15, 15, 15));
+        painel.add(criarPainelBarraFerramentas("+ Nova Sala", modeloSalas, "Salas"), BorderLayout.NORTH);
+
+        JScrollPane scrollPane = new JScrollPane();
+        JTable table = new JTable(modeloSalas);
+        table.setRowHeight(35);
+        scrollPane.setViewportView(table);
+        painel.add(scrollPane, BorderLayout.CENTER);
+        return painel;
+    }
+
+    private JPanel criarPainelTurmas() {
+        JPanel painel = new JPanel(new BorderLayout(0, 15));
+        painel.setBackground(BRANCO);
+        painel.setBorder(new EmptyBorder(15, 15, 15, 15));
+        painel.add(criarPainelBarraFerramentas("+ Nova Turma", modeloTurmas, "Turmas"), BorderLayout.NORTH);
+
+        JScrollPane scrollPane = new JScrollPane();
+        JTable table = new JTable(modeloTurmas);
+        table.setRowHeight(35);
+        scrollPane.setViewportView(table);
+        painel.add(scrollPane, BorderLayout.CENTER);
         return painel;
     }
 
@@ -514,18 +574,13 @@ public class Tela_Principal {
 
     private void abrirJanelaLegada(String nomeClasse) {
         try {
-            if(nomeClasse.equals("Tela_cadastroProfessor")) new Tela_cadastroProfessor().setVisible(true);
-            else if(nomeClasse.equals("Tela_cadastoTurma")) new Tela_cadastoTurma().setVisible(true);
-            else if(nomeClasse.equals("Tela_cadastroQualificação")) new Tela_cadastroQualificação().setVisible(true);
-
-            else if(nomeClasse.equals("Tela_Utilizadores")) new Tela_Utilizadores().setVisible(true);
+            if(nomeClasse.equals("Tela_cadastroQualificação")) new Tela_cadastroQualificação().setVisible(true);
             else if(nomeClasse.equals("Tela_cadastroNivel")) new Tela_cadastroNivel().setVisible(true);
-
         } catch (Exception e) {
             JOptionPane.showMessageDialog(frame, "Erro ao abrir a janela.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     private void fecharAplicacao() {
         int resposta = JOptionPane.showConfirmDialog(null, "Tens a certeza que queres sair?", "Confirmação", JOptionPane.YES_NO_OPTION);
         if (resposta == JOptionPane.YES_OPTION) {

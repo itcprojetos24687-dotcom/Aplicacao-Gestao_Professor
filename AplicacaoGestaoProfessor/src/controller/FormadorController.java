@@ -8,14 +8,15 @@ import java.util.ArrayList;
 import servico.FormadorServico;
 public class FormadorController {
 	static Scanner sc = new Scanner(System.in);
-	
+
 	public boolean cadastrarFormador(String nome, String apelido, String email, String genero, String estadoCivil,int contacto, double salario)
 
 	throws ExceptionDao{
 		if(nome != null && nome.length()>0 && nome.matches("[a-zA-Z]+")&& apelido != null && apelido.matches("[a-zA-z]+") && apelido.length() > 0 && email != null && email.length() > 0 && contacto > 0){
 			Formador formador = new Formador(nome, apelido, email,genero,estadoCivil,contacto, salario);
-			FormadorServico fs = new FormadorServico(formador);
-			fs.salvar(formador);
+			formador.cadastrarFormador(formador);
+//			FormadorServico fs = new FormadorServico(formador);
+//			fs.salvar(formador);
 			return true;
 		}
 		return false;
@@ -42,7 +43,7 @@ public class FormadorController {
 			formador.setCodigo(codigo);
 			formador.apagarFormador(formador);
 			return true;
-			
+
 		}
 		return false;
 	}
@@ -58,7 +59,6 @@ public class FormadorController {
 			throw new ExceptionDao("Erro ao apagar Professor"+e);
 		}
 	}*/
-	
-	
-}
 
+
+}
