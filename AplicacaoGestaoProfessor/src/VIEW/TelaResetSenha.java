@@ -9,30 +9,26 @@ public class TelaResetSenha extends JFrame {
         
         setTitle("Sistema de Professores - Reset de Senha");
         setSize(500, 550);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Alterado para não fechar a app inteira caso venha de outra tela
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
         setLocationRelativeTo(null);
         
-     
         JPanel painelFundo = new JPanel();
         painelFundo.setBackground(new Color(0, 51, 102)); 
         painelFundo.setLayout(null);
         getContentPane().add(painelFundo);
-
-       
+      
         JPanel card = new JPanel();
         card.setBackground(Color.WHITE);
         card.setBounds(38, 50, 400, 400); 
         card.setLayout(null);
         painelFundo.add(card);
 
-  
         JLabel lblTitulo = new JLabel("Redefinir Senha", SwingConstants.CENTER);
         lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 22));
         lblTitulo.setForeground(new Color(30, 41, 59));
         lblTitulo.setBounds(0, 30, 400, 30);
         card.add(lblTitulo);
 
- 
         JLabel lblUtilizador = new JLabel("Nome do Utilizador");
         lblUtilizador.setFont(new Font("Bahnschrift", Font.PLAIN, 12));
         lblUtilizador.setBounds(40, 90, 200, 20);
@@ -65,7 +61,7 @@ public class TelaResetSenha extends JFrame {
         JButton btnConfirmar = new JButton("ATUALIZAR SENHA");
         btnConfirmar.setBounds(40, 320, 320, 45);
         btnConfirmar.setBackground(new Color(59, 130, 246)); 
-        btnConfirmar.setForeground(Color.WHITE); // Texto branco para melhor contraste com o fundo azul
+        btnConfirmar.setForeground(Color.WHITE); 
         btnConfirmar.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnConfirmar.setFocusPainted(false); 
         card.add(btnConfirmar);

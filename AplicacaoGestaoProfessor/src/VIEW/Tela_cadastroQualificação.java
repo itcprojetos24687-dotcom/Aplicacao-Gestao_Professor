@@ -41,7 +41,7 @@ public class Tela_cadastroQualificação extends JPanel {
         setBackground(BRANCO);
         setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        // --- Barra de Ações Superior (Idêntico ao padrão dos Formadores) ---
+ 
         JPanel panelAcoes = new JPanel(new BorderLayout());
         panelAcoes.setBackground(BRANCO);
 

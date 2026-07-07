@@ -47,16 +47,6 @@ public class Tela_Principal {
     private final Color TEXTO_MUTED     = new Color(108, 117, 125);
     private Tela_login tela_login;
 
-//    public static void main(String[] args) {
-//        EventQueue.invokeLater(() -> {
-//            try {
-//                Tela_Principal window = new Tela_Principal();
-//                window.frame.setVisible(true);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        });
-//    }
 
     public Tela_Principal(Perfil p,Tela_login tela_login) {
     	this.tela_login = tela_login;
