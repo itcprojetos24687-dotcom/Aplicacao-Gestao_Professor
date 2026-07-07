@@ -139,7 +139,6 @@ public class Tela_Principal {
         lblAdmin.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         panelTopoDireita.add(lblAdmin);
 
-        // CONFIGURAÇÃO DO BOTÃO GERIR UTILIZADORES
         JButton btnUtilizadores = new JButton(" Gerir Utilizadores");
         btnUtilizadores.setFont(new Font("Segoe UI", Font.BOLD, 12));
         btnUtilizadores.setForeground(BRANCO);
@@ -180,7 +179,7 @@ public class Tela_Principal {
         panelConteudoDinamico.add(criarPainelSalas(), "Salas");
         panelConteudoDinamico.add(criarPainelTurmas(), "Turmas");
 
-     
+        // Painel Embutido de Cadastro de Turma
         Tela_cadastoTurma painelCadastroTurma = new Tela_cadastoTurma(new Tela_cadastoTurma.OnTurmaCadastradaListener() {
             @Override
             public void onTurmaCadastrada(String codigo, String curso, String regime, String formador) {
@@ -193,7 +192,7 @@ public class Tela_Principal {
         });
         panelConteudoDinamico.add(painelCadastroTurma, "FormularioCadastroTurma");
 
-      
+        // Painel Embutido de Cadastro de Matrícula
         Tela_Matricula painelCadastroMatricula = new Tela_Matricula(new Tela_Matricula.OnMatriculaCadastradaListener() {
             @Override
             public void onMatriculaCadastrada(String numMatricula, String aluno, String turma, String sala, String data) {
@@ -207,7 +206,7 @@ public class Tela_Principal {
         });
         panelConteudoDinamico.add(painelCadastroMatricula, "FormularioCadastroMatricula");
 
-    
+        // Painel Embutido de Cadastro de Professor
         Tela_cadastroProfessor painelCadastroProfessor = new Tela_cadastroProfessor(new Tela_cadastroProfessor.OnProfessorCadastradoListener() {
             @Override
             public void onProfessorCadastrado(String codigo, String nome, String apelido, String sexo, String email, String telefone, String area, String estado) {
@@ -260,7 +259,6 @@ public class Tela_Principal {
                 JMenuItem itemDropdownMatricula = new JMenuItem("Matrícula");
                 JMenuItem itemDropdownTurma = new JMenuItem("Turma");
 
-                // Redirecionamento correto para o painel embutido de Professores
                 itemProfessores.addActionListener(e -> {
                     cardLayout.show(panelConteudoDinamico, "FormularioCadastroProfessor");
                     lblTituloPagina.setText("Cadastrar Professor / Formador");
@@ -270,10 +268,11 @@ public class Tela_Principal {
                 itemQualificacoes.addActionListener(e -> abrirJanelaLegada("Tela_cadastroQualificação"));
                 itemNiveis.addActionListener(e -> abrirJanelaLegada("Tela_cadastroNivel"));
 
+                // ATUALIZADO: Abre o formulário diretamente
                 itemDropdownInscricao.addActionListener(e -> {
-                    cardLayout.show(panelConteudoDinamico, "Inscrições");
-                    lblTituloPagina.setText("Inscrições");
-                    lblSubtituloPagina.setText("Gestão de Inscrições do Sistema");
+                    cardLayout.show(panelConteudoDinamico, "FormularioInscricao");
+                    lblTituloPagina.setText("Nova Inscrição");
+                    lblSubtituloPagina.setText("Preencha o formulário para registar uma nova inscrição");
                 });
 
                 itemDropdownMatricula.addActionListener(e -> {
