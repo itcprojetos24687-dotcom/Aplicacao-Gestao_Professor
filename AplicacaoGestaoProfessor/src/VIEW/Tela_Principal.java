@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-=======
+
 package VIEW;
 
 import java.awt.EventQueue;

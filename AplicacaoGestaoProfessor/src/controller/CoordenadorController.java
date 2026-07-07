@@ -17,30 +17,30 @@ public class CoordenadorController {
 		return false;
 	}
 
-	public ArrayList<Coordenador> listarCoordenador(Formador formador) throws ExceptionDao {
-		return new Coordenador().listarCoordenador(formador);
-	}
-
-	public boolean atualizarCoordenador(int codigo, Formador formador) throws ExceptionDao {
-		if (codigo != 0 && formador != null && formador.getCodigo() != 0) {
-			Coordenador coordenador = new Coordenador();
-			coordenador.setCodigo(codigo);
-			coordenador.setFormador(formador);
-			coordenador.atualizarCoordenador(coordenador);
-			return true;
-		}
-		return false;
-	}
-
-	public boolean apagarCoordenador(int codigo) throws ExceptionDao {
-		if (codigo != 0) {
-			Coordenador coordenador = new Coordenador();
-			coordenador.setCodigo(codigo);
-			coordenador.apagarCoordenador(coordenador);
-			return true;
-		}
-		return false;
-	}
+//	public ArrayList<Coordenador> listarCoordenador(Formador formador) throws ExceptionDao {
+//		return new Coordenador().listarCoordenador(formador);
+//	}
+//
+//	public boolean atualizarCoordenador(int codigo, Formador formador) throws ExceptionDao {
+//		if (codigo != 0 && formador != null && formador.getCodigo() != 0) {
+//			Coordenador coordenador = new Coordenador();
+//			coordenador.setCodigo(codigo);
+//			coordenador.setFormador(formador);
+//			coordenador.atualizarCoordenador(coordenador);
+//			return true;
+//		}
+//		return false;
+//	}
+//
+//	public boolean apagarCoordenador(int codigo) throws ExceptionDao {
+//		if (codigo != 0) {
+//			Coordenador coordenador = new Coordenador();
+//			coordenador.setCodigo(codigo);
+//			coordenador.apagarCoordenador(coordenador);
+//			return true;
+//		}
+//		return false;
+//	}
 
 	/*public static void main(String[] args) throws ExceptionDao {
 		CoordenadorController controller = new CoordenadorController();

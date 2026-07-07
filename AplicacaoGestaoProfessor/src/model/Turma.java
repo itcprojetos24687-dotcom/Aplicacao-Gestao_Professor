@@ -62,17 +62,17 @@ public class Turma {
 		new TurmaDao().cadastrarTurma(turma);
 	}
 
-	public ArrayList<Turma> listarTurma(String nome) throws ExceptionDao {
-		return new TurmaDao().listarTurma(nome);
-	}
-
-	public void atualizarTurma(Turma turma) throws ExceptionDao {
-		new TurmaDao().atualizarTurma(turma);
-	}
-
-	public void apagarTurma(Turma turma) throws ExceptionDao {
-		new TurmaDao().apagarTurma(turma);
-	}
+//	public ArrayList<Turma> listarTurma(String nome) throws ExceptionDao {
+//		return new TurmaDao().listarTurma(nome);
+//	}
+//
+//	public void atualizarTurma(Turma turma) throws ExceptionDao {
+//		new TurmaDao().atualizarTurma(turma);
+//	}
+//
+//	public void apagarTurma(Turma turma) throws ExceptionDao {
+//		new TurmaDao().apagarTurma(turma);
+//	}
 
 	@Override
 	public String toString() {

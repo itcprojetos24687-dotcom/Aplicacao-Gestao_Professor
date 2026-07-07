@@ -18,32 +18,32 @@ public class TurmaController {
 		}
 		return false;
 		}
-	public ArrayList<Turma> listarTurma(String nome) throws ExceptionDao{
-
-		return new Turma().listarTurma(nome);
-	}
-	public boolean atualizarTurma(int codigo, String nome, int ano_ingresso, String turno)
-			throws ExceptionDao{
-				if(nome != null && nome.length()>0 && codigo != 0 && ano_ingresso > 0 && turno != null && turno.length() > 0){
-					Turma turma = new Turma(nome, ano_ingresso, turno);
-					turma.setCodigo(codigo);
-					turma.atualizarTurma(turma);;
-					return true;
-				}
-				return false;
-				}
-	public boolean apagarTurma(int codigo) throws ExceptionDao{
-
-		if(codigo != 0) {
-
-			Turma turma = new Turma();
-			turma.setCodigo(codigo);
-			turma.apagarTurma(turma);
-			return true;
-
-		}
-		return false;
-	}
+//	public ArrayList<Turma> listarTurma(String nome) throws ExceptionDao{
+//
+//		return new Turma().listarTurma(nome);
+//	}
+//	public boolean atualizarTurma(int codigo, String nome, int ano_ingresso, String turno)
+//			throws ExceptionDao{
+//				if(nome != null && nome.length()>0 && codigo != 0 && ano_ingresso > 0 && turno != null && turno.length() > 0){
+//					Turma turma = new Turma(nome, ano_ingresso, turno);
+//					turma.setCodigo(codigo);
+//					turma.atualizarTurma(turma);;
+//					return true;
+//				}
+//				return false;
+//				}
+//	public boolean apagarTurma(int codigo) throws ExceptionDao{
+//
+//		if(codigo != 0) {
+//
+//			Turma turma = new Turma();
+//			turma.setCodigo(codigo);
+//			turma.apagarTurma(turma);
+//			return true;
+//
+//		}
+//		return false;
+//	}
 	/*public static void main( String[]args) throws ExceptionDao{
 		TurmaController controller = new TurmaController();
 		System.out.print("Adiciona o codigo");
