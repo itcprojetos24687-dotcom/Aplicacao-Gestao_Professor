@@ -223,9 +223,8 @@ public class Tela_login extends JFrame implements ActionListener {
         entrarButton.setForeground(Color.WHITE);
         entrarButton.setFocusPainted(false);
         entrarButton.setPreferredSize(new Dimension(140, 55));
-        entrarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        entrarButton.addActionListener(e -> {
+            
                 PerfilController pc = new PerfilController();
                 try {
                     String username = usuarioField.getText().trim();
@@ -249,13 +248,13 @@ public class Tela_login extends JFrame implements ActionListener {
                         } else {
                             Perfil p = pc.getPerfil(username);
                             
-                            // ATUALIZADO: Agora passa corretamente o perfil obtido e o JFrame de origem do login
+
                             Tela_Principal tl = new Tela_Principal(p, Tela_login.this);
                             tl.abrir();
                             
                             Tela_login.this.setVisible(false);
                             
-                            // Limpa o campo de senha por segurança quando deslogar
+
                             senhaField.setText("");
                         }
                     } else {
