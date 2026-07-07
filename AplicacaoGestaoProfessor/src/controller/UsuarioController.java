@@ -1,11 +1,11 @@
 package controller;
 
 import java.util.ArrayList;
-<<<<<<< HEAD
-=======
+
+
 import dao.*;
 
->>>>>>> branch 'master' of https://github.com/itcprojetos24687-dotcom/Aplicacao-Gestao_Professor.git
+
 import java.util.Scanner;
 import javax.swing.JOptionPane;
 import dao.ExceptionDao;
@@ -16,15 +16,7 @@ public class UsuarioController {
 
 	static Scanner sc = new Scanner(System.in);
 	
-	public boolean login(String username, String password) throws ExceptionDao {
-		if (username != null && username.length() > 0 && password != null && password.length() > 0) {
-			Usuario ul = new Usuario().login(username, password);
-			if (ul != null) {
-				return true;
-			}
-		}
-		return false;
-	}
+
 
 	public Usuario login(String username,String password) throws ExceptionDao{
 		if(username != null && username.length()>0 && password != null && password.length()>0) {
@@ -43,10 +35,6 @@ public class UsuarioController {
 	public boolean cadastrarUsuario(String nome_completo,String username, String password,String email,Perfil perfil, boolean primeiroAcesso)
 	throws Exception {
 
-
-	public boolean cadastrarUsuario(String nome_completo, String username, String password, String email, Perfil perfil)
-			throws ExceptionDao {
-
 		if (nome_completo != null && nome_completo.length() > 0 &&
 			username != null && username.length() > 0 &&
 			password != null && password.length() > 0 &&
@@ -54,7 +42,7 @@ public class UsuarioController {
 			perfil != null) {
 
 
-			Usuario usuario = new Usuario(nome_completo, username, password, email, perfil);
+		
 
 			Usuario usuario = new Usuario(nome_completo,username, password,email,perfil, primeiroAcesso);
 			usuario.cadastrarUsuario(usuario);
@@ -94,12 +82,12 @@ public class UsuarioController {
 	}
 
 
-	public boolean autenticar(String password) throws ExceptionDao {
-		if (password != null && password.length() > 0) {
-			Usuario ul = new Usuario().autenticar(password);
-			if (ul != null) {
-				return true;
-			}
+//	public boolean autenticar(String password) throws ExceptionDao {
+//		if (password != null && password.length() > 0) {
+//			Usuario ul = new Usuario().autenticar(password);
+//			if (ul != null) {
+//				return true;
+//			}
 
 //	public Usuario obterUsuarioPorCodigo(int codigo) throws ExceptionDao {
 //

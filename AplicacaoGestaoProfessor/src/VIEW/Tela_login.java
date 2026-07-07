@@ -521,19 +521,18 @@ public class Tela_login extends JFrame implements ActionListener{
                 String confirm = new String(confirmarSenhaField.getPassword());
                 
                 UsuarioController uc = new UsuarioController();
-                boolean sucesso = uc.autenticar(senhaAtual);
+                utilizadorlogado = uc.autenticar(senhaAtual);
                 
-                if (sucesso) {
+                if (utilizadorlogado != null) {
                     if (!nova.equals(confirm)) {
                         JOptionPane.showMessageDialog(Tela_login.this, "As senhas não coincidem!", "Erro", JOptionPane.ERROR_MESSAGE);
-                        return; // Para a execução para o usuário tentar de novo
+                        return; 
                     }
                     if (nova.length() < 8) {
                         JOptionPane.showMessageDialog(Tela_login.this, "A senha deve ter pelo menos 8 caracteres.", "Erro", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
                     
-                    // Se passar nas validações, altera a senha e limpa os campos
                     uc.redifinirSenha(senhaAtual, confirm); 
                     JOptionPane.showMessageDialog(Tela_login.this, "Senha alterada com sucesso!");
                     
