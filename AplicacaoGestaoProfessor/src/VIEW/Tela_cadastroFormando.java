@@ -9,7 +9,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -17,15 +16,17 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-public class Tela_cadastroQualificação extends JPanel {
+public class Tela_cadastroFormando extends JPanel {
 
     private static final long serialVersionUID = 1L;
     
     // Componentes de Entrada de Dados
-    private JTextField txtNomeQualificacao;
-    private JComboBox<String> cbCoordenador;
-    private JComboBox<String> cbNivelQualificacao;
-    private JComboBox<String> cbCampoPertencente;
+    private JTextField txtCodigo;
+    private JTextField txtNome;
+    private JTextField txtApelido;
+    private JTextField txtContacto;
+    private JTextField txtEmail;
+    private JTextField txtBi;
     private JButton btnSalvar, btnLimpar;
 
     // Paleta de Cores unificada AcademiaPro
@@ -35,19 +36,19 @@ public class Tela_cadastroQualificação extends JPanel {
     private final Color BRANCO          = Color.WHITE;
     private final Color TEXTO_MUTED     = new Color(108, 117, 125);
 
-    public Tela_cadastroQualificação() {
+    public Tela_cadastroFormando() {
         // Alinhado ao plano de design do painel central
         setLayout(new BorderLayout(0, 15));
         setBackground(BRANCO);
         setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        // --- Barra de Ações Superior (Idêntico ao padrão dos Formadores) ---
+        // --- Barra de Ações Superior (Idêntico ao padrão das outras telas) ---
         JPanel panelAcoes = new JPanel(new BorderLayout());
         panelAcoes.setBackground(BRANCO);
 
         JPanel panelTituloInterno = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         panelTituloInterno.setBackground(BRANCO);
-        JLabel lblInfo = new JLabel("Preencha os dados abaixo para registar uma nova qualificação no sistema.");
+        JLabel lblInfo = new JLabel("Preencha os dados abaixo para registar um novo formando no sistema.");
         lblInfo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         lblInfo.setForeground(TEXTO_MUTED);
         panelTituloInterno.add(lblInfo);
@@ -59,43 +60,49 @@ public class Tela_cadastroQualificação extends JPanel {
         JPanel panelFormContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         panelFormContainer.setBackground(BRANCO);
 
-        // Grid Layout para organizar os 4 campos (4 linhas, 2 colunas)
-        JPanel panelGridCampos = new JPanel(new GridLayout(4, 2, 20, 20));
+        // Grid Layout para organizar os 6 campos (6 linhas, 2 colunas)
+        JPanel panelGridCampos = new JPanel(new GridLayout(6, 2, 20, 20));
         panelGridCampos.setBackground(BRANCO);
-        panelGridCampos.setPreferredSize(new Dimension(750, 230));
+        panelGridCampos.setPreferredSize(new Dimension(750, 330));
 
         Font fontLabel = new Font("Segoe UI", Font.BOLD, 14);
         Font fontText = new Font("Segoe UI", Font.PLAIN, 14);
 
-        // 1. Nome da Qualificação
-        panelGridCampos.add(new JLabel("Nome da Qualificação *") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
-        txtNomeQualificacao = new JTextField();
-        txtNomeQualificacao.setFont(fontText);
-        panelGridCampos.add(txtNomeQualificacao);
+        // 1. Código
+        panelGridCampos.add(new JLabel("Código *") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
+        txtCodigo = new JTextField();
+        txtCodigo.setFont(fontText);
+        panelGridCampos.add(txtCodigo);
 
-        // 2. Coordenador da Qualificação (ComboBox)
-        panelGridCampos.add(new JLabel("Coordenador") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
-        cbCoordenador = new JComboBox<>(new String[] {
-            "Selecione...","Malik Mangue", "Edmundo Mapotere", "Kenny Pessula"
-        });
-        cbCoordenador.setFont(fontText);
-        panelGridCampos.add(cbCoordenador);
+        // 2. Nome
+        panelGridCampos.add(new JLabel("Nome *") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
+        txtNome = new JTextField();
+        txtNome.setFont(fontText);
+        panelGridCampos.add(txtNome);
 
-        // 3. Nível da Qualificação (ComboBox)
-        panelGridCampos.add(new JLabel("Nível da Qualificação *") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
-        cbNivelQualificacao = new JComboBox<>(new String[] {
-            "Selecione...", "CV 3", "CV 4", "CV 5"
-        });
-        cbNivelQualificacao.setFont(fontText);
-        panelGridCampos.add(cbNivelQualificacao);
+        // 3. Apelido
+        panelGridCampos.add(new JLabel("Apelido *") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
+        txtApelido = new JTextField();
+        txtApelido.setFont(fontText);
+        panelGridCampos.add(txtApelido);
 
-        // 4. Campo Pertencente (ComboBox)
-        panelGridCampos.add(new JLabel("Campo Pertencente") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
-        cbCampoPertencente = new JComboBox<>(new String[] {
-            "Selecione...", "Técnico", "Gestao"
-        });
-        cbCampoPertencente.setFont(fontText);
-        panelGridCampos.add(cbCampoPertencente);
+        // 4. Contacto
+        panelGridCampos.add(new JLabel("Contacto") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
+        txtContacto = new JTextField();
+        txtContacto.setFont(fontText);
+        panelGridCampos.add(txtContacto);
+
+        // 5. Email
+        panelGridCampos.add(new JLabel("Email") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
+        txtEmail = new JTextField();
+        txtEmail.setFont(fontText);
+        panelGridCampos.add(txtEmail);
+
+        // 6. BI
+        panelGridCampos.add(new JLabel("BI *") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
+        txtBi = new JTextField();
+        txtBi.setFont(fontText);
+        panelGridCampos.add(txtBi);
 
         panelFormContainer.add(panelGridCampos);
         add(panelFormContainer, BorderLayout.CENTER);
@@ -112,11 +119,11 @@ public class Tela_cadastroQualificação extends JPanel {
         btnLimpar.setBorder(new LineBorder(new Color(220, 224, 230)));
         btnLimpar.addActionListener(e -> limparCampos());
 
-        btnSalvar = new JButton("Guardar Qualificação");
+        btnSalvar = new JButton("Guardar Formando");
         btnSalvar.setBackground(AZUL_DESTAQUE);
         btnSalvar.setForeground(BRANCO);
         btnSalvar.setFont(fontLabel);
-        btnSalvar.setPreferredSize(new Dimension(185, 40));
+        btnSalvar.setPreferredSize(new Dimension(165, 40));
         btnSalvar.setBorder(null);
         btnSalvar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -134,26 +141,40 @@ public class Tela_cadastroQualificação extends JPanel {
      * Validação básica e persistência fictícia
      */
     private void acaoSalvar() {
-        String nome = txtNomeQualificacao.getText().trim();
-        String coordenador = (String) cbCoordenador.getSelectedItem();
-        String nivel = (String) cbNivelQualificacao.getSelectedItem();
-        String campo = (String) cbCampoPertencente.getSelectedItem();
+        String codigo = txtCodigo.getText().trim();
+        String nome = txtNome.getText().trim();
+        String apelido = txtApelido.getText().trim();
+        String contacto = txtContacto.getText().trim();
+        String email = txtEmail.getText().trim();
+        String bi = txtBi.getText().trim();
 
-        if (nome.isEmpty() || nivel.equals("Selecione...")) {
+        if (codigo.isEmpty() || nome.isEmpty() || apelido.isEmpty() || bi.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Por favor, preencha os campos obrigatórios (*).", "Aviso", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        String resumo = "Qualificação: " + nome + "\nNível: " + nivel + "\nCoordenador: " + coordenador;
-        JOptionPane.showMessageDialog(this, "Qualificação guardada com sucesso!\n\n" + resumo, "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        // Validação simples: contacto deve ser numérico, se preenchido
+        if (!contacto.isEmpty()) {
+            try {
+                Integer.parseInt(contacto);
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "O campo Contacto deve conter apenas números.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        }
+
+        String resumo = "Código: " + codigo + "\nNome: " + nome + " " + apelido + "\nBI: " + bi;
+        JOptionPane.showMessageDialog(this, "Formando guardado com sucesso!\n\n" + resumo, "Sucesso", JOptionPane.INFORMATION_MESSAGE);
         
         limparCampos();
     }
 
     private void limparCampos() {
-        txtNomeQualificacao.setText("");
-        cbCoordenador.setSelectedIndex(0);
-        cbNivelQualificacao.setSelectedIndex(0);
-        cbCampoPertencente.setSelectedIndex(0);
+        txtCodigo.setText("");
+        txtNome.setText("");
+        txtApelido.setText("");
+        txtContacto.setText("");
+        txtEmail.setText("");
+        txtBi.setText("");
     }
 }

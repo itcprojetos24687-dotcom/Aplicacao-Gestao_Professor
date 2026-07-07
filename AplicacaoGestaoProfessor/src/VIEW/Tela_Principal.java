@@ -48,24 +48,29 @@ public class Tela_Principal {
     private final Color TEXTO_MUTED     = new Color(108, 117, 125);
     private Tela_login tela_login;
 
-//    public static void main(String[] args) {
-//        EventQueue.invokeLater(() -> {
-//            try {
-//                Tela_Principal window = new Tela_Principal();
-//                window.frame.setVisible(true);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        });
-//    }
-
+    public static void main(String[] args) {
+        EventQueue.invokeLater(() -> {
+            try {
+                Tela_Principal window = new Tela_Principal();
+                window.frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+ // Construtor de teste - só para rodar via main(), sem precisar do login
+    public Tela_Principal() {
+        this.tela_login = null;
+        this.nivelAcesso = "Administrador"; // pode trocar para "Formador", "Secretaria", "Auditor" etc.
+        initialize();
+    }
     public Tela_Principal(Perfil p,Tela_login tela_login) {
     	this.tela_login = tela_login;
         this.nivelAcesso = p.getNome();
-        initialize();
-        
-        
+        initialize();   
     }
+    
+    
     public void abrir() {
     	if(frame != null) {
     		frame.setVisible(true);
@@ -155,19 +160,30 @@ public class Tela_Principal {
 
         JPanel painelDashboard = criarPainelDashboard();
         JPanel painelFormadores = criarPainelFormadores();
+      
 
         Tela_Incrição painelInscricoes = new Tela_Incrição(); 
         Tela_Utilizadores tl = new Tela_Utilizadores();
         Tela_cadastroQualificação TQ = new Tela_cadastroQualificação();
-
+        JPanel painelListaGestaoQualificacoes = criarPainelListaGestao_Qualificacoes();
+        Tela_cadastroQualificação painelFormularioQualificacao = new Tela_cadastroQualificação();
+        Tela_cadastroFormando painelFormularioFormando = new Tela_cadastroFormando();
+        JPanel painelListaFormando = criarPainelListaFormando();
+        
         Tela_Incrição painelFormularioInscricao = new Tela_Incrição(); 
         JPanel painelListaInscricoes = criarPainelListaInscricoes(); 
+        
+       
 
 
         panelConteudoDinamico.add(painelDashboard, "Dashboard");
         panelConteudoDinamico.add(painelFormadores, "Formadores");
         panelConteudoDinamico.add(criarPainelFormacoes(), "Formações");
-
+        panelConteudoDinamico.add(painelListaGestaoQualificacoes, "Qualificacao");
+        panelConteudoDinamico.add(painelFormularioQualificacao, "FormularioQualificacao");
+        panelConteudoDinamico.add(painelListaFormando, "Formando");
+        panelConteudoDinamico.add(painelFormularioFormando, "FormularioFormando");
+        
         panelConteudoDinamico.add(painelInscricoes, "Inscrições");
         panelConteudoDinamico.add(TQ, "Qualificacoes");
         //panelConteudoDinamico.add(tl, "Utilizadores");
@@ -180,12 +196,12 @@ public class Tela_Principal {
         //String[] menus = {"Dashboard", "Formações", "Inscrições","Qualificacoes", "Formadores", "Cadastros ▾"};
 
         // "Inscrições" firme e forte na barra lateral
-        String[] menus = {"Dashboard", "Formações", "Formadores", "Inscrições", "Cadastros ▾",};
+        String[] menus = {"Dashboard", "Formações", "Formadores", "Inscrições","Qualificacao", "Formando", "Cadastros ▾",};
 
         
         for (String menu : menus) {
             if (nivelAcesso.equalsIgnoreCase("Formador")) {
-                if (menu.equals("Cadastros ▾") || menu.equals("Formadores") || menu.equals("Inscrições")) {
+            	if (menu.equals("Cadastros ▾") || menu.equals("Formadores") || menu.equals("Inscrições") || menu.equals("Qualificacao")) {
                     continue;
                 }
             }
@@ -250,8 +266,8 @@ public class Tela_Principal {
 
 
             //if (menu.equals("Dashboard")|| menu.equals("Qualificacoes") ||menu.equals("Formadores") || menu.equals("Inscrições") || menu.equals("Formações")) {
-
-            if (menu.equals("Dashboard") || menu.equals("Formadores") || menu.equals("Formações") || menu.equals("Inscrições")) {
+            
+            if (menu.equals("Dashboard") || menu.equals("Formadores") || menu.equals("Formações") || menu.equals("Inscrições") || menu.equals("Qualificacao") || menu.equals("Formando")) {
 
                 btnMenu.addActionListener(e -> {
                     cardLayout.show(panelConteudoDinamico, menu);
@@ -506,6 +522,174 @@ public class Tela_Principal {
 
         return painel;
     }
+    
+    
+
+    // --- PAINEL DE LISTAGEM DE Gestao_Qualificacoes COM FILTRO E EDITAR ---
+    private JPanel criarPainelListaGestao_Qualificacoes() {
+        JPanel painel = new JPanel(new BorderLayout(0, 15));
+        painel.setBackground(BRANCO);
+        painel.setBorder(new EmptyBorder(15, 15, 15, 15));
+
+        JPanel panelAcoes = new JPanel(new BorderLayout());
+        panelAcoes.setBackground(BRANCO);
+
+        // Barra de Pesquisa (Esquerda)
+        JPanel panelPesquisa = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        panelPesquisa.setBackground(BRANCO);
+
+        JTextField txtPesquisarQualificacao = new JTextField();
+        txtPesquisarQualificacao.setPreferredSize(new Dimension(250, 35));
+        panelPesquisa.add(txtPesquisarQualificacao);
+
+        JButton btnFiltrar = new JButton("Filtrar");
+        btnFiltrar.setPreferredSize(new Dimension(90, 35));
+        btnFiltrar.setBackground(BRANCO);
+        btnFiltrar.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        btnFiltrar.setBorder(new LineBorder(Color.LIGHT_GRAY, 1));
+        panelPesquisa.add(btnFiltrar);
+        panelAcoes.add(panelPesquisa, BorderLayout.WEST);
+
+        // Botões CRUD (Direita)
+        JPanel panelBotoesCrud = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
+        panelBotoesCrud.setBackground(BRANCO);
+
+        JButton btnNovaQualificacao = new JButton("+ Nova Qualificacao");
+        btnNovaQualificacao.setBackground(AZUL_DESTAQUE);
+        btnNovaQualificacao.setForeground(BRANCO);
+        btnNovaQualificacao.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnNovaQualificacao.setPreferredSize(new Dimension(150, 35));
+        btnNovaQualificacao.setBorder(null);
+        btnNovaQualificacao.addActionListener(e -> {
+            cardLayout.show(panelConteudoDinamico, "FormularioQualificacao");
+            lblTituloPagina.setText("Cadastrar Qualificacao");
+            lblSubtituloPagina.setText("Formulário de Novas Qualificacoes");
+        });
+
+        JButton btnEditar = new JButton("Editar");
+        btnEditar.setBackground(BRANCO);
+        btnEditar.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        btnEditar.setPreferredSize(new Dimension(90, 35));
+        btnEditar.setBorder(new LineBorder(Color.LIGHT_GRAY, 1));
+
+        JButton btnEliminar = new JButton("Eliminar");
+        btnEliminar.setBackground(new Color(248, 215, 218));
+        btnEliminar.setForeground(new Color(114, 28, 36));
+        btnEliminar.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnEliminar.setPreferredSize(new Dimension(100, 35));
+        btnEliminar.setBorder(new LineBorder(new Color(245, 198, 203), 1));
+
+        if (nivelAcesso.equalsIgnoreCase("Administrador")) {
+            panelBotoesCrud.add(btnNovaQualificacao);
+            panelBotoesCrud.add(btnEditar);
+            panelBotoesCrud.add(btnEliminar);
+        } else if (nivelAcesso.equalsIgnoreCase("Secretaria")) {
+            panelBotoesCrud.add(btnEditar);
+        }
+
+        panelAcoes.add(panelBotoesCrud, BorderLayout.EAST);
+        painel.add(panelAcoes, BorderLayout.NORTH);
+
+        // Tabela de Inscrições realizadas
+        JScrollPane scrollPane = new JScrollPane();
+        JTable table = new JTable();
+        table.setRowHeight(35);
+        table.setModel(new DefaultTableModel(
+            new Object[][] {
+            	 {"QUA-001", "Técnico de Suporte Informático", "Edmundo Mapotere", "CV4", "Técnico"},
+                 {"QUA-002", "Técnico Programacao Web", "PLOO", "CV4", "Profissionalizante"},
+                 {"QUA-003", "Tecnico de Administracao de Redes","Kenny Pessula", "Cv4", "Técnico"},
+            },
+            new String[] {"Código", "Nome da Qualificação", "Coordenador", "Nível da Qualificação", "Campo" }
+        ));
+        scrollPane.setViewportView(table);
+        painel.add(scrollPane, BorderLayout.CENTER);
+
+        return painel;
+    }
+
+    // --- PAINEL DE LISTAGEM DE FORMANDOS COM FILTRO E EDITAR ---
+    private JPanel criarPainelListaFormando() {
+        JPanel painel = new JPanel(new BorderLayout(0, 15));
+        painel.setBackground(BRANCO);
+        painel.setBorder(new EmptyBorder(15, 15, 15, 15));
+
+        JPanel panelAcoes = new JPanel(new BorderLayout());
+        panelAcoes.setBackground(BRANCO);
+
+        // Barra de Pesquisa (Esquerda)
+        JPanel panelPesquisa = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        panelPesquisa.setBackground(BRANCO);
+
+        JTextField txtPesquisarFormando = new JTextField();
+        txtPesquisarFormando.setPreferredSize(new Dimension(250, 35));
+        panelPesquisa.add(txtPesquisarFormando);
+
+        JButton btnFiltrar = new JButton("Filtrar");
+        btnFiltrar.setPreferredSize(new Dimension(90, 35));
+        btnFiltrar.setBackground(BRANCO);
+        btnFiltrar.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        btnFiltrar.setBorder(new LineBorder(Color.LIGHT_GRAY, 1));
+        panelPesquisa.add(btnFiltrar);
+        panelAcoes.add(panelPesquisa, BorderLayout.WEST);
+
+        // Botões CRUD (Direita)
+        JPanel panelBotoesCrud = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
+        panelBotoesCrud.setBackground(BRANCO);
+
+        JButton btnNovoFormando = new JButton("+ Novo Formando");
+        btnNovoFormando.setBackground(AZUL_DESTAQUE);
+        btnNovoFormando.setForeground(BRANCO);
+        btnNovoFormando.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnNovoFormando.setPreferredSize(new Dimension(150, 35));
+        btnNovoFormando.setBorder(null);
+        btnNovoFormando.addActionListener(e -> {
+            cardLayout.show(panelConteudoDinamico, "FormularioFormando");
+            lblTituloPagina.setText("Cadastrar Formando");
+            lblSubtituloPagina.setText("Formulário de Novos Formandos");
+        });
+
+        JButton btnEditar = new JButton("Editar");
+        btnEditar.setBackground(BRANCO);
+        btnEditar.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        btnEditar.setPreferredSize(new Dimension(90, 35));
+        btnEditar.setBorder(new LineBorder(Color.LIGHT_GRAY, 1));
+
+        JButton btnEliminar = new JButton("Eliminar");
+        btnEliminar.setBackground(new Color(248, 215, 218));
+        btnEliminar.setForeground(new Color(114, 28, 36));
+        btnEliminar.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnEliminar.setPreferredSize(new Dimension(100, 35));
+        btnEliminar.setBorder(new LineBorder(new Color(245, 198, 203), 1));
+
+        if (nivelAcesso.equalsIgnoreCase("Administrador")) {
+            panelBotoesCrud.add(btnNovoFormando);
+            panelBotoesCrud.add(btnEditar);
+            panelBotoesCrud.add(btnEliminar);
+        } else if (nivelAcesso.equalsIgnoreCase("Secretaria")) {
+            panelBotoesCrud.add(btnEditar);
+        }
+
+        panelAcoes.add(panelBotoesCrud, BorderLayout.EAST);
+        painel.add(panelAcoes, BorderLayout.NORTH);
+
+        // Tabela de Formandos
+        JScrollPane scrollPane = new JScrollPane();
+        JTable table = new JTable();
+        table.setRowHeight(35);
+        table.setModel(new DefaultTableModel(
+            new Object[][] {
+                {"001", "Edmundo", "Mapotee", "Masculino", "edmundomapotere@gmail.com", "845123456", "112232444S","TPW1","Programacao", "Ativo"},
+                {"002", "Malik", "Mangue", "Masculino", "malikmangue@gmail.com", "846789123", "112123321D","TPW1","Programacao", "Ativo"},
+                {"003", "Kenny", "Pessula", "Masculino", "kennypessula@gmail.com", "847654321", "1133244F","TPW1","Programacao", "Ativo"}
+            },
+            new String[] { "Código", "Nome", "Apelido", "Sexo", "Email", "Telefone", "BI", "Turma", "Qualificacao", "Estado"}
+        ));
+        scrollPane.setViewportView(table);
+        painel.add(scrollPane, BorderLayout.CENTER);
+
+        return painel;
+    }
 
     private JPanel criarCardMetrica(String titulo, String valor, Color corDestaque) {
         JPanel card = new JPanel(new BorderLayout());
@@ -558,4 +742,3 @@ public class Tela_Principal {
         }
     }
 }
-
