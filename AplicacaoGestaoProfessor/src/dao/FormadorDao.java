@@ -1,6 +1,6 @@
 package dao;
 
-import model.Formador;
+import model.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -30,6 +30,9 @@ public class FormadorDao {
 			InsertFormador.setInt(6, formador.getContacto());
 			InsertFormador.setDouble(7, formador.getSalario());
 			InsertFormador.execute();
+			Usuario u = Seccao.obterUtilizador();
+			Logs log = new Logs("INSERT","Formador: "+formador.getNome()+"cadastro",u );
+			new LogDao().salvar(log);
 			
 			ResultSet rs = InsertFormador.getGeneratedKeys();
 			if(rs != null  && rs.next()) {

@@ -197,7 +197,7 @@ public class Tela_login extends JFrame {
 	            		UsuarioController uc = new UsuarioController();
 	            		Perfil p = null;
 	            		utilizadorlogado = uc.login(username, senha);
-	            		
+	            		Seccao.iniciarSeccao(utilizadorlogado);
 	            		
 	            		if(utilizadorlogado != null) {
 	            			if(utilizadorlogado.isPrimeiroAcesso()) {
@@ -440,6 +440,7 @@ public class Tela_login extends JFrame {
 	                	UsuarioController uc = new UsuarioController();
 	                	
 	                	utilizadorlogado = uc.autenticar(senhaAtual);
+	                	
 	                	if(utilizadorlogado != null) {
 	                		 
 	                		if (!nova.equals(confirm)) {

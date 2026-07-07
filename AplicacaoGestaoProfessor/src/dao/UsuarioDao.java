@@ -2,6 +2,7 @@ package dao;
 
 import java.sql.*;
 
+
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import model.*;
@@ -76,6 +77,9 @@ public class UsuarioDao {
 			int idPerfil = usuario.getPerfil().getId();
 			insertUsuario.setInt(5, idPerfil);
 			insertUsuario.execute();
+			Usuario u = Seccao.obterUtilizador();
+			Logs log = new Logs("INSERT","Operador"+usuario.getNome_completo()+"cadastrado",u);
+			log.salvar(log);
 			
 
 		} catch (SQLException e) {
@@ -103,7 +107,7 @@ public class UsuarioDao {
 
 	public ArrayList<Usuario> listarUsuario(String username) throws ExceptionDao {
 
-		String sql = "select idUser,nome_completo,username,email,Perfil.nome, from Usuario "
+		String sql = "select idUser,nome_completo,username,email,Perfil.nome from Usuario "
 				+ " join Perfil on idPerfil = id "
 				+ "where username like '%"+username+"%'";
 		Connection con = null;
@@ -131,7 +135,7 @@ public class UsuarioDao {
 					p.setNome(rs.getString("nome"));
 					usuario.setPerfil(p);
 					usuario.setEmail(rs.getString("email"));
-					usuario.setPrimeiroAcesso(rs.getBoolean("primeiroAcesso"));
+					//usuario.setPrimeiroAcesso(rs.getBoolean("primeiroAcesso"));
 					
 
 					usuarios.add(usuario);
