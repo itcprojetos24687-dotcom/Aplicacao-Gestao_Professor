@@ -23,6 +23,7 @@ public class Tela_login extends JFrame {
 	    private JPasswordField senhaAtualField;
 	    private JPasswordField novaSenhaField;
 	    private JPasswordField confirmarSenhaField;
+	    private Usuario utilizadorlogado;
 	    
 	    public static void main(String[]args) {
 	    	Tela_login frame = new Tela_login();
@@ -30,6 +31,7 @@ public class Tela_login extends JFrame {
 	    }
 
 	    public Tela_login() {
+	    	
 	        setTitle("Sistema de Gestão Acadêmica");
 	        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	        setSize(1200, 750);
@@ -194,15 +196,21 @@ public class Tela_login extends JFrame {
 	            		String senha = senhaField.getText();
 	            		UsuarioController uc = new UsuarioController();
 	            		Perfil p = null;
-	            		sucesso = uc.login(username, senha);
+	            		utilizadorlogado = uc.login(username, senha);
 	            		
 	            		
-	            		if(sucesso) {
-	            			p = pc.getPerfil(username);
-	            			 Tela_Principal tl = new Tela_Principal(p,Tela_login.this);
-	            			 tl.abrir();
-	            			Tela_login.this.setVisible(false);
-	            			JOptionPane.showMessageDialog(Tela_login.this, "Login efetuado!");
+	            		if(utilizadorlogado != null) {
+	            			if(utilizadorlogado.isPrimeiroAcesso()) {
+	            				cardLayout.show(cardPanel, "reset");
+	        	                atualizarLeftPanel("reset");
+	            			}
+	            			else {
+	            				p = pc.getPerfil(username);
+	            				Tela_Principal tl = new Tela_Principal(p,Tela_login.this);
+	            				tl.abrir();
+	            				Tela_login.this.setVisible(false);
+	            				JOptionPane.showMessageDialog(Tela_login.this, "Login efetuado!");
+	            			}
 	            		}
 	            		else {
 	            			JOptionPane.showMessageDialog(Tela_login.this, "Falha no login, Tente Novamente!");
@@ -290,12 +298,36 @@ public class Tela_login extends JFrame {
 
 	        senhaAtualField = new JPasswordField(30);
 	        senhaAtualField.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-	        senhaAtualField.setEchoChar('*');
+	        senhaAtualField.setEchoChar((char) 0);
+	        
+	       
 	        gbc.gridx = 1;
 	        gbc.gridy = 2;
 	        gbc.fill = GridBagConstraints.HORIZONTAL;
 	        gbc.weightx = 1.0;
 	        panel.add(senhaAtualField, gbc);
+	        
+//	        mostrarSenhaCheckBox = new JCheckBox("Mostrar senha");
+//	        mostrarSenhaCheckBox.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+//	        mostrarSenhaCheckBox.setBackground(Color.WHITE);
+//	        gbc.gridx = 1;
+//	        gbc.gridy = 3;
+//	        gbc.fill = GridBagConstraints.NONE;
+//	        gbc.weightx = 0;
+//	        gbc.insets = new Insets(5, 25, 25, 25);
+//	        panel.add(mostrarSenhaCheckBox, gbc);
+//	        
+//	        mostrarSenhaCheckBox.addActionListener(new ActionListener() {
+//	        	@Override
+//	        	public void actionPerformed(ActionEvent e) {
+//	        		if(mostrarSenhaCheckBox.isSelected()) {
+//	        			senhaAtualField.setEchoChar((char) 0);
+//	        		}
+//	        		else {
+//	        			senhaAtualField.setEchoChar('*');
+//	        		}
+//	        	}
+//	        });
 
 	        // Nova Senha
 	        JLabel novaLabel = new JLabel("Nova Senha");
@@ -308,12 +340,35 @@ public class Tela_login extends JFrame {
 
 	        novaSenhaField = new JPasswordField(30);
 	        novaSenhaField.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-	        novaSenhaField.setEchoChar('*');
+	        novaSenhaField.setEchoChar((char) 0);
 	        gbc.gridx = 1;
 	        gbc.gridy = 3;
 	        gbc.fill = GridBagConstraints.HORIZONTAL;
 	        gbc.weightx = 1.0;
 	        panel.add(novaSenhaField, gbc);
+	        
+//	        mostrarSenhaCheckBox = new JCheckBox("Mostrar senha");
+//	        mostrarSenhaCheckBox.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+//	        mostrarSenhaCheckBox.setBackground(Color.WHITE);
+//	        gbc.gridx = 1;
+//	        gbc.gridy = 3;
+//	        gbc.fill = GridBagConstraints.NONE;
+//	        gbc.weightx = 0;
+//	        gbc.insets = new Insets(5, 25, 25, 25);
+//	        panel.add(mostrarSenhaCheckBox, gbc);
+//	        
+//	        mostrarSenhaCheckBox.addActionListener(new ActionListener() {
+//	        	@Override
+//	        	public void actionPerformed(ActionEvent e) {
+//	        		if(mostrarSenhaCheckBox.isSelected()) {
+//	        			novaSenhaField.setEchoChar((char) 0);
+//	        		}
+//	        		else {
+//	        			novaSenhaField.setEchoChar('*');
+//	        		}
+//	        	}
+//	        });
+	        
 
 	        // Requisitos (caixa de texto)
 	        JLabel requisitosLabel = new JLabel("<html>• Pelo menos 8 caracteres<br>• Contém pelo menos uma letra maiúscula<br>• Contém pelo menos uma letra minúscula<br>• Contém pelo menos um número<br>• Contém pelo menos um caractere especial (!@#$%^&*()?:\"{}<>)</html>");
@@ -336,12 +391,33 @@ public class Tela_login extends JFrame {
 
 	        confirmarSenhaField = new JPasswordField(30);
 	        confirmarSenhaField.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-	        confirmarSenhaField.setEchoChar('*');
+	        confirmarSenhaField.setEchoChar((char) 0);
 	        gbc.gridx = 1;
 	        gbc.gridy = 5;
 	        gbc.fill = GridBagConstraints.HORIZONTAL;
 	        gbc.weightx = 1.0;
 	        panel.add(confirmarSenhaField, gbc);
+	        
+//	        mostrarSenhaCheckBox = new JCheckBox("Mostrar senha");
+//	        mostrarSenhaCheckBox.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+//	        mostrarSenhaCheckBox.setBackground(Color.WHITE);
+//	        gbc.gridx = 1;
+//	        gbc.gridy = 3;
+//	        gbc.fill = GridBagConstraints.NONE;
+//	        gbc.weightx = 0;
+//	        gbc.insets = new Insets(5, 25, 25, 25);
+//	        panel.add(mostrarSenhaCheckBox, gbc);
+//	        mostrarSenhaCheckBox.addActionListener(new ActionListener() {
+//	        	@Override
+//	        	public void actionPerformed(ActionEvent e) {
+//	        		if(mostrarSenhaCheckBox.isSelected()) {
+//	        			confirmarSenhaField.setEchoChar((char) 0);
+//	        		}
+//	        		else {
+//	        			confirmarSenhaField.setEchoChar('*');
+//	        		}
+//	        	}
+//	        });
 
 	        // Botões Confirmar e Cancelar
 	        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 10));
@@ -363,9 +439,9 @@ public class Tela_login extends JFrame {
 	                	String confirm = new String(confirmarSenhaField.getPassword());
 	                	UsuarioController uc = new UsuarioController();
 	                	
-	                	sucesso = uc.autenticar(senhaAtual);
-	                	if(sucesso) {
-	                		
+	                	utilizadorlogado = uc.autenticar(senhaAtual);
+	                	if(utilizadorlogado != null) {
+	                		 
 	                		if (!nova.equals(confirm)) {
 	                			JOptionPane.showMessageDialog(Tela_login.this, "As senhas não coincidem!", "Erro", JOptionPane.ERROR_MESSAGE);
 	                			return;
@@ -376,7 +452,10 @@ public class Tela_login extends JFrame {
 	                		}
 	                		
 	                		uc.redifinirSenha(confirm, senhaAtual);
+	                		uc.alterarPrimeiroAcesso(utilizadorlogado);
 	                		JOptionPane.showMessageDialog(Tela_login.this, "Senha alterada com sucesso!");
+	                		cardLayout.show(cardPanel, "login");
+	                		atualizarLeftPanel("login");
 	                	}
 	                	else {
 	                		JOptionPane.showMessageDialog(null, "Senha atual errada");
@@ -385,8 +464,6 @@ public class Tela_login extends JFrame {
 	                }catch(Exception s) {
 	                	s.printStackTrace();
 	                }
-	                cardLayout.show(cardPanel, "login");
-	                atualizarLeftPanel("login");
 	            }
 	        });
 

@@ -60,7 +60,7 @@ public class UsuarioDao {
 
 	public void cadastrarUsuario(Usuario usuario) throws ExceptionDao {
 
-		String sql = "insert into Usuario(nome_completo, username, password, email, idPerfil) values(?,?,?,?,?)";
+		String sql = "insert into Usuario(nome_completo, username, password, email, idPerfil,primeiroAcesso) values(?,?,?,?,?,?)";
 		Connection con = null;
 		PreparedStatement insertUsuario = null;
 
@@ -72,7 +72,7 @@ public class UsuarioDao {
 			insertUsuario.setString(2, usuario.getUsername());
 			insertUsuario.setString(3, usuario.getPassword());
 			insertUsuario.setString(4, usuario.getEmail());
-			
+			insertUsuario.setBoolean(6,usuario.isPrimeiroAcesso());
 			int idPerfil = usuario.getPerfil().getId();
 			insertUsuario.setInt(5, idPerfil);
 			insertUsuario.execute();
@@ -103,7 +103,7 @@ public class UsuarioDao {
 
 	public ArrayList<Usuario> listarUsuario(String username) throws ExceptionDao {
 
-		String sql = "select idUser,nome_completo,username,email,Perfil.nome from Usuario "
+		String sql = "select idUser,nome_completo,username,email,Perfil.nome, from Usuario "
 				+ " join Perfil on idPerfil = id "
 				+ "where username like '%"+username+"%'";
 		Connection con = null;
@@ -131,6 +131,7 @@ public class UsuarioDao {
 					p.setNome(rs.getString("nome"));
 					usuario.setPerfil(p);
 					usuario.setEmail(rs.getString("email"));
+					usuario.setPrimeiroAcesso(rs.getBoolean("primeiroAcesso"));
 					
 
 					usuarios.add(usuario);
@@ -202,9 +203,43 @@ public class UsuarioDao {
 		}
 		
 	}
+	public void alterarPrimeiroAcesso(Usuario u) throws ExceptionDao{
+		String sql = "update Usuario set primeiroAcesso = ? where idUser = ?";
+		Connection con = null;
+		PreparedStatement stms = null;
+		try {
+			con = new Conexao().getConnection();
+			stms = con.prepareStatement(sql);
+			stms.setBoolean(1, u.isPrimeiroAcesso());
+			stms.setInt(2, u.getCodigo());
+			}catch(SQLException s) {
+				new ExceptionDao("Erro ao alterar acesso"+ s);
+		}finally {
+			try {
+				if(stms != null) {
+					stms.close();
+					//JOptionPane.showMessageDialog(null, "Fechado com sucesso");
+				}
+			}catch(SQLException sq) {
+				throw new ExceptionDao("Erro ao fechar  a conexao"+ sq);
+			}
+			try {
+				if(con != null) {
+					con.close();
+					//JOptionPane.showMessageDialog(null, "Fechado com sucesso");
+				}
+			}catch(SQLException l) {
+				throw new ExceptionDao("Erro ao fechar  a conexao"+ l);
+				//JOptionPane.showMessageDialog(null, "Falha de fechado ");
+			}
+			
+		}
+	}
 	public Usuario autenticar( String password) throws ExceptionDao {
 
-		String sql = "select * from Usuario where password=?";
+
+		String sql = "select idUser,nome_completo,username,email,Perfil.nome,primeiroAcesso, password from Usuario "
+				+ " join Perfil on idPerfil = id where password =?";
 		Connection con = null;
 		PreparedStatement lg = null;
 		Usuario u = null;
@@ -219,7 +254,16 @@ public class UsuarioDao {
 				//JOptionPane.showMessageDialog(null, "Result set nao e null, pegou algo");
 				while (rs.next()) {
 					u = new Usuario();
+					Perfil p = new Perfil();
 					u.setPassword(rs.getString("password"));
+					u.setCodigo(rs.getInt("idUser"));
+					u.setNome_completo(rs.getString("nome_completo"));
+					u.setUsername(rs.getString("username"));
+					//usuario.setIdPerfil(rs.getInt("idPerfil"));
+					p.setNome(rs.getString("nome"));
+					u.setPerfil(p);
+					u.setEmail(rs.getString("email"));
+					u.setPrimeiroAcesso(rs.getBoolean("primeiroAcesso"));
 					//JOptionPane.showMessageDialog(null, u.getUsername()+""+u.getPassword());
 				}
 			}
@@ -249,10 +293,45 @@ public class UsuarioDao {
 		return u;
 	}
 
+	public void resetarSenha(String senhaResetada, int codigo) throws ExceptionDao{
+		String sql = "update Usuario set password = ? where idUser ="+codigo;
+		Connection con = null;
+		PreparedStatement stms = null;
+		try {
+			con = new Conexao().getConnection();
+			stms = con.prepareStatement(sql);
+			stms.setString(1, senhaResetada);
+			stms.executeUpdate();
+			
+		}catch(SQLException sq) {
+			new ExceptionDao("Erro ao atualizar senha");
+		}finally {
+			try {
+				if (stms != null) {
+					stms.close();
+				}
+			} catch (Exception es) {
+				throw new ExceptionDao("Erro ao fechar o statement: " + es);
+			}
+
+			try {
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException sq) {
+				throw new ExceptionDao("Erro ao fechar conexao: " + sql);
+			}
+		}
+	}
 
 	public ArrayList<Usuario> obterTodosUsuarios() throws ExceptionDao {
 
-		String sql = "select * from Usuario";
+
+
+
+		String sql = "select idUser,nome_completo,username,email,Perfil.nome from Usuario "
+				+ " join Perfil on idPerfil = id ";
+				
 		Connection con = null;
 		PreparedStatement obterTodos = null;
 		ArrayList<Usuario> usuarios = null;
@@ -270,12 +349,14 @@ public class UsuarioDao {
 				while (rs.next()) {
 
 					Usuario usuario = new Usuario();
-
+					Perfil p =new Perfil();
 					usuario.setCodigo(rs.getInt("idUser"));
 					usuario.setNome_completo(rs.getString("nome_completo"));
 					usuario.setUsername(rs.getString("username"));
+					//usuario.setIdPerfil(rs.getInt("idPerfil"));
+					p.setNome(rs.getString("nome"));
+					usuario.setPerfil(p);
 					usuario.setEmail(rs.getString("email"));
-					usuario.setPassword(rs.getString("password"));
 					
 
 					usuarios.add(usuario);
@@ -308,6 +389,7 @@ public class UsuarioDao {
 	}
 
 	public Usuario obterUsuarioPorCodigo(int codigo) throws ExceptionDao {
+
 
 		String sql = "select * from Usuario where codigo=?";
 		Connection con = null;
@@ -360,7 +442,7 @@ public class UsuarioDao {
 	}
 
 	public void atualizarUsuario(Usuario usuario) throws ExceptionDao {
-		String sql = "update Usuario set idPerfil = ?,nome_completo=?, username = ?,email = ? where idUser = ?";
+		String sql = "update Usuario set idPerfil = ? where idUser = ?";
 		PreparedStatement alterar = null;
 		Connection con = null;
 		
@@ -368,11 +450,8 @@ public class UsuarioDao {
 			con = new Conexao().getConnection();
 			alterar = con.prepareStatement(sql);
 			
-			alterar.setInt(1,usuario.getPerfil().getId() );
-			alterar.setString(2, usuario.getNome_completo());
-			alterar.setString(3,usuario.getUsername());
-			alterar.setString(4, usuario.getEmail());
-			alterar.setInt(5, usuario.getCodigo());
+			alterar.setInt(1,usuario.getPerfil().getId());
+			alterar.setInt(2, usuario.getCodigo());
 			
 			alterar.executeUpdate();
 			//JOptionPane.showMessageDialog(null,"Alterado com sucesso");
