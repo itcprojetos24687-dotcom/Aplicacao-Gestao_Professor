@@ -22,6 +22,9 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import model.Perfil;
+
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -51,24 +54,28 @@ public class Tela_Principal {
     private final Color BRANCO          = Color.WHITE;
     private final Color TEXTO_MUTED     = new Color(108, 117, 125);
 
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                Tela_Principal window = new Tela_Principal("Administrador");
-                window.frame.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+//    public static void main(String[] args) {
+//        EventQueue.invokeLater(() -> {
+//            try {
+//                Tela_Principal window = new Tela_Principal("Administrador");
+//                window.frame.setVisible(true);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        });
+//    }
+
+    public Tela_Principal(Perfil p,Tela_login tl) {
+         this.nivelAcesso = p.getNome();
+         inicializarModelos();
+         initialize();
     }
 
-    public Tela_Principal(String nivelAcesso) {
-        this.nivelAcesso = nivelAcesso != null ? nivelAcesso : "Secretaria";
-        inicializarModelos();
-        initialize();
-    }
+//    public Tela_Principal(Perfil p, Tela_login tl) {
+//		// TODO Auto-generated constructor stub
+//	}
 
-    private void inicializarModelos() {
+	private void inicializarModelos() {
         modeloInscricoes = new DefaultTableModel(
             new Object[][] {
                 {"INC-001", "Lucas Silva", "Bases de Dados", "02/07/2026", "Primeiro semestre", "Confirmada"},
@@ -585,5 +592,8 @@ public class Tela_Principal {
         if (resposta == JOptionPane.YES_OPTION) {
             System.exit(0);
         }
+    }
+    public void abrir() {
+    	frame.setVisible(true);
     }
 }

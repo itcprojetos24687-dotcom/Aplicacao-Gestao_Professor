@@ -21,8 +21,22 @@ public class Tela_login extends JFrame implements ActionListener {
     private JPasswordField novaSenhaField;
     private JPasswordField confirmarSenhaField;
     
-    private Usuario utilizadorlogado;
+    
 
+  
+
+	   
+	    private Usuario utilizadorlogado;
+	    public static void main(String[]args) {
+	    	Tela_login tl = new Tela_login();
+	    	tl.setVisible(true);
+	    	
+	    }
+	   
+
+
+       
+    
     public Tela_login() {
         setTitle("Sistema de Gestão Acadêmica");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -156,7 +170,54 @@ public class Tela_login extends JFrame implements ActionListener {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 10));
         buttonPanel.setBackground(Color.WHITE);
         
+
         JButton entrarButton = new JButton("Entrar");
+
+	        entrarButton = new JButton("Entrar");
+	        entrarButton.setFont(new Font("Segoe UI", Font.BOLD, 18));
+	        entrarButton.setBackground(new Color(0, 120, 215));
+	        entrarButton.setForeground(Color.WHITE);
+	        entrarButton.setFocusPainted(false);
+	        entrarButton.setPreferredSize(new Dimension(140, 55));
+	        entrarButton.addActionListener(new ActionListener() {
+	            @Override
+	            public void actionPerformed(ActionEvent e) {
+	            	boolean sucesso;
+	            	PerfilController pc = new PerfilController();
+	            	try{
+	            		String username = usuarioField.getText();
+	            		String senha = senhaField.getText();
+	            		UsuarioController uc = new UsuarioController();
+	            		Perfil p = null;
+	            		utilizadorlogado = uc.login(username, senha);
+	            		Seccao.iniciarSeccao(utilizadorlogado);
+	            		
+	            		if(utilizadorlogado != null) {
+	            			if(utilizadorlogado.isPrimeiroAcesso()) {
+	            				cardLayout.show(cardPanel, "reset");
+	        	                atualizarLeftPanel("reset");
+	            			}
+	            			else {
+	            				p = pc.getPerfil(username);
+	            				Tela_Principal tl = new Tela_Principal(p,Tela_login.this);
+	            				tl.abrir();
+	            				Tela_login.this.setVisible(false);
+	            				JOptionPane.showMessageDialog(Tela_login.this, "Login efetuado!");
+	            			}
+	            		}
+	            		else {
+	            			JOptionPane.showMessageDialog(Tela_login.this, "Falha no login, Tente Novamente!");
+	            		}
+	            	}catch(Exception x) {
+	            		x.printStackTrace();
+	            		JOptionPane.showMessageDialog(Tela_login.this, "Introduca todos os dados corretamente!");
+	            	}
+	               // JOptionPane.showMessageDialog(Tela_login.this, "Login efetuado!");
+	            }
+	        });
+
+         entrarButton = new JButton("Entrar");
+
         entrarButton.setFont(new Font("Segoe UI", Font.BOLD, 18));
         entrarButton.setBackground(new Color(0, 120, 215));
         entrarButton.setForeground(Color.WHITE);
@@ -174,6 +235,7 @@ public class Tela_login extends JFrame implements ActionListener {
                         JOptionPane.showMessageDialog(Tela_login.this, "Por favor, introduza todos os dados corretamente!", "Aviso", JOptionPane.WARNING_MESSAGE);
                         return;
                     }
+
 
                     UsuarioController uc = new UsuarioController();
                     utilizadorlogado = uc.login(username, senha);
@@ -202,6 +264,18 @@ public class Tela_login extends JFrame implements ActionListener {
                 } catch (Exception x) {
                     x.printStackTrace();
                     JOptionPane.showMessageDialog(Tela_login.this, "Erro técnico no sistema: " + x.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+
+                UsuarioController uc = new UsuarioController();
+                utilizadorlogado = uc.login(username, senha);
+                
+                if (utilizadorlogado != null) {
+                    Perfil p = pc.getPerfil(username);
+                    Tela_Principal tl = new Tela_Principal(p, Tela_login.this);
+                    tl.abrir();
+                    Tela_login.this.setVisible(false);
+                    JOptionPane.showMessageDialog(Tela_login.this, "Login efetuado com sucesso!");
+                } else {
+                    JOptionPane.showMessageDialog(Tela_login.this, "Falha no login. Usuário ou senha incorretos!", "Erro", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -323,7 +397,7 @@ public class Tela_login extends JFrame implements ActionListener {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 10));
         buttonPanel.setBackground(Color.WHITE);
 
-        JButton confirmarButton = new JButton("Confirmar");
+        confirmarButton = new JButton("Confirmar");
         confirmarButton.setFont(new Font("Segoe UI", Font.BOLD, 18));
         confirmarButton.setBackground(new Color(0, 120, 215));
         confirmarButton.setForeground(Color.WHITE);
