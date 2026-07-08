@@ -1,5 +1,7 @@
 package VIEW;
 
+import  model.*;
+import controller.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -7,14 +9,25 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.security.SecureRandom;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -23,6 +36,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
+import java.util.ArrayList;
 public class Tela_Utilizadores extends JFrame {
 
     private static final long serialVersionUID = 1L;
@@ -30,14 +44,28 @@ public class Tela_Utilizadores extends JFrame {
     private JTable tableUtilizadores;
     private JTextField txtPesquisar;
 
+    private final Color CINZA_FUNDO   = new Color(240, 240, 240);
+    private final Color AZUL_NORMAL   = new Color(41, 98, 189);
+    private final Color AZUL_HOVER    = new Color(28, 74, 150);
+    private final Color BRANCO        = Color.WHITE;
+    private final Color CINZA_HOVER   = new Color(225, 225, 225);
  
     private final Color AZUL_PRIMARY   = new Color(13, 110, 253);  
     private final Color VERDE_SUCCESS  = new Color(40, 167, 69);   
     private final Color VERMELHO_DANGER = new Color(220, 53, 69); 
-    private final Color BRANCO         = Color.WHITE;
+    
     private final Color TEXTO_DARK     = new Color(33, 37, 41);     
     private final Color BORDA_CARD     = new Color(225, 228, 232); 
-
+    
+    private JTextField campoNomeCompleto;
+    private JTextField campoNomeOperador;
+    private JPasswordField campoSenha;
+    private JComboBox<Perfil> comboPerfil;
+    private JTextField campoEmail;
+    private ArrayList<Perfil> perfis;
+    private ArrayList<Usuario> usuarios;
+    private UsuarioController uc;
+    private PerfilController pc;
     /**
      * Launch the application.
      */
@@ -155,35 +183,76 @@ public class Tela_Utilizadores extends JFrame {
 
         tableUtilizadores.setModel(new DefaultTableModel(
             new Object[][] {
-                {"1", "admin.malik", "Malik Mangue", "Malikmang@gmail.com", "Administrador", "Ativo"},
-                {"2", "KPessula", "Keany Pessula", "Keanypessul@gmail.com", "Gestor", "Ativo"},
-                {"3", "ED Mapotere", "Edmundo Mapotere", "EDMapotere@gmail.com", "Professor", "Ativo"},
+                
             },
             new String[] {
-                "ID", "Username", "Nome Completo", "Email", "Perfil / Função", "Estado"
+                "ID", "Username", "Nome", "Email", "Perfil"
             }
         ));
         scrollPane.setViewportView(tableUtilizadores);
 
         panelCard.add(panelCardInterno, BorderLayout.CENTER);
         contentPane.add(panelCard, BorderLayout.CENTER);
-
+        
+        btnPesquisar.addActionListener(new ActionListener() {
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        		try {
+        			uc = new UsuarioController();
+        			DefaultTableModel modelo = (DefaultTableModel) tableUtilizadores.getModel();
+        			String pesquisar = txtPesquisar.getText();
+        			usuarios = uc.listarUsuario(pesquisar);
+        			modelo.setRowCount(0);
+        			for(Usuario u : usuarios) {
+        				modelo.addRow(new Object[] {
+        						        u.getCodigo(),
+        						        u.getUsername(),
+        						        u.getNome_completo(),
+        						        u.getEmail(),
+        						        u.getPerfil().getNome(),
+        				});
+        			}
+        			
+        			uc.listarUsuario(pesquisar);
+        		}catch(Exception x) {
+        			x.printStackTrace();
+        		}
+        	}
+        });
 
         btnNovo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Abrir formulário de criação de utilizador.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            	try {
+            		criarDialog();
+//            		d.setVisible(true);
+            	}catch(Exception s) {
+            		s.printStackTrace();
+            	}
+                //JOptionPane.showMessageDialog(null, "Abrir formulário de criação de utilizador.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
         btnEditar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int linha = tableUtilizadores.getSelectedRow();
-                if (linha == -1) {
-                    JOptionPane.showMessageDialog(null, "Selecione um utilizador na tabela para editar.", "Aviso", JOptionPane.WARNING_MESSAGE);
-                } else {
-                    String username = tableUtilizadores.getValueAt(linha, 1).toString();
-                    JOptionPane.showMessageDialog(null, "A editar as permissões de: " + username, "Editar", JOptionPane.INFORMATION_MESSAGE);
-                }
+            	try {
+            		int linha = tableUtilizadores.getSelectedRow();
+            		Integer codigo = (Integer)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 0);
+            		String username = (String)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 1);
+            		String nome = (String)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 2);
+            		String email = (String)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 3);
+            		//Perfil p = (Perfil)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 4);
+            		
+            		if (linha == -1) {
+            			JOptionPane.showMessageDialog(null, "Selecione um utilizador na tabela para editar.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            		} else {
+            			criarDialog();
+            			buscarUsuario(codigo,username,nome,email);
+            			//String username = tableUtilizadores.getValueAt(linha, 1).toString();
+            			//JOptionPane.showMessageDialog(null, "A editar as permissões de: " + username, "Editar", JOptionPane.INFORMATION_MESSAGE);
+            		}
+            	}catch(Exception s){
+            		s.printStackTrace();
+            	}
             }
         });
 
@@ -202,7 +271,12 @@ public class Tela_Utilizadores extends JFrame {
         });
     }
 
-   
+   private void buscarUsuario(int codigo, String username,String nome,String email) {
+	   campoNomeCompleto.setText(nome);
+	   campoNomeOperador.setText(username);
+	   campoEmail.setText(email);
+	 //  comboPerfil.addItem(p);
+   }
     private void estilizarBotao(JButton botao, Color fundo, Color texto, int largura, int altura) {
         botao.setPreferredSize(new Dimension(largura, altura));
         botao.setFont(new Font("Segoe UI", Font.BOLD, 13));
@@ -222,4 +296,224 @@ public class Tela_Utilizadores extends JFrame {
             }
         });
     }
+    public JDialog criarDialog() {
+    	 JDialog d = new JDialog();
+    	 d.setTitle("Cadastro de Utilizador");
+         d.setSize(400, 400);
+         d.setLocationRelativeTo(null);
+         d.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+         d.setResizable(true);
+         d.setVisible(true);
+
+         // Painel principal com fundo cinzento e layout responsivo
+         JPanel painelPrincipal = new JPanel(new GridBagLayout());
+         painelPrincipal.setBackground(CINZA_FUNDO);
+         painelPrincipal.setBorder(new EmptyBorder(20, 20, 20, 20));
+         d.setContentPane(painelPrincipal);
+
+         GridBagConstraints gbc = new GridBagConstraints();
+         gbc.insets = new Insets(8, 8, 8, 8);
+         gbc.fill = GridBagConstraints.HORIZONTAL;
+
+         // ================= LINHA 0: Nome Completo | Perfil =================
+         gbc.gridx = 0; gbc.gridy = 0;
+         gbc.weightx = 0;
+         gbc.anchor = GridBagConstraints.WEST;
+         painelPrincipal.add(criarLabel("Nome completo:"), gbc);
+
+         gbc.gridx = 0; gbc.gridy = 1;
+         gbc.weightx = 0.5; // coluna esquerda cresce
+         campoNomeCompleto = new JTextField();
+         painelPrincipal.add(campoNomeCompleto, gbc);
+
+         gbc.gridx = 1; gbc.gridy = 0;
+         gbc.weightx = 0;
+         painelPrincipal.add(criarLabel("Perfil:"), gbc);
+
+         gbc.gridx = 1; gbc.gridy = 1;
+         gbc.weightx = 0.5; // coluna direita também cresce
+         
+         comboPerfil = new JComboBox<>();
+         try {
+        	 pc = new PerfilController();
+        	 perfis = pc.listarPerfil();
+        	 for(Perfil p: perfis) {
+        		 comboPerfil.addItem(p);
+        	 }
+        	 
+         }catch(Exception s) {
+        	 s.printStackTrace();
+         }
+;         
+         painelPrincipal.add(comboPerfil, gbc);
+
+         // ================= LINHA 2: Nome do Operador | Email =================
+         gbc.gridx = 0; gbc.gridy = 2;
+         gbc.weightx = 0;
+         painelPrincipal.add(criarLabel("Nome do operador:"), gbc);
+
+         gbc.gridx = 0; gbc.gridy = 3;
+         gbc.weightx = 0.5;
+         campoNomeOperador = new JTextField();
+         painelPrincipal.add(campoNomeOperador, gbc);
+
+         gbc.gridx = 1; gbc.gridy = 2;
+         gbc.weightx = 0;
+         painelPrincipal.add(criarLabel("Email:"), gbc);
+
+         gbc.gridx = 1; gbc.gridy = 3;
+         gbc.weightx = 0.5;
+         campoEmail = new JTextField();
+         painelPrincipal.add(campoEmail, gbc);
+
+         // ================= LINHA 4: Senha + botão Gerar Senha =================
+         gbc.gridx = 0; gbc.gridy = 4;
+         gbc.weightx = 0;
+         painelPrincipal.add(criarLabel("Senha:"), gbc);
+
+         // Painel interno só para juntar campo + botão "Gerar Senha" numa célula só
+         JPanel painelSenha = new JPanel(new BorderLayout(8, 0));
+         painelSenha.setOpaque(false);
+
+         campoSenha = new JPasswordField();
+         painelSenha.add(campoSenha, BorderLayout.CENTER);
+         campoSenha.setEchoChar((char) 0);
+
+         JButton botaoGerarSenha = criarBotaoNeutro("Gerar senha");
+         botaoGerarSenha.addActionListener(e -> campoSenha.setText(gerarSenhaAleatoria(10)));
+         painelSenha.add(botaoGerarSenha, BorderLayout.EAST);
+
+         gbc.gridx = 0; gbc.gridy = 5;
+         gbc.gridwidth = 2; // ocupa as duas colunas para dar espaço ao botão
+         gbc.weightx = 1.0;
+         painelPrincipal.add(painelSenha, gbc);
+
+         // reset dos campos "especiais" antes de continuar
+         gbc.gridwidth = 1;
+
+         // ================= Espaço que empurra os botões para baixo =================
+         gbc.gridx = 0; gbc.gridy = 6;
+         gbc.gridwidth = 2;
+         gbc.weighty = 1.0; // absorve o espaço vertical extra ao redimensionar
+         gbc.fill = GridBagConstraints.BOTH;
+         painelPrincipal.add(Box.createGlue(), gbc);
+
+         gbc.weighty = 0;
+         gbc.fill = GridBagConstraints.HORIZONTAL;
+         gbc.gridwidth = 1;
+
+         // ================= Linha final: botões Sair | Guardar =================
+         JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+         painelBotoes.setOpaque(false);
+
+         JButton botaoSair = criarBotaoSair();
+         botaoSair.addActionListener(e -> d.dispose());
+
+         JButton botaoGuardar = criarBotaoGuardar();
+         botaoGuardar.addActionListener(e -> {
+             // aqui entra a lógica de gravação
+        	 boolean sucesso;
+        	 try {
+        		 String nome = campoNomeCompleto.getText();
+        		 String username = campoNomeOperador.getText();
+        		 String senha = campoSenha.getText();
+        		 String email = campoEmail.getText();
+        		 Perfil p = (Perfil) comboPerfil.getSelectedItem();
+        		 boolean primeiroAcesso = true;
+        		 sucesso = uc.cadastrarUsuario(nome, username, senha, email, p, primeiroAcesso);
+        		 if(sucesso) {
+        			 JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso");
+        		 }
+        		 else {
+        			 JOptionPane.showMessageDialog(null,"Falha ao fazer cadastro");
+        		 }
+        	 }catch(Exception s) {
+        		 JOptionPane.showMessageDialog(null,"Erro ao fazer cadastro");
+        		 s.printStackTrace();
+        	 }
+             //JOptionPane.showMessageDialog(this, "Registo guardado com sucesso!");
+         });
+
+         painelBotoes.add(botaoSair);
+         painelBotoes.add(botaoGuardar);
+
+         gbc.gridx = 0; gbc.gridy = 7;
+         gbc.gridwidth = 2;
+         gbc.fill = GridBagConstraints.NONE;
+         gbc.anchor = GridBagConstraints.EAST;
+         painelPrincipal.add(painelBotoes, gbc);
+         return d;
+     }
+
+     // ---------- Métodos auxiliares de criação de componentes ----------
+
+     private JLabel criarLabel(String texto) {
+         JLabel label = new JLabel(texto);
+         label.setFont(new Font("SansSerif", Font.PLAIN, 13));
+         return label;
+     }
+
+     /** Botão "Gerar senha" — neutro, cinzento, com hover */
+     private JButton criarBotaoNeutro(String texto) {
+         JButton botao = new JButton(texto);
+         botao.setFocusPainted(false);
+         botao.setBackground(CINZA_FUNDO);
+         botao.setForeground(Color.DARK_GRAY);
+         botao.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
+         botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+         botao.addMouseListener(new MouseAdapter() {
+             public void mouseEntered(MouseEvent e) { botao.setBackground(CINZA_HOVER); }
+             public void mouseExited(MouseEvent e)  { botao.setBackground(CINZA_FUNDO); }
+         });
+         return botao;
+     }
+
+     /** Botão "Guardar" — fundo azul, texto branco, hover em azul mais escuro */
+     private JButton criarBotaoGuardar() {
+         JButton botao = new JButton("Guardar");
+         botao.setFocusPainted(false);
+         botao.setOpaque(true);
+         botao.setBorderPainted(false);
+         botao.setBackground(AZUL_NORMAL);
+         botao.setForeground(BRANCO);
+         botao.setFont(new Font("SansSerif", Font.BOLD, 13));
+         botao.setPreferredSize(new Dimension(110, 34));
+         botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+         botao.addMouseListener(new MouseAdapter() {
+             public void mouseEntered(MouseEvent e) { botao.setBackground(AZUL_HOVER); }
+             public void mouseExited(MouseEvent e)  { botao.setBackground(AZUL_NORMAL); }
+         });
+         return botao;
+     }
+
+     /** Botão "Sair" — fundo branco, texto azul, hover muda para cinza claro */
+     private JButton criarBotaoSair() {
+         JButton botao = new JButton("Sair");
+         botao.setFocusPainted(false);
+         botao.setOpaque(true);
+         botao.setBackground(BRANCO);
+         botao.setForeground(AZUL_NORMAL);
+         botao.setFont(new Font("SansSerif", Font.BOLD, 13));
+         botao.setBorder(BorderFactory.createLineBorder(AZUL_NORMAL));
+         botao.setPreferredSize(new Dimension(110, 34));
+         botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+         botao.addMouseListener(new MouseAdapter() {
+             public void mouseEntered(MouseEvent e) { botao.setBackground(CINZA_HOVER); }
+             public void mouseExited(MouseEvent e)  { botao.setBackground(BRANCO); }
+         });
+         return botao;
+     }
+
+     private String gerarSenhaAleatoria(int tamanho) {
+         String sb = campoNomeCompleto.getText()+"123";
+         return sb;
+     }
+     private void limpar() throws Exception{
+    	 uc = new UsuarioController();
+    	 uc.obterTodosUsuarios();
+     }
+    
 }
