@@ -62,10 +62,12 @@ public class Tela_Utilizadores extends JFrame {
     private JPasswordField campoSenha;
     private JComboBox<Perfil> comboPerfil;
     private JTextField campoEmail;
+    private JButton botaoGerarSenha;
     private ArrayList<Perfil> perfis;
     private ArrayList<Usuario> usuarios;
-    private UsuarioController uc;
+    private UsuarioController uc = new UsuarioController();
     private PerfilController pc;
+    private int idUsuario = 0;
     /**
      * Launch the application.
      */
@@ -143,6 +145,10 @@ public class Tela_Utilizadores extends JFrame {
         JButton btnExcluir = new JButton(" Eliminar");
         estilizarBotao(btnExcluir, VERMELHO_DANGER, BRANCO, 110, 36);
         panelAcoesEsquerda.add(btnExcluir);
+        
+        JButton btnResetarSenha = new JButton("Resetar Senha");
+        estilizarBotao(btnResetarSenha,VERDE_SUCCESS,BRANCO,169,36);
+        panelAcoesEsquerda.add(btnResetarSenha);
 
         panelBarraSuperior.add(panelAcoesEsquerda, BorderLayout.WEST);
 
@@ -240,13 +246,13 @@ public class Tela_Utilizadores extends JFrame {
             		String username = (String)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 1);
             		String nome = (String)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 2);
             		String email = (String)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 3);
-            		//Perfil p = (Perfil)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 4);
+            		String p = (String)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 4);
             		
             		if (linha == -1) {
             			JOptionPane.showMessageDialog(null, "Selecione um utilizador na tabela para editar.", "Aviso", JOptionPane.WARNING_MESSAGE);
             		} else {
             			criarDialog();
-            			buscarUsuario(codigo,username,nome,email);
+            			buscarUsuario(codigo,username,nome,email,p);
             			//String username = tableUtilizadores.getValueAt(linha, 1).toString();
             			//JOptionPane.showMessageDialog(null, "A editar as permissões de: " + username, "Editar", JOptionPane.INFORMATION_MESSAGE);
             		}
@@ -258,24 +264,87 @@ public class Tela_Utilizadores extends JFrame {
 
         btnExcluir.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	boolean sucesso;
                 int linha = tableUtilizadores.getSelectedRow();
                 if (linha == -1) {
-                    JOptionPane.showMessageDialog(null, "Selecione um utilizador para eliminar.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Selecione um Operador para eliminar.", "Aviso", JOptionPane.WARNING_MESSAGE);
                 } else {
                     int confirmacao = JOptionPane.showConfirmDialog(null, "Tem a certeza que deseja remover esta conta de acesso?", "Confirmar Remoção", JOptionPane.YES_NO_OPTION);
                     if (confirmacao == JOptionPane.YES_OPTION) {
-                       
+                    	try {
+                    		idUsuario = (Integer)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(),0);
+                    		sucesso = uc.apagarUsuario(idUsuario);
+                    		idUsuario = 0;
+                    		listar();
+                    		if(sucesso) {
+                    			
+                    			JOptionPane.showMessageDialog(null, "Operador deletado");
+                    		}else {
+                    			JOptionPane.showMessageDialog(null, "Falha ao deletar operador");
+
+                    		}
+                    	}catch(Exception s) {
+                    		s.printStackTrace();
+                    	}
                     }
                 }
             }
         });
+        btnResetarSenha.addActionListener(new ActionListener() {
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        		boolean sucesso;
+        		try {
+        			Integer codigo = (Integer)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 0);
+            		String username = (String)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 1);
+            		String nome = (String)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 2);
+            		String email = (String)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 3);
+            		String p = (String)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 4);
+            		String senha = nome+"123";
+        			sucesso = uc.resetarSenha(senha, codigo);;
+        			Usuario u = new Usuario();
+        			Perfil pr = new Perfil();
+        			u.setCodigo(codigo);
+        			u.setUsername(username);
+        			u.setNome_completo(nome);
+        			u.setEmail(email);
+        			pr.setNome(p);
+        			u.setPerfil(pr);
+        			u.setPassword(senha);
+        			if (sucesso) {
+        				int confirmar = JOptionPane.showConfirmDialog(null,"Tens a certeza que deseja Resetar Senha");
+        				if(confirmar == JOptionPane.YES_OPTION) {
+        					FicheiroDefault.criarFicheiro(u);
+        					JOptionPane.showMessageDialog(null,"Senha resetada com sucesso");
+        				}
+        				else {
+        					JOptionPane.showMessageDialog(null, "Falha ao resetar senha");
+        				}
+        			}
+        		}catch(Exception s) {
+        			s.printStackTrace();
+        		}
+        	}
+        });
     }
 
-   private void buscarUsuario(int codigo, String username,String nome,String email) {
+   private void buscarUsuario(int codigo, String username,String nome,String email,String p) {
+	   idUsuario = codigo;
 	   campoNomeCompleto.setText(nome);
+	   campoNomeCompleto.setEditable(false);
 	   campoNomeOperador.setText(username);
+	   campoNomeOperador.setEditable(false);
 	   campoEmail.setText(email);
+	   campoEmail.setEditable(false);
+	   campoSenha.setEditable(false);
+	   botaoGerarSenha.setEnabled(false);
+	   for(int i = 0; i< comboPerfil.getItemCount();i++) {
+		   if(comboPerfil.getItemAt(i).equals(p)) {
+			   comboPerfil.setSelectedIndex(i);
+		   }
+	   }
 	 //  comboPerfil.addItem(p);
+	   
    }
     private void estilizarBotao(JButton botao, Color fundo, Color texto, int largura, int altura) {
         botao.setPreferredSize(new Dimension(largura, altura));
@@ -379,7 +448,7 @@ public class Tela_Utilizadores extends JFrame {
          painelSenha.add(campoSenha, BorderLayout.CENTER);
          campoSenha.setEchoChar((char) 0);
 
-         JButton botaoGerarSenha = criarBotaoNeutro("Gerar senha");
+         botaoGerarSenha = criarBotaoNeutro("Gerar senha");
          botaoGerarSenha.addActionListener(e -> campoSenha.setText(gerarSenhaAleatoria(10)));
          painelSenha.add(botaoGerarSenha, BorderLayout.EAST);
 
@@ -419,14 +488,28 @@ public class Tela_Utilizadores extends JFrame {
         		 String senha = campoSenha.getText();
         		 String email = campoEmail.getText();
         		 Perfil p = (Perfil) comboPerfil.getSelectedItem();
-        		 boolean primeiroAcesso = true;
-        		 sucesso = uc.cadastrarUsuario(nome, username, senha, email, p, primeiroAcesso);
-        		 if(sucesso) {
-        			 JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso");
+        		 if(idUsuario == 0) {
+        			 //JOptionPane.showMessageDialog(null, "Codigo do usuario: "+idUsuario);
+        			 sucesso = uc.cadastrarUsuario(nome, username, senha, email, p);
+        			 listar();
+        			 if(sucesso) {
+        				 JOptionPane.showMessageDialog(null, "Operador Cadastrado com sucesso");
+        			 }else {
+        				 JOptionPane.showMessageDialog(null, "Falha ao cadastrado");
+        			 }
+        		 }else {
+        			 sucesso = uc.atualizarUsuario(idUsuario, p);
+        			 idUsuario = 0;
+        			 listar();
+        			 if(sucesso) {
+        				 JOptionPane.showMessageDialog(null, "Atualizado com sucesso");
+        			 }else {
+        				 JOptionPane.showMessageDialog(null, "Falha ao atualizar Operador");
+        			 }
         		 }
-        		 else {
-        			 JOptionPane.showMessageDialog(null,"Falha ao fazer cadastro");
-        		 }
+        		 
+  
+        		 
         	 }catch(Exception s) {
         		 JOptionPane.showMessageDialog(null,"Erro ao fazer cadastro");
         		 s.printStackTrace();
@@ -511,9 +594,22 @@ public class Tela_Utilizadores extends JFrame {
          String sb = campoNomeCompleto.getText()+"123";
          return sb;
      }
-     private void limpar() throws Exception{
-    	 uc = new UsuarioController();
-    	 uc.obterTodosUsuarios();
+     private void listar() throws Exception{
+    	 DefaultTableModel modelo = (DefaultTableModel) tableUtilizadores.getModel();
+			String pesquisar = txtPesquisar.getText();
+			usuarios = uc.listarUsuario(pesquisar);
+			modelo.setRowCount(0);
+			for(Usuario u : usuarios) {
+				modelo.addRow(new Object[] {
+						        u.getCodigo(),
+						        u.getUsername(),
+						        u.getNome_completo(),
+						        u.getEmail(),
+						        u.getPerfil().getNome(),
+				});
+			}
+			
+			uc.listarUsuario(pesquisar);
      }
     
 }

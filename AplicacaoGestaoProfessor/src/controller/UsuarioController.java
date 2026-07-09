@@ -32,7 +32,7 @@ public class UsuarioController {
 		u.setPrimeiroAcesso(false);
 		new UsuarioDao().alterarPrimeiroAcesso(u);
 	}
-	public boolean cadastrarUsuario(String nome_completo,String username, String password,String email,Perfil perfil, boolean primeiroAcesso)
+	public boolean cadastrarUsuario(String nome_completo,String username, String password,String email,Perfil perfil)
 	throws Exception {
 
 		if (nome_completo != null && nome_completo.length() > 0 &&
@@ -41,10 +41,10 @@ public class UsuarioController {
 			email != null && email.length() > 0 &&
 			perfil != null) {
 
-
+			//JOptionPane.showMessageDialog(null, nome_completo+username+ password+email+perfil);
 		
 
-			Usuario usuario = new Usuario(nome_completo,username, password,email,perfil, primeiroAcesso);
+			Usuario usuario = new Usuario(nome_completo,username, password,email,perfil);
 			usuario.cadastrarUsuario(usuario);
 			FicheiroDefault.criarFicheiro(usuario);
 			return true;
@@ -58,6 +58,7 @@ public class UsuarioController {
 			Usuario u = new Usuario();
 			u.setCodigo(idUser);
 			u.setPerfil(p);
+			JOptionPane.showMessageDialog(null,idUser+""+p.getNome()+p.getNome());
 			u.atualizarUsuario(u);
 			return true;
 			

@@ -61,7 +61,7 @@ public class UsuarioDao {
 
 	public void cadastrarUsuario(Usuario usuario) throws ExceptionDao {
 
-		String sql = "insert into Usuario(nome_completo, username, password, email, idPerfil,primeiroAcesso) values(?,?,?,?,?,?)";
+		String sql = "insert into Usuario(nome_completo, username, password, email, idPerfil,primeiroAcesso) values(?,?,?,?,?,1)";
 		Connection con = null;
 		PreparedStatement insertUsuario = null;
 
@@ -73,7 +73,7 @@ public class UsuarioDao {
 			insertUsuario.setString(2, usuario.getUsername());
 			insertUsuario.setString(3, usuario.getPassword());
 			insertUsuario.setString(4, usuario.getEmail());
-			insertUsuario.setBoolean(6,usuario.isPrimeiroAcesso());
+			
 			int idPerfil = usuario.getPerfil().getId();
 			insertUsuario.setInt(5, idPerfil);
 			insertUsuario.execute();
@@ -208,7 +208,7 @@ public class UsuarioDao {
 		
 	}
 	public void alterarPrimeiroAcesso(Usuario u) throws ExceptionDao{
-		String sql = "update Usuario set primeiroAcesso = ? where idUser = ?";
+		String sql = "update Usuario set primeiroAcesso = 0 where idUser = ?";
 		Connection con = null;
 		PreparedStatement stms = null;
 		try {
@@ -298,7 +298,7 @@ public class UsuarioDao {
 	}
 
 	public void resetarSenha(String senhaResetada, int codigo) throws ExceptionDao{
-		String sql = "update Usuario set password = ? where idUser ="+codigo;
+		String sql = "update Usuario set password = ?, primeiroAcesso = 1 where idUser ="+codigo;
 		Connection con = null;
 		PreparedStatement stms = null;
 		try {
