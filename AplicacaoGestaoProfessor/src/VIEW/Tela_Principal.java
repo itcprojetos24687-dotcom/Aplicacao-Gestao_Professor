@@ -69,8 +69,8 @@ public class Tela_Principal {
 //        });
 //    }
 
-    public Tela_Principal(Perfil p,Tela_login tl) {
-         this.nivelAcesso = p.getNome();
+    public Tela_Principal(Usuario u) {
+         this.nivelAcesso = u.getPerfil().getNome();
          inicializarModelos();
          initialize();
     }
@@ -222,6 +222,8 @@ public class Tela_Principal {
         
         
         
+        //Painel de cadastro de Qualificacao
+        
         // Painel Embutido de Cadastro de Turma
         Tela_cadastoTurma painelCadastroTurma = new Tela_cadastoTurma(new Tela_cadastoTurma.OnTurmaCadastradaListener() {
             @Override
@@ -261,6 +263,7 @@ public class Tela_Principal {
             }
             @Override public void onCancelar() { cardLayout.show(panelConteudoDinamico, "Formadores"); }
         });
+        // Painel
         panelConteudoDinamico.add(painelCadastroProfessor, "FormularioCadastroProfessor");
         
         String[] menus = {"Dashboard", "Formações", "Formadores", "Inscrições", "Matrículas", "Salas", "Turmas", "Qualificações","Formandos", "Cadastros ▾"};
@@ -610,7 +613,7 @@ public class Tela_Principal {
         return painel;
     }
     
-    private JPanel criarPainelQualificacoes() {
+    public JPanel criarPainelQualificacoes() {
         JPanel painel = new JPanel(new BorderLayout(0, 15));
         painel.setBackground(BRANCO);
         painel.setBorder(new EmptyBorder(15, 15, 15, 15));

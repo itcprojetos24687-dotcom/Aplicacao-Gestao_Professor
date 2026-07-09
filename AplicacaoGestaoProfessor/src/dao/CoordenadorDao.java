@@ -49,51 +49,51 @@ public class CoordenadorDao {
 //		}
 //	}
 //
-//	public ArrayList<Coordenador> listarCoordenador(Formador formador) throws ExceptionDao {
-//
-//		String sql = "select * from Coordenador where formador = ?";
-//		PreparedStatement listarCoordenador = null;
-//		ArrayList<Coordenador> listaCoordenador = new ArrayList<>();
-//
-//		try {
-//			con = new Conexao().getConnection();
-//			listarCoordenador = con.prepareStatement(sql);
-//			listarCoordenador.setInt(1, formador.getCodigo());
-//
-//			ResultSet rs = listarCoordenador.executeQuery();
-//
-//			while (rs.next()) {
-//				Coordenador c = new Coordenador();
-//				c.setCodigo(rs.getInt("codigo"));
-//
-//				Formador formadorEncontrado = new Formador();
-//				formadorEncontrado.setCodigo(rs.getInt("formador"));
-//				c.setFormador(formadorEncontrado);
-//
-//				listaCoordenador.add(c);
-//			}
-//
-//		} catch (SQLException ex) {
-//			throw new ExceptionDao("Erro ao selecionar dados" + ex);
-//
-//		} finally {
-//			try {
-//				if (listarCoordenador != null) {
-//					listarCoordenador.close();
-//				}
-//			} catch (SQLException es) {
-//				throw new ExceptionDao("Erro ao fechar o statement: " + es);
-//			}
-//			try {
-//				if (con != null) {
-//					con.close();
-//				}
-//			} catch (SQLException sq) {
-//				throw new ExceptionDao("Erro ao fechar conexao: " + sq);
-//			}
-//		}
-//		return listaCoordenador;
-//	}
+	public ArrayList<Coordenador> listarCoordenador() throws ExceptionDao {
+
+		String sql = "select cod_Formador,Formador.nome from Coordenador "
+				+ "join Formador on cod_Formador = codigo";
+		Connection con = null;
+		PreparedStatement listarCoordenador = null;
+		ArrayList<Coordenador> listaCoordenador = null;
+
+		try {
+			con = new Conexao().getConnection();
+			listarCoordenador = con.prepareStatement(sql);
+			ResultSet rs = listarCoordenador.executeQuery();
+			if(rs != null) {
+				listaCoordenador = new ArrayList<Coordenador>();
+				while (rs.next()) {
+					Formador f = new Formador();
+					Coordenador c = new Coordenador();
+					f.setCodigo(rs.getInt("cod_Formador"));
+					f.setNome(rs.getString("nome"));
+					c.setFormador(f);
+					listaCoordenador.add(c);
+				}
+			}
+
+		} catch (SQLException ex) {
+			throw new ExceptionDao("Erro ao selecionar dados" + ex);
+
+		} finally {
+			try {
+				if (listarCoordenador != null) {
+					listarCoordenador.close();
+				}
+			} catch (SQLException es) {
+				throw new ExceptionDao("Erro ao fechar o statement: " + es);
+			}
+			try {
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException sq) {
+				throw new ExceptionDao("Erro ao fechar conexao: " + sq);
+			}
+		}
+		return listaCoordenador;
+	}
 //
 //	public void atualizarCoordenador(Coordenador coordenador) throws ExceptionDao {
 //		String sql = "update Coordenador set formador = ? where codigo = ?";

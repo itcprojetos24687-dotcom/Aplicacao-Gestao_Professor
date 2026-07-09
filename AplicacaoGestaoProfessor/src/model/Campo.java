@@ -15,8 +15,8 @@ public class Campo {
 	public void cadastrarCampo(Campo campo) throws ExceptionDao{
 		new CampoDao().cadastrarCampo(campo);
 	}
-	public ArrayList<Campo> listarCampo(String nome) throws ExceptionDao{
-		return new CampoDao().listarCampo(nome);
+	public ArrayList<Campo> listarCampo() throws ExceptionDao{
+		return new CampoDao().listarCampo();
 	}
 	public void atualizarCampo(Campo campo) throws ExceptionDao{
 		new CampoDao().atualizarCampo(campo);
@@ -36,5 +36,8 @@ public class Campo {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	
+	@Override
+	public String toString() {
+		return nome;
+	}
 }

@@ -17,9 +17,9 @@ public class CoordenadorController {
 		return false;
 	}
 
-//	public ArrayList<Coordenador> listarCoordenador(Formador formador) throws ExceptionDao {
-//		return new Coordenador().listarCoordenador(formador);
-//	}
+	public ArrayList<Coordenador> listarCoordenador() throws ExceptionDao {
+		return new Coordenador().listarCoordenador();
+	}
 //
 //	public boolean atualizarCoordenador(int codigo, Formador formador) throws ExceptionDao {
 //		if (codigo != 0 && formador != null && formador.getCodigo() != 0) {

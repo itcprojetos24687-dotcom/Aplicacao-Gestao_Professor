@@ -1,16 +1,17 @@
 package controller;
 
-import model.Classificacao;
-import model.Campo;
+import model.*;
+
 import dao.ExceptionDao;
 import java.util.ArrayList;
 
 public class ClassificacaoController {
 
-	public boolean cadastrarClassificacao(Campo campo) throws ExceptionDao {
-		if (campo != null) {
+	public boolean cadastrarClassificacao(Campo campo, Qualificacao qualificacao) throws ExceptionDao {
+		if (campo != null && qualificacao != null) {
 			Classificacao classificacao = new Classificacao();
 			classificacao.setCampo(campo);
+			classificacao.setQualificacao(qualificacao);
 			classificacao.cadastrarClassificacao(classificacao);
 			return true;
 		}

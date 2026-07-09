@@ -6,15 +6,20 @@ public class QualificacaoDao {
 
 	public void cadastrarQualificacao(Qualificacao qc) throws ExceptionDao{
 
-		String sql = "insert into Qualificacao(titulo)" + "values(?)";
+		String sql = "insert into Qualificacao(titulo, cod_Coordenador) values(?,?)";
 		Connection con = null;
 		PreparedStatement InsertQualificacao = null;
 		try {
 
 			con = new Conexao().getConnection();
-			InsertQualificacao = con.prepareStatement(sql);
+			InsertQualificacao = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			InsertQualificacao.setString(1, qc.getTitulo());
+			InsertQualificacao.setInt(2, qc.getCoordenador().getFormador().getCodigo());
 			InsertQualificacao.execute();
+			ResultSet rs = InsertQualificacao.getGeneratedKeys();
+			if(rs.next()) {
+				qc.setCodigo(rs.getInt(1));
+			}
 
 		}catch(SQLException e) {
 			throw new ExceptionDao("Erro ao inserir dados :" + e);

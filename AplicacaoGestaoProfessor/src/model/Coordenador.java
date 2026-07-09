@@ -1,5 +1,6 @@
 package model;
-
+import java.util.ArrayList;
+import dao.*;
 public class Coordenador{
 	private Formador formador;
 	
@@ -15,7 +16,13 @@ public class Coordenador{
 	public void setFormador(Formador formador) {
 		this.formador = formador;
 	}
-	public void cadastrarCoordenador(Coordenador coordenador) {
+	public void cadastrarCoordenador(Coordenador coordenador) throws ExceptionDao {
 		
+	}
+	public ArrayList<Coordenador> listarCoordenador() throws ExceptionDao{
+		return new CoordenadorDao().listarCoordenador();
+	}
+	public String toString() {
+		return formador.getNome();
 	}
 }

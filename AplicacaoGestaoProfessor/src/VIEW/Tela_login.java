@@ -203,7 +203,7 @@ public class Tela_login extends JFrame implements ActionListener {
 	            			}
 	            			else {
 	            				
-	            				Tela_Principal tl = new Tela_Principal(utilizadorlogado.getPerfil(),Tela_login.this);
+	            				Tela_Principal tl = new Tela_Principal(Seccao.obterUtilizador());
 	            				JOptionPane.showMessageDialog(Tela_login.this, "Login efetuado!");
 	            				tl.abrir();
 	            				Tela_login.this.setVisible(false);

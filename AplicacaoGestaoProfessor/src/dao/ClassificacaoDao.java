@@ -15,19 +15,18 @@ public class ClassificacaoDao {
 	Connection con = null;
 
 	public void cadastrarClassificacao(Classificacao classificacao) throws ExceptionDao {
-		String sql = "insert into Classificacao(campo) values(?)";
+		String sql = "insert into Classificacao(cod_Campo,cod_Qualificacao) values(?,?)";
 		PreparedStatement insertClassificacao = null;
 
 		try {
 			con = new Conexao().getConnection();
-			insertClassificacao = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			insertClassificacao = con.prepareStatement(sql);
 			insertClassificacao.setInt(1, classificacao.getCampo().getCodigo());
+			insertClassificacao.setInt(2, classificacao.getQualificacao().getCodigo());
 			insertClassificacao.execute();
 
-			ResultSet rs = insertClassificacao.getGeneratedKeys();
-			if (rs != null && rs.next()) {
-				classificacao.setCodigo(rs.getInt(1));
-			}
+			
+			
 
 		} catch (SQLException e) {
 			throw new ExceptionDao("Erro ao inserir dados :" + e);

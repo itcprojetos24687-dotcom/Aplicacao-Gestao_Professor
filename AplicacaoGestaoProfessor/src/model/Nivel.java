@@ -35,8 +35,8 @@ public class Nivel {
 	public void cadastrarNivel(Nivel nivel) throws ExceptionDao{
 		new NivelDao().cadastrarNivel(nivel);
 	}
-	public ArrayList<Nivel> listarNivel(String nome) throws ExceptionDao{
-		return new NivelDao().listarNivel(nome);
+	public ArrayList<Nivel> listarNivel() throws ExceptionDao{
+		return new NivelDao().listarNivel();
 	}
 	public void atualizarNivel(Nivel nivel) throws ExceptionDao{
 		new NivelDao().atualizarNivel(nivel);
@@ -46,7 +46,7 @@ public class Nivel {
 	}
 	@Override
 	public String toString() {
-		return "Nivel [codigo=" + codigo + ", nome=" + nome + "]";
+		return nome;
 	}
 	
 	

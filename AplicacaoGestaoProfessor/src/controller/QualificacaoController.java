@@ -2,19 +2,31 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-import dao.ExceptionDao;
-import model.Qualificacao;
 
+import javax.swing.JOptionPane;
+
+import dao.ExceptionDao;
+import model.*;
 public class QualificacaoController {
 	static Scanner sc = new Scanner(System.in);
 
-	public boolean cadastrarQualificacao(String titulo)
+	public boolean cadastrarQualificacao(String titulo, Coordenador coordenador, Campo campo, Nivel nivel)
 	throws ExceptionDao{
-		if(titulo != null && titulo.length() > 0 && titulo.matches("[a-zA-Z ]+")){
-			Qualificacao qc = new Qualificacao(titulo);
+		if(titulo != null && titulo.length() > 0 && titulo.matches("[a-zA-Z ]+") && coordenador != null && campo != null){
+			Qualificacao qc = new Qualificacao(titulo, coordenador);
 			qc.cadastrarQualificacao(qc);
-			return true;
+			
+			if(qc.getCodigo()>0) {
+				ClassificacaoController cc = new ClassificacaoController();
+				boolean sucesso= cc.cadastrarClassificacao(campo,qc);
+				
+				if(sucesso) {
+					Quali_NivelController qn = new Quali_NivelController();
+					sucesso = qn.cadastrarQuali_Nivel(nivel,qc);
+					return true;
+			}
 		}
+	}
 		return false;
 	}
 
@@ -29,7 +41,8 @@ public class QualificacaoController {
 	public boolean atualizarQualificacao(int codigo, String titulo)
 	throws ExceptionDao{
 		if(codigo != 0 && titulo != null && titulo.length() > 0 && titulo.matches("[a-zA-Z ]+")){
-			Qualificacao qc = new Qualificacao(titulo);
+			Qualificacao qc = new Qualificacao();
+			qc.setTitulo(titulo);
 			qc.setCodigo(codigo);
 			qc.atualizarQualificacao(qc);
 			return true;

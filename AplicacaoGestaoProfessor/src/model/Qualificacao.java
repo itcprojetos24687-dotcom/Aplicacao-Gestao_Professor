@@ -7,12 +7,14 @@ public class Qualificacao {
 	private ArrayList<Classificacao> classificacoes;
 	private ArrayList<Quali_Nivel> quali_nivel;
 	private ArrayList<Quali_modulo> quali_modulo;
+	private Coordenador coordenador;
 
 	public Qualificacao() {
 
 	}
-	public Qualificacao(String titulo) {
+	public Qualificacao(String titulo, Coordenador coordenador) {
 		this.titulo = titulo;
+		this.coordenador= coordenador;
 	}
 	public int getCodigo() {
 		return codigo;
@@ -25,6 +27,12 @@ public class Qualificacao {
 	}
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
+	}
+	public Coordenador getCoordenador() {
+		return coordenador;
+	}
+	public void setCoordenador(Coordenador coordenador) {
+		this.coordenador = coordenador;
 	}
 	public void cadastrarQualificacao(Qualificacao qc) throws ExceptionDao{
 		new QualificacaoDao().cadastrarQualificacao(qc);

@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 import model.Nivel;
 
 public class NivelDao {
@@ -38,8 +40,8 @@ public class NivelDao {
 		}
 		
 	}
-	public ArrayList<Nivel> listarNivel(String nome) throws ExceptionDao{
-		String sql = "select * from Nivel where nome like '%" + nome+ "%'";
+	public ArrayList<Nivel> listarNivel() throws ExceptionDao{
+		String sql = "select * from Nivel ";
 		Connection con = null;
 		PreparedStatement select = null;
 		ArrayList<Nivel> niveis = null;
@@ -47,12 +49,13 @@ public class NivelDao {
 			con = new Conexao().getConnection();
 			select = con.prepareStatement(sql);
 			ResultSet rs = select.executeQuery();
-			
 			if(rs != null) {
+				niveis = new ArrayList<Nivel>();
 				while (rs.next()) {
 					Nivel nivel = new Nivel();
 					nivel.setCodigo(rs.getInt("codigo"));
 					nivel.setNome(rs.getString("nome"));
+					//JOptionPane.showMessageDialog(null, nivel.getCodigo()+" "+nivel.getNome());
 					niveis.add(nivel);
 					
 				}
