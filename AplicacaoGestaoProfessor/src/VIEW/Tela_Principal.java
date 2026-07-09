@@ -47,6 +47,9 @@ public class Tela_Principal {
     private DefaultTableModel modeloFormadores;
     private DefaultTableModel modeloFormacoes;
     private DefaultTableModel modeloSalas;
+    private DefaultTableModel modeloQualificacoes;
+    private DefaultTableModel modeloFormandos;
+    
 
     private final Color AZUL_ESCURO_NAV = new Color(15, 38, 70);
     private final Color AZUL_DESTAQUE   = new Color(13, 110, 253);
@@ -118,6 +121,18 @@ public class Tela_Principal {
             },
             new String[] { "Identificação", "Localização", "Capacidade", "Tipo de Sala" }
         );
+        modeloQualificacoes = new DefaultTableModel(
+        	    new Object[][] {
+        	        {"QUAL-001", "Programação Web","Edmundo Mapotere", "CV4", "Informatica"}
+        	    },
+        	    new String[] { "Codigo","Nome da Qualificacao","Coordenador", "Nivel da Qualificacao", "Campo Pertencente" }
+        	);
+        modeloFormandos = new DefaultTableModel(
+        	    new Object[][] {
+        	        {"FORM-001", "Edmundo", "Mapotere", "876543211", "edmundo@gmail.com", "123456789A"}
+        	    },
+        	    new String[] { "Código", "Nome", "Apelido", "Contacto", "Email", "BI" }
+        	);
     }
 
     private void initialize() {
@@ -185,7 +200,13 @@ public class Tela_Principal {
         panelConteudoDinamico.add(criarPainelMatriculas(), "Matrículas");
         panelConteudoDinamico.add(criarPainelSalas(), "Salas");
         panelConteudoDinamico.add(criarPainelTurmas(), "Turmas");
-
+        panelConteudoDinamico.add(criarPainelQualificacoes(), "Qualificações");
+        panelConteudoDinamico.add(new Tela_cadastroQualificação(), "FormularioQualificacao");
+        panelConteudoDinamico.add(criarPainelFormandos(), "Formandos");
+        panelConteudoDinamico.add(new Tela_cadastroFormando(), "FormularioCadastroFormando");
+        
+        
+        
         // Painel Embutido de Cadastro de Turma
         Tela_cadastoTurma painelCadastroTurma = new Tela_cadastoTurma(new Tela_cadastoTurma.OnTurmaCadastradaListener() {
             @Override
@@ -226,11 +247,11 @@ public class Tela_Principal {
             @Override public void onCancelar() { cardLayout.show(panelConteudoDinamico, "Formadores"); }
         });
         panelConteudoDinamico.add(painelCadastroProfessor, "FormularioCadastroProfessor");
-
-        String[] menus = {"Dashboard", "Formações", "Formadores", "Inscrições", "Matrículas", "Salas", "Turmas", "Cadastros ▾"};
+        
+        String[] menus = {"Dashboard", "Formações", "Formadores", "Inscrições", "Matrículas", "Salas", "Turmas", "Qualificações","Formandos", "Cadastros ▾"};
         
         for (String menu : menus) {
-            if (nivelAcesso.equalsIgnoreCase("Formador") && (menu.equals("Cadastros ▾") || menu.equals("Formadores") || menu.equals("Inscrições") || menu.equals("Matrículas") || menu.equals("Salas"))) {
+        	if (nivelAcesso.equalsIgnoreCase("Formador") && (menu.equals("Cadastros ▾") || menu.equals("Formadores") || menu.equals("Formandos") || menu.equals("Inscrições") || menu.equals("Matrículas") || menu.equals("Salas") || menu.equals("Qualificações"))) {
                 continue;
             }
 
@@ -265,6 +286,13 @@ public class Tela_Principal {
                 JMenuItem itemDropdownInscricao = new JMenuItem("Inscrição");
                 JMenuItem itemDropdownMatricula = new JMenuItem("Matrícula");
                 JMenuItem itemDropdownTurma = new JMenuItem("Turma");
+                JMenuItem itemFormandos = new JMenuItem("Formandos");
+
+                itemFormandos.addActionListener(e -> {
+                    cardLayout.show(panelConteudoDinamico, "FormularioCadastroFormando");
+                    lblTituloPagina.setText("Novo Formando");
+                    lblSubtituloPagina.setText("Preencha o formulário para registar um novo formando");
+                });
 
                 itemProfessores.addActionListener(e -> {
                     cardLayout.show(panelConteudoDinamico, "FormularioCadastroProfessor");
@@ -272,9 +300,14 @@ public class Tela_Principal {
                     lblSubtituloPagina.setText("Insira os dados do novo docente para listagem automática");
                 });
 
-                itemQualificacoes.addActionListener(e -> abrirJanelaLegada("Tela_cadastroQualificação"));
+                itemQualificacoes.addActionListener(e -> {
+                    cardLayout.show(panelConteudoDinamico, "FormularioQualificacao");
+                    lblTituloPagina.setText("Nova Qualificação");
+                    lblSubtituloPagina.setText("Preencha o formulário para registar uma nova qualificação");
+                });
+                
+                
                 itemNiveis.addActionListener(e -> abrirJanelaLegada("Tela_cadastroNivel"));
-
                 // ATUALIZADO: Abre o formulário diretamente
                 itemDropdownInscricao.addActionListener(e -> {
                     cardLayout.show(panelConteudoDinamico, "FormularioInscricao");
@@ -293,7 +326,8 @@ public class Tela_Principal {
                     lblTituloPagina.setText("Cadastrar Turma");
                     lblSubtituloPagina.setText("Insira os dados da nova turma para listagem automática");
                 });
-
+                
+                
                 if (!nivelAcesso.equalsIgnoreCase("Secretaria")) {
                     menuPopupCadastros.add(itemProfessores);
                     menuPopupCadastros.add(itemNiveis);
@@ -303,6 +337,7 @@ public class Tela_Principal {
                 menuPopupCadastros.add(itemDropdownInscricao);
                 menuPopupCadastros.add(itemDropdownMatricula);
                 menuPopupCadastros.add(itemDropdownTurma);
+                menuPopupCadastros.add(itemFormandos);
 
                 btnMenu.addActionListener(e -> menuPopupCadastros.show(btnMenu, btnMenu.getWidth(), 0));
             } else {
@@ -429,6 +464,10 @@ public class Tela_Principal {
                 cardLayout.show(panelConteudoDinamico, "FormularioCadastroMatricula");
             } else if(nomeCardView.equals("Formadores")) {
                 cardLayout.show(panelConteudoDinamico, "FormularioCadastroProfessor");
+            } else if(nomeCardView.equals("Qualificações")) {
+                cardLayout.show(panelConteudoDinamico, "FormularioQualificacao");
+            } else if(nomeCardView.equals("Formandos")) {
+                cardLayout.show(panelConteudoDinamico, "FormularioCadastroFormando");
             } else {
                 Object[] novaLinha = new Object[modeloReferencia.getColumnCount()];
                 novaLinha[0] = "NOVO";
@@ -547,7 +586,34 @@ public class Tela_Principal {
         painel.add(scrollPane, BorderLayout.CENTER);
         return painel;
     }
+    
+    private JPanel criarPainelQualificacoes() {
+        JPanel painel = new JPanel(new BorderLayout(0, 15));
+        painel.setBackground(BRANCO);
+        painel.setBorder(new EmptyBorder(15, 15, 15, 15));
+        painel.add(criarPainelBarraFerramentas("+ Nova Qualificação", modeloQualificacoes, "Qualificações"), BorderLayout.NORTH);
 
+        JScrollPane scrollPane = new JScrollPane();
+        JTable table = new JTable(modeloQualificacoes);
+        table.setRowHeight(35);
+        scrollPane.setViewportView(table);
+        painel.add(scrollPane, BorderLayout.CENTER);
+        return painel;
+    }
+    private JPanel criarPainelFormandos() {
+        JPanel painel = new JPanel(new BorderLayout(0, 15));
+        painel.setBackground(BRANCO);
+        painel.setBorder(new EmptyBorder(15, 15, 15, 15));
+        painel.add(criarPainelBarraFerramentas("+ Novo Formando", modeloFormandos, "Formandos"), BorderLayout.NORTH);
+
+        JScrollPane scrollPane = new JScrollPane();
+        JTable table = new JTable(modeloFormandos);
+        table.setRowHeight(35);
+        scrollPane.setViewportView(table);
+        painel.add(scrollPane, BorderLayout.CENTER);
+        return painel;
+    }
+    
     private JPanel criarCardMetrica(String titulo, String valor, Color corDestaque) {
         JPanel card = new JPanel(new BorderLayout());
         card.setBackground(FUNDO_CLARO);
