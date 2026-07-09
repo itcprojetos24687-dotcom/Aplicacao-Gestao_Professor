@@ -73,7 +73,6 @@ public class UsuarioDao {
 	}
 
 	public void cadastrarUsuario(Usuario usuario) throws ExceptionDao {
-
 		String sql = "insert into Usuario(nome, username, password, apelido, idPerfil,primeiroAcesso) values(?,?,?,?,?,1)";
 		Connection con = null;
 		PreparedStatement insertUsuario = null;

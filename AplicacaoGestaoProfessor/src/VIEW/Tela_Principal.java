@@ -247,6 +247,9 @@ public class Tela_Principal {
             @Override public void onCancelar() { cardLayout.show(panelConteudoDinamico, "Formadores"); }
         });
         panelConteudoDinamico.add(painelCadastroProfessor, "FormularioCadastroProfessor");
+      
+        
+        
         
         String[] menus = {"Dashboard", "Formações", "Formadores", "Inscrições", "Matrículas", "Salas", "Turmas", "Qualificações","Formandos", "Cadastros ▾"};
         
@@ -279,66 +282,32 @@ public class Tela_Principal {
 
                 JPopupMenu menuPopupCadastros = new JPopupMenu();
                 
-                JMenuItem itemProfessores = new JMenuItem("Professores");
-                JMenuItem itemQualificacoes = new JMenuItem("Qualificações");
+                JMenuItem itemSala = new JMenuItem("Sala");
+                JMenuItem itemCampo = new JMenuItem("Campo");
                 JMenuItem itemNiveis = new JMenuItem("Níveis");
                 
-                JMenuItem itemDropdownInscricao = new JMenuItem("Inscrição");
-                JMenuItem itemDropdownMatricula = new JMenuItem("Matrícula");
-                JMenuItem itemDropdownTurma = new JMenuItem("Turma");
-                JMenuItem itemFormandos = new JMenuItem("Formandos");
 
-                itemFormandos.addActionListener(e -> {
-                    cardLayout.show(panelConteudoDinamico, "FormularioCadastroFormando");
-                    lblTituloPagina.setText("Novo Formando");
-                    lblSubtituloPagina.setText("Preencha o formulário para registar um novo formando");
+                itemSala .addActionListener(e -> {
+                    cardLayout.show(panelConteudoDinamico, "FormularioCadastroSala");
+                    lblTituloPagina.setText("Cadastrar Sala");
+                    lblSubtituloPagina.setText("Insira os dados da sala ");
                 });
 
-                itemProfessores.addActionListener(e -> {
-                    cardLayout.show(panelConteudoDinamico, "FormularioCadastroProfessor");
-                    lblTituloPagina.setText("Cadastrar Professor / Formador");
-                    lblSubtituloPagina.setText("Insira os dados do novo docente para listagem automática");
-                });
-
-                itemQualificacoes.addActionListener(e -> {
-                    cardLayout.show(panelConteudoDinamico, "FormularioQualificacao");
-                    lblTituloPagina.setText("Nova Qualificação");
-                    lblSubtituloPagina.setText("Preencha o formulário para registar uma nova qualificação");
+                itemCampo.addActionListener(e -> {
+                    cardLayout.show(panelConteudoDinamico, "FormularioCampo");
+                    lblTituloPagina.setText("Novo Campo");
+                    lblSubtituloPagina.setText("Preencha o formulário para registar uma novo Campo");
                 });
                 
                 
                 itemNiveis.addActionListener(e -> abrirJanelaLegada("Tela_cadastroNivel"));
-                // ATUALIZADO: Abre o formulário diretamente
-                itemDropdownInscricao.addActionListener(e -> {
-                    cardLayout.show(panelConteudoDinamico, "FormularioInscricao");
-                    lblTituloPagina.setText("Nova Inscrição");
-                    lblSubtituloPagina.setText("Preencha o formulário para registar uma nova inscrição");
-                });
-
-                itemDropdownMatricula.addActionListener(e -> {
-                    cardLayout.show(panelConteudoDinamico, "FormularioCadastroMatricula");
-                    lblTituloPagina.setText("Efetivar Matrícula");
-                    lblSubtituloPagina.setText("Insira as credenciais para realizar uma nova matrícula");
-                });
-
-                itemDropdownTurma.addActionListener(e -> {
-                    cardLayout.show(panelConteudoDinamico, "FormularioCadastroTurma");
-                    lblTituloPagina.setText("Cadastrar Turma");
-                    lblSubtituloPagina.setText("Insira os dados da nova turma para listagem automática");
-                });
-                
+              
                 
                 if (!nivelAcesso.equalsIgnoreCase("Secretaria")) {
-                    menuPopupCadastros.add(itemProfessores);
+                    menuPopupCadastros.add(itemSala);
                     menuPopupCadastros.add(itemNiveis);
                 }
-                menuPopupCadastros.add(itemQualificacoes);
-                menuPopupCadastros.addSeparator();
-                menuPopupCadastros.add(itemDropdownInscricao);
-                menuPopupCadastros.add(itemDropdownMatricula);
-                menuPopupCadastros.add(itemDropdownTurma);
-                menuPopupCadastros.add(itemFormandos);
-
+                menuPopupCadastros.add(itemCampo);
                 btnMenu.addActionListener(e -> menuPopupCadastros.show(btnMenu, btnMenu.getWidth(), 0));
             } else {
                 corPadraoFundo = AZUL_ESCURO_NAV;
