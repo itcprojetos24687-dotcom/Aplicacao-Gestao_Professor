@@ -117,7 +117,7 @@ public class Tela_login extends JFrame implements ActionListener {
         gbc.gridwidth = 1;
         gbc.insets = new Insets(12, 25, 12, 25);
 
-        JLabel usuarioLabel = new JLabel("Operador");
+        JLabel usuarioLabel = new JLabel("Username");
         usuarioLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
         gbc.gridx = 0;
         gbc.gridy = 1;
