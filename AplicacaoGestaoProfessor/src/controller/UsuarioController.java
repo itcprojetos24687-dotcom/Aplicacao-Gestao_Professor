@@ -28,10 +28,10 @@ public class UsuarioController {
 		return null;
 
 	}
-	public void alterarPrimeiroAcesso(Usuario u) throws ExceptionDao {
-		u.setPrimeiroAcesso(false);
-		new UsuarioDao().alterarPrimeiroAcesso(u);
-	}
+//	public void alterarPrimeiroAcesso(Usuario u) throws ExceptionDao {
+//		u.setPrimeiroAcesso(false);
+//		new UsuarioDao().alterarPrimeiroAcesso(u);
+//	}
 	public boolean cadastrarUsuario(String nome,String username, String password,String apelido,Perfil perfil)
 	throws Exception {
 
@@ -122,8 +122,8 @@ public class UsuarioController {
 		
 	}
 
-	public void redifinirSenha(String novapassword, String antigapassword) throws ExceptionDao {
-		new Usuario().refinirSenha(novapassword, antigapassword);
+	public void redifinirSenha(String novapassword, int codigo) throws ExceptionDao {
+		new Usuario().refinirSenha(novapassword, codigo);
 	}
 
 	public boolean apagarUsuario(int codigo) throws ExceptionDao {

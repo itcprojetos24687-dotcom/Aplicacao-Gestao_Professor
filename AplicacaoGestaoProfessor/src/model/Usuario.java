@@ -117,8 +117,8 @@ public class Usuario {
 	public Usuario autenticar(String password)throws ExceptionDao {
 	 return new UsuarioDao().autenticar(password);
 }
-	public void refinirSenha(String novapassword,String antigapassword)throws ExceptionDao{
-		new UsuarioDao().refinirSenha(novapassword,antigapassword);
+	public void refinirSenha(String novapassword,int codigo)throws ExceptionDao{
+		new UsuarioDao().refinirSenha(novapassword,codigo);
 	}
 	public Perfil getPerfil() {
 		return perfil;
@@ -138,6 +138,6 @@ public class Usuario {
 
 	@Override
 	public String toString() {
-		return "Usuario [codigo=" + codigo + ", username=" + username + "]";
+		return "USuario: Codigo: "+codigo+" Username: "+username+" Apelido: "+apelido+" password: "+password+" primeiroAcesso: "+primeiroAcesso+" idPerfil: "+ perfil.getId()+" NomePerfil: "+perfil.getNome();
 	}
 }

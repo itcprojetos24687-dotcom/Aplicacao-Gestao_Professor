@@ -60,15 +60,15 @@ public class PerfilDao {
 			stms = con.prepareStatement(sql);
 			stms.setString(1, username);
 			ResultSet rs = stms.executeQuery();
-			JOptionPane.showMessageDialog(null, "Query executada");
+			//JOptionPane.showMessageDialog(null, "Query executada");
 			if(rs != null) {
-				JOptionPane.showMessageDialog(null, "Result set nao e nulu");
+				//JOptionPane.showMessageDialog(null, "Result set nao e nulu");
 				while(rs.next()) {
 					p = new Perfil();
 					p.setId(rs.getInt("id"));
 					p.setNome(rs.getString("nome"));
 					
-					JOptionPane.showMessageDialog(null, "Inicializado:"+p.getId()+p.getNome());
+					//JOptionPane.showMessageDialog(null, "Inicializado:"+p.getId()+p.getNome());
 					
 				}
 			}

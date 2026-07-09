@@ -11,13 +11,17 @@ public class UsuarioDao {
 
 	public Usuario login(String username, String password) throws ExceptionDao {
 
-		String sql = "select * from Usuario where username=? and password=?";
+		String sql = "select * from Usuario "
+				+ "join Perfil on idPerfil = id "
+				+ "where username=? and password=?";
 		Connection con = null;
 		PreparedStatement lg = null;
 		Usuario u = null;
+		Perfil p = null;
 
 		try {
 			con = new Conexao().getConnection();
+			JOptionPane.showMessageDialog(null, "Conexao estabelecida");
 			lg = con.prepareStatement(sql);
 			lg.setString(1, username);
 			lg.setString(2, password);
@@ -27,9 +31,18 @@ public class UsuarioDao {
 				//JOptionPane.showMessageDialog(null, "Result set nao e null, pegou algo");
 				while (rs.next()) {
 					u = new Usuario();
+					p = new Perfil();
 					u.setCodigo(rs.getInt("idUser"));
 					u.setUsername(rs.getString("username"));
+					u.setApelido(rs.getString("apelido"));
 					u.setPassword(rs.getString("password"));
+					u.setPrimeiroAcesso(rs.getBoolean("primeiroAcesso"));
+					p.setId(rs.getInt("id"));
+					p.setNome(rs.getString("Perfil.nome"));
+					u.setPerfil(p);
+					//JOptionPane.showMessageDialog(null, u);
+					
+					
 					//JOptionPane.showMessageDialog(null, u.getUsername()+""+u.getPassword());
 				}
 			}
@@ -166,8 +179,8 @@ public class UsuarioDao {
 
 		return usuarios;
 	}
-	public void refinirSenha(String novapassword,String antigapassword) throws ExceptionDao {
-		String sql = "update Usuario set password=? where password = ?";
+	public void refinirSenha(String novapassword,int codigo) throws ExceptionDao {
+		String sql = "update Usuario set password=?, primeiroAcesso = 0 where idUser = ?";
 		PreparedStatement alterar = null;
 		Connection con = null;
 		
@@ -176,7 +189,7 @@ public class UsuarioDao {
 			alterar = con.prepareStatement(sql);
 			
 			alterar.setString(1, novapassword);
-			alterar.setString(2, antigapassword);
+			alterar.setInt(2, codigo);
 			
 			
 			alterar.executeUpdate();
@@ -207,43 +220,43 @@ public class UsuarioDao {
 		}
 		
 	}
-	public void alterarPrimeiroAcesso(Usuario u) throws ExceptionDao{
-		String sql = "update Usuario set primeiroAcesso = 0 where idUser = ?";
-		Connection con = null;
-		PreparedStatement stms = null;
-		try {
-			con = new Conexao().getConnection();
-			stms = con.prepareStatement(sql);
-			stms.setBoolean(1, u.isPrimeiroAcesso());
-			stms.setInt(2, u.getCodigo());
-			}catch(SQLException s) {
-				new ExceptionDao("Erro ao alterar acesso"+ s);
-		}finally {
-			try {
-				if(stms != null) {
-					stms.close();
-					//JOptionPane.showMessageDialog(null, "Fechado com sucesso");
-				}
-			}catch(SQLException sq) {
-				throw new ExceptionDao("Erro ao fechar  a conexao"+ sq);
-			}
-			try {
-				if(con != null) {
-					con.close();
-					//JOptionPane.showMessageDialog(null, "Fechado com sucesso");
-				}
-			}catch(SQLException l) {
-				throw new ExceptionDao("Erro ao fechar  a conexao"+ l);
-				//JOptionPane.showMessageDialog(null, "Falha de fechado ");
-			}
-			
-		}
-	}
+//	public void alterarPrimeiroAcesso(Usuario u) throws ExceptionDao{
+//		String sql = "update Usuario set primeiroAcesso = 0 where idUser = ?";
+//		Connection con = null;
+//		PreparedStatement stms = null;
+//		try {
+//			con = new Conexao().getConnection();
+//			stms = con.prepareStatement(sql);
+//			stms.setBoolean(1, u.isPrimeiroAcesso());
+//			stms.setInt(2, u.getCodigo());
+//			}catch(SQLException s) {
+//				new ExceptionDao("Erro ao alterar acesso"+ s);
+//		}finally {
+//			try {
+//				if(stms != null) {
+//					stms.close();
+//					//JOptionPane.showMessageDialog(null, "Fechado com sucesso");
+//				}
+//			}catch(SQLException sq) {
+//				throw new ExceptionDao("Erro ao fechar  a conexao"+ sq);
+//			}
+//			try {
+//				if(con != null) {
+//					con.close();
+//					//JOptionPane.showMessageDialog(null, "Fechado com sucesso");
+//				}
+//			}catch(SQLException l) {
+//				throw new ExceptionDao("Erro ao fechar  a conexao"+ l);
+//				//JOptionPane.showMessageDialog(null, "Falha de fechado ");
+//			}
+//			
+//		}
+//	}
 	public Usuario autenticar( String password) throws ExceptionDao {
 
 
-		String sql = "select idUser,nome,username,apelido,Perfil.nome,primeiroAcesso, password from Usuario "
-				+ " join Perfil on idPerfil = id where password =?";
+		String sql = "select idUser, password from Usuario "
+				+ " where password =?";
 		Connection con = null;
 		PreparedStatement lg = null;
 		Usuario u = null;
@@ -258,17 +271,8 @@ public class UsuarioDao {
 				//JOptionPane.showMessageDialog(null, "Result set nao e null, pegou algo");
 				while (rs.next()) {
 					u = new Usuario();
-					Perfil p = new Perfil();
 					u.setPassword(rs.getString("password"));
 					u.setCodigo(rs.getInt("idUser"));
-					u.setNome(rs.getString("nome"));
-					u.setUsername(rs.getString("username"));
-					//usuario.setIdPerfil(rs.getInt("idPerfil"));
-					p.setNome(rs.getString("nome"));
-					u.setPerfil(p);
-					u.setApelido(rs.getString("apelido"));
-					u.setPrimeiroAcesso(rs.getBoolean("primeiroAcesso"));
-					//JOptionPane.showMessageDialog(null, u.getUsername()+""+u.getPassword());
 				}
 			}
 
