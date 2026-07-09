@@ -57,11 +57,11 @@ public class Tela_Utilizadores extends JFrame {
     private final Color TEXTO_DARK     = new Color(33, 37, 41);     
     private final Color BORDA_CARD     = new Color(225, 228, 232); 
     
-    private JTextField campoNomeCompleto;
+    private JTextField campoNome;
     private JTextField campoNomeOperador;
     private JPasswordField campoSenha;
     private JComboBox<Perfil> comboPerfil;
-    private JTextField campoEmail;
+    private JTextField campoApelido;
     private JButton botaoGerarSenha;
     private ArrayList<Perfil> perfis;
     private ArrayList<Usuario> usuarios;
@@ -192,7 +192,7 @@ public class Tela_Utilizadores extends JFrame {
                 
             },
             new String[] {
-                "ID", "Username", "Nome", "Email", "Perfil"
+                "ID", "Username", "Nome", "Apelido", "Perfil"
             }
         ));
         scrollPane.setViewportView(tableUtilizadores);
@@ -213,8 +213,8 @@ public class Tela_Utilizadores extends JFrame {
         				modelo.addRow(new Object[] {
         						        u.getCodigo(),
         						        u.getUsername(),
-        						        u.getNome_completo(),
-        						        u.getEmail(),
+        						        u.getNome(),
+        						        u.getApelido(),
         						        u.getPerfil().getNome(),
         				});
         			}
@@ -245,14 +245,14 @@ public class Tela_Utilizadores extends JFrame {
             		Integer codigo = (Integer)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 0);
             		String username = (String)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 1);
             		String nome = (String)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 2);
-            		String email = (String)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 3);
+            		String apelido = (String)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 3);
             		String p = (String)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 4);
             		
             		if (linha == -1) {
             			JOptionPane.showMessageDialog(null, "Selecione um utilizador na tabela para editar.", "Aviso", JOptionPane.WARNING_MESSAGE);
             		} else {
             			criarDialog();
-            			buscarUsuario(codigo,username,nome,email,p);
+            			buscarUsuario(codigo,username,nome,apelido,p);
             			//String username = tableUtilizadores.getValueAt(linha, 1).toString();
             			//JOptionPane.showMessageDialog(null, "A editar as permissões de: " + username, "Editar", JOptionPane.INFORMATION_MESSAGE);
             		}
@@ -273,11 +273,15 @@ public class Tela_Utilizadores extends JFrame {
                     if (confirmacao == JOptionPane.YES_OPTION) {
                     	try {
                     		idUsuario = (Integer)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(),0);
+                    		String nome = (String)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 2);
                     		sucesso = uc.apagarUsuario(idUsuario);
                     		idUsuario = 0;
                     		listar();
                     		if(sucesso) {
-                    			
+                    			FicheiroDefault.apagarFicheiro(nome);
+                    			if(!sucesso) {
+                    				JOptionPane.showMessageDialog(null,"Erro ao apagar o ficheiro");
+                    			}
                     			JOptionPane.showMessageDialog(null, "Operador deletado");
                     		}else {
                     			JOptionPane.showMessageDialog(null, "Falha ao deletar operador");
@@ -298,7 +302,7 @@ public class Tela_Utilizadores extends JFrame {
         			Integer codigo = (Integer)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 0);
             		String username = (String)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 1);
             		String nome = (String)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 2);
-            		String email = (String)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 3);
+            		String apelido = (String)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 3);
             		String p = (String)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 4);
             		String senha = nome+"123";
         			sucesso = uc.resetarSenha(senha, codigo);;
@@ -306,8 +310,8 @@ public class Tela_Utilizadores extends JFrame {
         			Perfil pr = new Perfil();
         			u.setCodigo(codigo);
         			u.setUsername(username);
-        			u.setNome_completo(nome);
-        			u.setEmail(email);
+        			u.setNome(nome);
+        			u.setApelido(apelido);
         			pr.setNome(p);
         			u.setPerfil(pr);
         			u.setPassword(senha);
@@ -328,14 +332,14 @@ public class Tela_Utilizadores extends JFrame {
         });
     }
 
-   private void buscarUsuario(int codigo, String username,String nome,String email,String p) {
+   private void buscarUsuario(int codigo, String username,String nome,String apelido,String p) {
 	   idUsuario = codigo;
-	   campoNomeCompleto.setText(nome);
-	   campoNomeCompleto.setEditable(false);
+	   campoNome.setText(nome);
+	   campoNome.setEditable(false);
 	   campoNomeOperador.setText(username);
 	   campoNomeOperador.setEditable(false);
-	   campoEmail.setText(email);
-	   campoEmail.setEditable(false);
+	   campoApelido.setText(apelido);
+	   campoApelido.setEditable(false);
 	   campoSenha.setEditable(false);
 	   botaoGerarSenha.setEnabled(false);
 	   for(int i = 0; i< comboPerfil.getItemCount();i++) {
@@ -388,12 +392,12 @@ public class Tela_Utilizadores extends JFrame {
          gbc.gridx = 0; gbc.gridy = 0;
          gbc.weightx = 0;
          gbc.anchor = GridBagConstraints.WEST;
-         painelPrincipal.add(criarLabel("Nome completo:"), gbc);
+         painelPrincipal.add(criarLabel("Nome :"), gbc);
 
          gbc.gridx = 0; gbc.gridy = 1;
          gbc.weightx = 0.5; // coluna esquerda cresce
-         campoNomeCompleto = new JTextField();
-         painelPrincipal.add(campoNomeCompleto, gbc);
+         campoNome = new JTextField();
+         painelPrincipal.add(campoNome, gbc);
 
          gbc.gridx = 1; gbc.gridy = 0;
          gbc.weightx = 0;
@@ -419,7 +423,7 @@ public class Tela_Utilizadores extends JFrame {
          // ================= LINHA 2: Nome do Operador | Email =================
          gbc.gridx = 0; gbc.gridy = 2;
          gbc.weightx = 0;
-         painelPrincipal.add(criarLabel("Nome do operador:"), gbc);
+         painelPrincipal.add(criarLabel("Username:"), gbc);
 
          gbc.gridx = 0; gbc.gridy = 3;
          gbc.weightx = 0.5;
@@ -428,12 +432,12 @@ public class Tela_Utilizadores extends JFrame {
 
          gbc.gridx = 1; gbc.gridy = 2;
          gbc.weightx = 0;
-         painelPrincipal.add(criarLabel("Email:"), gbc);
+         painelPrincipal.add(criarLabel("Apelido:"), gbc);
 
          gbc.gridx = 1; gbc.gridy = 3;
          gbc.weightx = 0.5;
-         campoEmail = new JTextField();
-         painelPrincipal.add(campoEmail, gbc);
+         campoApelido = new JTextField();
+         painelPrincipal.add(campoApelido, gbc);
 
          // ================= LINHA 4: Senha + botão Gerar Senha =================
          gbc.gridx = 0; gbc.gridy = 4;
@@ -483,14 +487,14 @@ public class Tela_Utilizadores extends JFrame {
              // aqui entra a lógica de gravação
         	 boolean sucesso;
         	 try {
-        		 String nome = campoNomeCompleto.getText();
+        		 String nome = campoNome.getText();
         		 String username = campoNomeOperador.getText();
         		 String senha = campoSenha.getText();
-        		 String email = campoEmail.getText();
+        		 String apelido = campoApelido.getText();
         		 Perfil p = (Perfil) comboPerfil.getSelectedItem();
         		 if(idUsuario == 0) {
         			 //JOptionPane.showMessageDialog(null, "Codigo do usuario: "+idUsuario);
-        			 sucesso = uc.cadastrarUsuario(nome, username, senha, email, p);
+        			 sucesso = uc.cadastrarUsuario(nome, username, senha, apelido, p);
         			 listar();
         			 if(sucesso) {
         				 JOptionPane.showMessageDialog(null, "Operador Cadastrado com sucesso");
@@ -591,7 +595,7 @@ public class Tela_Utilizadores extends JFrame {
      }
 
      private String gerarSenhaAleatoria(int tamanho) {
-         String sb = campoNomeCompleto.getText()+"123";
+         String sb = campoNome.getText()+"123";
          return sb;
      }
      private void listar() throws Exception{
@@ -603,8 +607,8 @@ public class Tela_Utilizadores extends JFrame {
 				modelo.addRow(new Object[] {
 						        u.getCodigo(),
 						        u.getUsername(),
-						        u.getNome_completo(),
-						        u.getEmail(),
+						        u.getNome(),
+						        u.getApelido(),
 						        u.getPerfil().getNome(),
 				});
 			}

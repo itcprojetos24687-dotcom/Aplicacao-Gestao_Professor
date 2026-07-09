@@ -61,7 +61,7 @@ public class UsuarioDao {
 
 	public void cadastrarUsuario(Usuario usuario) throws ExceptionDao {
 
-		String sql = "insert into Usuario(nome_completo, username, password, email, idPerfil,primeiroAcesso) values(?,?,?,?,?,1)";
+		String sql = "insert into Usuario(nome, username, password, apelido, idPerfil,primeiroAcesso) values(?,?,?,?,?,1)";
 		Connection con = null;
 		PreparedStatement insertUsuario = null;
 
@@ -69,16 +69,16 @@ public class UsuarioDao {
 
 			con = new Conexao().getConnection();
 			insertUsuario = con.prepareStatement(sql);
-			insertUsuario.setString(1, usuario.getNome_completo());
+			insertUsuario.setString(1, usuario.getNome());
 			insertUsuario.setString(2, usuario.getUsername());
 			insertUsuario.setString(3, usuario.getPassword());
-			insertUsuario.setString(4, usuario.getEmail());
+			insertUsuario.setString(4, usuario.getApelido());
 			
 			int idPerfil = usuario.getPerfil().getId();
 			insertUsuario.setInt(5, idPerfil);
 			insertUsuario.execute();
 			Usuario u = Seccao.obterUtilizador();
-			Logs log = new Logs("INSERT","Operador"+usuario.getNome_completo()+"cadastrado",u);
+			Logs log = new Logs("INSERT","Operador"+usuario.getNome()+"cadastrado",u);
 			log.salvar(log);
 			
 
@@ -107,7 +107,7 @@ public class UsuarioDao {
 
 	public ArrayList<Usuario> listarUsuario(String username) throws ExceptionDao {
 
-		String sql = "select idUser,nome_completo,username,email,Perfil.nome from Usuario "
+		String sql = "select idUser,Usuario.nome,username,apelido,Perfil.nome from Usuario "
 				+ " join Perfil on idPerfil = id "
 				+ "where username like '%"+username+"%'";
 		Connection con = null;
@@ -129,12 +129,12 @@ public class UsuarioDao {
 					Usuario usuario = new Usuario();
 					Perfil p = new Perfil();
 					usuario.setCodigo(rs.getInt("idUser"));
-					usuario.setNome_completo(rs.getString("nome_completo"));
+					usuario.setNome(rs.getString("nome"));
 					usuario.setUsername(rs.getString("username"));
 					//usuario.setIdPerfil(rs.getInt("idPerfil"));
-					p.setNome(rs.getString("nome"));
+					p.setNome(rs.getString("Perfil.nome"));
 					usuario.setPerfil(p);
-					usuario.setEmail(rs.getString("email"));
+					usuario.setApelido(rs.getString("apelido"));
 					//usuario.setPrimeiroAcesso(rs.getBoolean("primeiroAcesso"));
 					
 
@@ -242,7 +242,7 @@ public class UsuarioDao {
 	public Usuario autenticar( String password) throws ExceptionDao {
 
 
-		String sql = "select idUser,nome_completo,username,email,Perfil.nome,primeiroAcesso, password from Usuario "
+		String sql = "select idUser,nome,username,apelido,Perfil.nome,primeiroAcesso, password from Usuario "
 				+ " join Perfil on idPerfil = id where password =?";
 		Connection con = null;
 		PreparedStatement lg = null;
@@ -261,12 +261,12 @@ public class UsuarioDao {
 					Perfil p = new Perfil();
 					u.setPassword(rs.getString("password"));
 					u.setCodigo(rs.getInt("idUser"));
-					u.setNome_completo(rs.getString("nome_completo"));
+					u.setNome(rs.getString("nome"));
 					u.setUsername(rs.getString("username"));
 					//usuario.setIdPerfil(rs.getInt("idPerfil"));
 					p.setNome(rs.getString("nome"));
 					u.setPerfil(p);
-					u.setEmail(rs.getString("email"));
+					u.setApelido(rs.getString("apelido"));
 					u.setPrimeiroAcesso(rs.getBoolean("primeiroAcesso"));
 					//JOptionPane.showMessageDialog(null, u.getUsername()+""+u.getPassword());
 				}
@@ -355,12 +355,12 @@ public class UsuarioDao {
 					Usuario usuario = new Usuario();
 					Perfil p =new Perfil();
 					usuario.setCodigo(rs.getInt("idUser"));
-					usuario.setNome_completo(rs.getString("nome_completo"));
+					usuario.setNome(rs.getString("nome"));
 					usuario.setUsername(rs.getString("username"));
 					//usuario.setIdPerfil(rs.getInt("idPerfil"));
 					p.setNome(rs.getString("nome"));
 					usuario.setPerfil(p);
-					usuario.setEmail(rs.getString("email"));
+					usuario.setApelido(rs.getString("apelido"));
 					
 
 					usuarios.add(usuario);
