@@ -1,7 +1,8 @@
 package dao;
 import java.sql.*;
+
 import java.util.ArrayList;
-import model.Qualificacao;
+import model.*;
 public class QualificacaoDao {
 
 	public void cadastrarQualificacao(Qualificacao qc) throws ExceptionDao{
@@ -86,7 +87,14 @@ public class QualificacaoDao {
 
 	public ArrayList<Qualificacao> listarQualificacao(String titulo) throws ExceptionDao{
 
-		String sql = "select * from Qualificacao where titulo like '%" + titulo + "%'";
+		String sql = "select Qualificacao.cod_Quali,titulo,Formador.nome as Coordenador,Nivel.nome as Nivel "
+				+ ",Campo.nome as Campo from Qualificacao"
+				+ " join Coordenador on cod_Coordenador = cod_Formador "
+				+ "join Formador on Coordenador.cod_Formador = Formador.codigo "
+				+ "join Quali_Nivel on Quali_Nivel.cod_Quali = Qualificacao.cod_Quali "
+				+ "join Nivel on cod_Nivel=Nivel.codigo "
+				+ "join Classificacao on cod_Qualificacao = Qualificacao.cod_Quali "
+				+ "join Campo on Campo.codigo = cod_Qualificacao where titulo like '%"+titulo+"%'";
 		Connection con = null;
 		PreparedStatement listarQualificacao = null;
 		ArrayList<Qualificacao> qualificacoes = null;
@@ -100,8 +108,19 @@ public class QualificacaoDao {
 				qualificacoes = new ArrayList();
 				while(rs.next()) {
 					Qualificacao qc = new Qualificacao();
-					qc.setCodigo(rs.getInt("codigo"));
+					Coordenador c = new Coordenador();
+					Formador f = new Formador();
+					Nivel n = new Nivel();
+					Campo campo = new Campo();
+					qc.setCodigo(rs.getInt("cod_Quali"));
 					qc.setTitulo(rs.getString("titulo"));
+					f.setNome(rs.getString("Coordenador"));
+					c.setFormador(f);
+					qc.setCoordenador(c);
+					n.setNome(rs.getNString("Nivel"));
+					qc.setNivel(n);
+					campo.setNome(rs.getString("Campo"));
+					qc.setCampo(campo);
 					qualificacoes.add(qc);
 				}
 			}

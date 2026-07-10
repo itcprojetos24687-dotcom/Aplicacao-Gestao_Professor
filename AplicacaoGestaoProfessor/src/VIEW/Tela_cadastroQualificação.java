@@ -35,6 +35,7 @@ public class Tela_cadastroQualificação extends JPanel {
     private ArrayList<Coordenador> coordenadores;
     private ArrayList<Nivel> niveis;
     private ArrayList<Campo> campos;
+    private int codigo;
     
   
     // Paleta de Cores unificada AcademiaPro
@@ -204,6 +205,29 @@ public class Tela_cadastroQualificação extends JPanel {
     	setVisible(false);
     	Tela_Principal tl = new Tela_Principal(Seccao.obterUtilizador());
     	tl.criarPainelQualificacoes();
+    	
+    }
+    public void buscarQualificacao(int cod, String titulo,String coordenador,String nivel, String campo) {
+    	codigo = cod;
+    	txtNomeQualificacao.setText(titulo);
+    	for(int i = 0 ;i<cbCoordenador.getItemCount();i++) {
+    		if(cbCoordenador.getItemAt(i).equals(coordenador)) {
+    			cbCoordenador.setSelectedIndex(i);
+    		}
+    	}
+    	for(int i = 0 ;i<cbNivelQualificacao.getItemCount();i++) {
+    		if(cbNivelQualificacao.getItemAt(i).equals(nivel)) {
+    			cbNivelQualificacao.setSelectedIndex(i);
+    		}
+    	}
+    	
+    	for(int i = 0 ;i<cbCampoPertencente.getItemCount();i++) {
+    		if(cbCampoPertencente.getItemAt(i).equals(campo)) {
+    			cbCampoPertencente.setSelectedIndex(i);
+    		}
+    	}
+    	
+    	
     	
     }
     private void limparCampos() {

@@ -2,6 +2,7 @@ package VIEW;
 
 import java.awt.EventQueue;
 
+
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.BorderLayout;
@@ -10,8 +11,11 @@ import java.awt.Dimension;
 import java.awt.Cursor;
 import java.awt.GridLayout;
 import java.awt.CardLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -25,7 +29,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import model.*;
-
+import controller.*;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -51,7 +55,8 @@ public class Tela_Principal {
     private DefaultTableModel modeloQualificacoes;
     private DefaultTableModel modeloFormandos;
     
-
+    private JTable tabelaQualificacao;
+    
     private final Color AZUL_ESCURO_NAV = new Color(15, 38, 70);
     private final Color AZUL_DESTAQUE   = new Color(13, 110, 253);
     private final Color FUNDO_CLARO      = new Color(244, 246, 249);
@@ -474,7 +479,34 @@ public class Tela_Principal {
         btnFiltrar.setBorder(new LineBorder(Color.LIGHT_GRAY, 1));
         panelPesquisa.add(btnFiltrar);
         panelAcoes.add(panelPesquisa, BorderLayout.WEST);
-
+        
+        btnFiltrar.addActionListener(new ActionListener() {
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        		if(nomeCardView.equals("Qualificações")) {
+        			JOptionPane.showMessageDialog(null,"Entrado com sucesso");
+        			DefaultTableModel modelo = (DefaultTableModel) tabelaQualificacao.getModel();
+        			String texto = txtPesquisar.getText();
+        			try {
+        				QualificacaoController qc = new QualificacaoController();
+        				ArrayList<Qualificacao> qualificacoes = qc.listarQualificacao(texto);
+        				modelo.setRowCount(0);
+        				for(Qualificacao q: qualificacoes) {
+        					modelo.addRow(new Object[] {
+        							      q.getCodigo(),
+        							      q.getTitulo(),
+        							      q.getCoordenador().getFormador().getNome(),
+        							      q.getNivel().getNome(),
+        							      q.getCampo().getNome(),
+        					});
+        				}
+        			}catch(Exception s) {
+        				s.printStackTrace();
+        			}
+        		}
+        		
+        	}
+        });
         JPanel panelBotoesCrud = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
         panelBotoesCrud.setBackground(BRANCO);
 
@@ -508,6 +540,29 @@ public class Tela_Principal {
         btnEditar.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         btnEditar.setPreferredSize(new Dimension(90, 35));
         btnEditar.setBorder(new LineBorder(Color.LIGHT_GRAY, 1));
+        btnEditar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(nomeCardView.equals("Qualificações")) {
+					Integer codigo = (Integer)tabelaQualificacao.getModel().getValueAt(tabelaQualificacao.getSelectedRow(), 0);
+					String titulo = (String)tabelaQualificacao.getModel().getValueAt(tabelaQualificacao.getSelectedRow(), 1);
+					String coordenador = (String)tabelaQualificacao.getModel().getValueAt(tabelaQualificacao.getSelectedRow(), 2);
+					String nivel = (String)tabelaQualificacao.getModel().getValueAt(tabelaQualificacao.getSelectedRow(), 3);
+					String campo = (String)tabelaQualificacao.getModel().getValueAt(tabelaQualificacao.getSelectedRow(), 4);
+					
+					try {
+						new Tela_cadastroQualificação().buscarQualificacao(codigo, titulo, coordenador, nivel, campo);
+						cardLayout.show(panelConteudoDinamico, "FormularioQualificacao");
+						
+					}catch(Exception s) {
+						s.printStackTrace();
+					}
+					
+				
+				};
+				
+			}
+        });
 
         JButton btnEliminar = new JButton("Eliminar");
         btnEliminar.setBackground(new Color(248, 215, 218));
@@ -620,9 +675,9 @@ public class Tela_Principal {
         painel.add(criarPainelBarraFerramentas("+ Nova Qualificação", modeloQualificacoes, "Qualificações"), BorderLayout.NORTH);
 
         JScrollPane scrollPane = new JScrollPane();
-        JTable table = new JTable(modeloQualificacoes);
-        table.setRowHeight(35);
-        scrollPane.setViewportView(table);
+        tabelaQualificacao = new JTable(modeloQualificacoes);
+        tabelaQualificacao.setRowHeight(35);
+        scrollPane.setViewportView(tabelaQualificacao);
         painel.add(scrollPane, BorderLayout.CENTER);
         return painel;
     }
