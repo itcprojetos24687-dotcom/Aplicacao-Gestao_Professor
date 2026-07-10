@@ -13,9 +13,10 @@ public class Classificacao {
 	public Classificacao() {
 	}
 
-	public Classificacao(int codigo, Campo campo) {
-		this.codigo = codigo;
+	public Classificacao( Campo campo, Qualificacao qualificacao) {
+		
 		this.campo = campo;
+		this.qualificacao = qualificacao;
 	}
 
 	public int getCodigo() {

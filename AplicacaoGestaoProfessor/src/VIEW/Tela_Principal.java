@@ -2,6 +2,7 @@ package VIEW;
 
 import java.awt.EventQueue;
 
+
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.BorderLayout;
@@ -10,8 +11,11 @@ import java.awt.Dimension;
 import java.awt.Cursor;
 import java.awt.GridLayout;
 import java.awt.CardLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -25,7 +29,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import model.*;
-
+import controller.*;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -51,7 +55,9 @@ public class Tela_Principal {
     private DefaultTableModel modeloQualificacoes;
     private DefaultTableModel modeloFormandos;
     
-
+    private JTable tabelaQualificacao;
+    private JTable tabelaFormador;
+    
     private final Color AZUL_ESCURO_NAV = new Color(15, 38, 70);
     private final Color AZUL_DESTAQUE   = new Color(13, 110, 253);
     private final Color FUNDO_CLARO      = new Color(244, 246, 249);
@@ -69,8 +75,8 @@ public class Tela_Principal {
 //        });
 //    }
 
-    public Tela_Principal(Perfil p,Tela_login tl) {
-         this.nivelAcesso = p.getNome();
+    public Tela_Principal(Usuario u) {
+         this.nivelAcesso = u.getPerfil().getNome();
          inicializarModelos();
          initialize();
     }
@@ -104,9 +110,9 @@ public class Tela_Principal {
 
         modeloFormadores = new DefaultTableModel(
             new Object[][] {
-                {"12345", "Malik", "Mangue", "Masculino", "Malikmang@gmail.com", "876543211", "Programação web", "Ativo"}
+                
             },
-            new String[] { "Código", "Nome", "Apelido", "Sexo", "Email", "Telefone", "Área de Atuação", "Estado" }
+            new String[] { "Código", "Nome", "Apelido", "Genero", "Email","Estado Civil", "Contacto", "Salario" }
         );
 
         modeloFormacoes = new DefaultTableModel(
@@ -222,6 +228,8 @@ public class Tela_Principal {
         
         
         
+        //Painel de cadastro de Qualificacao
+        
         // Painel Embutido de Cadastro de Turma
         Tela_cadastoTurma painelCadastroTurma = new Tela_cadastoTurma(new Tela_cadastoTurma.OnTurmaCadastradaListener() {
             @Override
@@ -261,6 +269,7 @@ public class Tela_Principal {
             }
             @Override public void onCancelar() { cardLayout.show(panelConteudoDinamico, "Formadores"); }
         });
+        // Painel
         panelConteudoDinamico.add(painelCadastroProfessor, "FormularioCadastroProfessor");
       
         
@@ -460,7 +469,35 @@ public class Tela_Principal {
         btnFiltrar.setBorder(new LineBorder(Color.LIGHT_GRAY, 1));
         panelPesquisa.add(btnFiltrar);
         panelAcoes.add(panelPesquisa, BorderLayout.WEST);
-
+        
+        btnFiltrar.addActionListener(new ActionListener() {
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        		if(nomeCardView.equals("Qualificações")) {
+        			
+        			DefaultTableModel modelo = (DefaultTableModel) tabelaQualificacao.getModel();
+        			String texto = txtPesquisar.getText();
+        			try {
+        				QualificacaoController qc = new QualificacaoController();
+        				ArrayList<Qualificacao> qualificacoes = qc.listarQualificacao(texto);
+        				modelo.setRowCount(0);
+        				for(Qualificacao q: qualificacoes) {
+        					modelo.addRow(new Object[] {
+        							      q.getCodigo(),
+        							      q.getTitulo(),
+        							      q.getCoordenador().getFormador().getNome(),
+        							      q.getNivel().getNome(),
+        							      q.getCampo().getNome(),
+        					});
+        				}
+        			}catch(Exception s) {
+        				s.printStackTrace();
+        			}
+        		}
+        		
+        		
+        	}
+        });
         JPanel panelBotoesCrud = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
         panelBotoesCrud.setBackground(BRANCO);
 
@@ -479,7 +516,7 @@ public class Tela_Principal {
             } else if(nomeCardView.equals("Matrículas")) {
                 cardLayout.show(panelConteudoDinamico, "FormularioCadastroMatricula");
             } else if(nomeCardView.equals("Formadores")) {
-                cardLayout.show(panelConteudoDinamico, "FormularioCadastroProfessor");
+               new Cadastro_Formador().setVisible(true); 
             } else if(nomeCardView.equals("Qualificações")) {
                 cardLayout.show(panelConteudoDinamico, "FormularioQualificacao");
             } else if(nomeCardView.equals("Formandos")) {
@@ -494,6 +531,50 @@ public class Tela_Principal {
         btnEditar.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         btnEditar.setPreferredSize(new Dimension(90, 35));
         btnEditar.setBorder(new LineBorder(Color.LIGHT_GRAY, 1));
+        btnEditar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(nomeCardView.equals("Qualificações")) {
+					Integer codigo = (Integer)tabelaQualificacao.getModel().getValueAt(tabelaQualificacao.getSelectedRow(), 0);
+					String titulo = (String)tabelaQualificacao.getModel().getValueAt(tabelaQualificacao.getSelectedRow(), 1);
+					String coordenador = (String)tabelaQualificacao.getModel().getValueAt(tabelaQualificacao.getSelectedRow(), 2);
+					String nivel = (String)tabelaQualificacao.getModel().getValueAt(tabelaQualificacao.getSelectedRow(), 3);
+					String campo = (String)tabelaQualificacao.getModel().getValueAt(tabelaQualificacao.getSelectedRow(), 4);
+					
+					try {
+						new Tela_cadastroQualificação().buscarQualificacao(codigo, titulo, coordenador, nivel, campo);
+						cardLayout.show(panelConteudoDinamico, "FormularioQualificacao");
+						
+					}catch(Exception s) {
+						s.printStackTrace();
+					}
+					
+				
+				};
+				if(nomeCardView.equals("Formadores")) {
+					Integer codigo=(Integer)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 0);
+					String nome=(String)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 1);
+					String apelido=(String)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 2);
+					String genero=(String)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 3);
+					String estadoCivil=(String)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 5);
+					String email=(String)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 4);
+					Integer contacto=(Integer)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 6);
+					Integer Salario=(Integer)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 7);
+					try {
+						Cadastro_Formador cf = new Cadastro_Formador();
+						cf.setVisible(true);
+						cf.buscarFormador(codigo, nome, apelido, email, genero, estadoCivil, contacto, 0);
+						
+					}catch(Exception s) {
+						s.printStackTrace();
+					}
+
+
+
+				}
+				
+			}
+        });
 
         JButton btnEliminar = new JButton("Eliminar");
         btnEliminar.setBackground(new Color(248, 215, 218));
@@ -599,16 +680,16 @@ public class Tela_Principal {
         return painel;
     }
     
-    private JPanel criarPainelQualificacoes() {
+    public JPanel criarPainelQualificacoes() {
         JPanel painel = new JPanel(new BorderLayout(0, 15));
         painel.setBackground(BRANCO);
         painel.setBorder(new EmptyBorder(15, 15, 15, 15));
         painel.add(criarPainelBarraFerramentas("+ Nova Qualificação", modeloQualificacoes, "Qualificações"), BorderLayout.NORTH);
 
         JScrollPane scrollPane = new JScrollPane();
-        JTable table = new JTable(modeloQualificacoes);
-        table.setRowHeight(35);
-        scrollPane.setViewportView(table);
+        tabelaQualificacao = new JTable(modeloQualificacoes);
+        tabelaQualificacao.setRowHeight(35);
+        scrollPane.setViewportView(tabelaQualificacao);
         painel.add(scrollPane, BorderLayout.CENTER);
         return painel;
     }

@@ -12,8 +12,8 @@ public class CampoController {
 		}
 		return false;
 	}
-	public ArrayList<Campo> listarCampo (String nome) throws ExceptionDao{
-		return new Campo().listarCampo(nome);
+	public ArrayList<Campo> listarCampo () throws ExceptionDao{
+		return new Campo().listarCampo();
 	}
 	public boolean atualizarCampo(int codigo,String nome)
 			throws ExceptionDao{

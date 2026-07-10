@@ -34,8 +34,8 @@ public class CampoDao {
 		}
 		
 	}
-	public ArrayList<Campo> listarCampo(String nome) throws ExceptionDao{
-		String sql = "select * from Campo where nome like '%" + nome+ "%'";
+	public ArrayList<Campo> listarCampo() throws ExceptionDao{
+		String sql = "select * from Campo ";
 		Connection con = null;
 		PreparedStatement select = null;
 		ArrayList<Campo> campos = null;
@@ -45,6 +45,7 @@ public class CampoDao {
 			ResultSet rs = select.executeQuery();
 			
 			if(rs != null) {
+				campos = new ArrayList<Campo>();
 				while (rs.next()) {
 					Campo campo = new Campo();
 					campo.setCodigo(rs.getInt("codigo"));

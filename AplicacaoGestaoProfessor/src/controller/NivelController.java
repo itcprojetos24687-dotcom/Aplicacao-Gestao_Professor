@@ -12,8 +12,8 @@ public class NivelController {
 		}
 		return false;
 	}
-	public ArrayList<Nivel> listarCampo (String nome) throws ExceptionDao{
-		return new Nivel().listarNivel(nome);
+	public ArrayList<Nivel> listarNivel () throws ExceptionDao{
+		return new Nivel().listarNivel();
 	}
 	public boolean atualizarCampo(int codigo,String nome)
 			throws ExceptionDao{

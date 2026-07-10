@@ -1,5 +1,7 @@
 package VIEW;
-
+import  model.*;
+import controller.*;
+import java.util.ArrayList;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -23,11 +25,19 @@ public class Tela_cadastroQualificação extends JPanel {
     
     // Componentes de Entrada de Dados
     private JTextField txtNomeQualificacao;
-    private JComboBox<String> cbCoordenador;
-    private JComboBox<String> cbNivelQualificacao;
-    private JComboBox<String> cbCampoPertencente;
-    private JButton btnSalvar, btnLimpar;
-
+    private JComboBox<Coordenador> cbCoordenador;
+    private JComboBox<Nivel> cbNivelQualificacao;
+    private JComboBox<Campo> cbCampoPertencente;
+    private JButton btnSalvar, btnLimpar, btnCancelar;
+    private CoordenadorController cc = new CoordenadorController();
+    private NivelController nv = new NivelController();
+    private CampoController cac = new CampoController();
+    private ArrayList<Coordenador> coordenadores;
+    private ArrayList<Nivel> niveis;
+    private ArrayList<Campo> campos;
+    private int codigo;
+    
+  
     // Paleta de Cores unificada AcademiaPro
     private final Color AZUL_ESCURO_NAV = new Color(15, 38, 70);
     private final Color AZUL_DESTAQUE   = new Color(13, 110, 253);
@@ -35,7 +45,9 @@ public class Tela_cadastroQualificação extends JPanel {
     private final Color BRANCO          = Color.WHITE;
     private final Color TEXTO_MUTED     = new Color(108, 117, 125);
 
+    
     public Tela_cadastroQualificação() {
+    	
         // Alinhado ao plano de design do painel central
         setLayout(new BorderLayout(0, 15));
         setBackground(BRANCO);
@@ -75,25 +87,48 @@ public class Tela_cadastroQualificação extends JPanel {
 
         // 2. Coordenador da Qualificação (ComboBox)
         panelGridCampos.add(new JLabel("Coordenador") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
-        cbCoordenador = new JComboBox<>(new String[] {
-            "Selecione...","Malik Mangue", "Edmundo Mapotere", "Kenny Pessula"
-        });
+        try {
+        	
+        	coordenadores = cc.listarCoordenador();
+        	cbCoordenador = new JComboBox<>();
+        	for(Coordenador c : coordenadores) {
+        		cbCoordenador.addItem(c);
+        	}
+        }catch(Exception s) {
+        	
+        	s.printStackTrace();
+        }
         cbCoordenador.setFont(fontText);
         panelGridCampos.add(cbCoordenador);
 
         // 3. Nível da Qualificação (ComboBox)
         panelGridCampos.add(new JLabel("Nível da Qualificação *") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
-        cbNivelQualificacao = new JComboBox<>(new String[] {
-            "Selecione...", "CV 3", "CV 4", "CV 5"
-        });
+        try {
+        	niveis = nv.listarNivel();
+        	cbNivelQualificacao = new JComboBox<>();
+        	for(Nivel n: niveis) {
+        		cbNivelQualificacao.addItem(n);
+        		
+        	}
+        	
+        	
+        }catch(Exception s) {
+        	s.printStackTrace();
+        }
         cbNivelQualificacao.setFont(fontText);
         panelGridCampos.add(cbNivelQualificacao);
 
         // 4. Campo Pertencente (ComboBox)
         panelGridCampos.add(new JLabel("Campo Pertencente") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
-        cbCampoPertencente = new JComboBox<>(new String[] {
-            "Selecione...", "Técnico", "Gestao"
-        });
+        try {
+        	campos = cac.listarCampo();
+        	cbCampoPertencente = new JComboBox<>();
+        	for(Campo c: campos) {
+        		cbCampoPertencente.addItem(c);
+        	}
+        }catch(Exception s) {
+        	s.printStackTrace();
+        }
         cbCampoPertencente.setFont(fontText);
         panelGridCampos.add(cbCampoPertencente);
 
@@ -112,6 +147,16 @@ public class Tela_cadastroQualificação extends JPanel {
         btnLimpar.setBorder(new LineBorder(new Color(220, 224, 230)));
         btnLimpar.addActionListener(e -> limparCampos());
 
+        btnCancelar = new JButton("Cancelar");
+        btnCancelar.setBackground(BRANCO);
+        btnCancelar.setFont(fontLabel);
+        btnCancelar.setPreferredSize(new Dimension(150, 40));
+        btnCancelar.setBorder(new LineBorder(new Color(220, 224, 230)));
+        btnCancelar.addActionListener(e -> {
+        	cancelar();
+        	
+        });
+        
         btnSalvar = new JButton("Guardar Qualificação");
         btnSalvar.setBackground(AZUL_DESTAQUE);
         btnSalvar.setForeground(BRANCO);
@@ -123,9 +168,10 @@ public class Tela_cadastroQualificação extends JPanel {
                 acaoSalvar();
             }
         });
-
+        panelBotoesRodape.add(btnCancelar);
         panelBotoesRodape.add(btnLimpar);
         panelBotoesRodape.add(btnSalvar);
+        
         
         add(panelBotoesRodape, BorderLayout.SOUTH);
     }
@@ -135,21 +181,55 @@ public class Tela_cadastroQualificação extends JPanel {
      */
     private void acaoSalvar() {
         String nome = txtNomeQualificacao.getText().trim();
-        String coordenador = (String) cbCoordenador.getSelectedItem();
-        String nivel = (String) cbNivelQualificacao.getSelectedItem();
-        String campo = (String) cbCampoPertencente.getSelectedItem();
+        Coordenador coordenador = (Coordenador) cbCoordenador.getSelectedItem();
+        Nivel nivel = (Nivel) cbNivelQualificacao.getSelectedItem();
+        Campo campo = (Campo) cbCampoPertencente.getSelectedItem();
+        boolean sucesso;
+        try{
 
-        if (nome.isEmpty() || nivel.equals("Selecione...")) {
-            JOptionPane.showMessageDialog(this, "Por favor, preencha os campos obrigatórios (*).", "Aviso", JOptionPane.WARNING_MESSAGE);
-            return;
+			QualificacaoController qc = new QualificacaoController();
+			sucesso = qc.cadastrarQualificacao(nome, coordenador, campo, nivel);
+        	if(sucesso) {
+        		JOptionPane.showMessageDialog(null, "Cadastrado com sucesso");
+        	}
+        	else {
+        		JOptionPane.showMessageDialog(null,"Falha no cadastro");
+        	}
+        }catch(Exception e) {
+        	JOptionPane.showMessageDialog(null,"Erro ao salvar");
+        	e.printStackTrace();
         }
-
-        String resumo = "Qualificação: " + nome + "\nNível: " + nivel + "\nCoordenador: " + coordenador;
-        JOptionPane.showMessageDialog(this, "Qualificação guardada com sucesso!\n\n" + resumo, "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-        
         limparCampos();
     }
-
+    private void cancelar() {
+    	setVisible(false);
+    	Tela_Principal tl = new Tela_Principal(Seccao.obterUtilizador());
+    	tl.criarPainelQualificacoes();
+    	
+    }
+    public void buscarQualificacao(int cod, String titulo,String coordenador,String nivel, String campo) {
+    	codigo = cod;
+    	txtNomeQualificacao.setText(titulo);
+    	for(int i = 0 ;i<cbCoordenador.getItemCount();i++) {
+    		if(cbCoordenador.getItemAt(i).equals(coordenador)) {
+    			cbCoordenador.setSelectedIndex(i);
+    		}
+    	}
+    	for(int i = 0 ;i<cbNivelQualificacao.getItemCount();i++) {
+    		if(cbNivelQualificacao.getItemAt(i).equals(nivel)) {
+    			cbNivelQualificacao.setSelectedIndex(i);
+    		}
+    	}
+    	
+    	for(int i = 0 ;i<cbCampoPertencente.getItemCount();i++) {
+    		if(cbCampoPertencente.getItemAt(i).equals(campo)) {
+    			cbCampoPertencente.setSelectedIndex(i);
+    		}
+    	}
+    	
+    	
+    	
+    }
     private void limparCampos() {
         txtNomeQualificacao.setText("");
         cbCoordenador.setSelectedIndex(0);

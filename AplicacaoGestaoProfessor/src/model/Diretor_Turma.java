@@ -1,6 +1,7 @@
 package model;
 import java.util.ArrayList;
 
+
 import dao.*;
 
 public class Diretor_Turma {
@@ -14,6 +15,11 @@ public class Diretor_Turma {
 	}
 	public void setFormador(Formador formador) {
 		this.formador=formador;
+	}
+
+	public void cadastrarDiretor_Turma(Diretor_Turma dt)throws ExceptionDao {
+		new Diretor_TurmaDao().cadastrarDiretor_Turma(dt);
+		
 	}
 	
 	/*public void cadastrarDiretor_Turma(Diretor_Turma diretor)throws ExceptionDao{
