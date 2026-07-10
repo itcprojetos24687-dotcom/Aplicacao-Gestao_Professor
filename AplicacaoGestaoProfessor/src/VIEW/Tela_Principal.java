@@ -1,6 +1,7 @@
 package VIEW;
 
 import java.awt.EventQueue;
+
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.BorderLayout;
@@ -23,7 +24,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import model.Perfil;
+import model.*;
 
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
@@ -148,7 +149,7 @@ public class Tela_Principal {
         panelTopo.setPreferredSize(new Dimension(1280, 50));
         panelTopo.setBorder(new EmptyBorder(0, 20, 0, 20));
 
-        JLabel lblTituloApp = new JLabel("SGP - Painel de Controle");
+        JLabel lblTituloApp = new JLabel("Sistema de Gestao de Formadores - Painel de Controle");
         lblTituloApp.setForeground(BRANCO);
         lblTituloApp.setFont(new Font("Segoe UI", Font.BOLD, 16));
         panelTopo.add(lblTituloApp, BorderLayout.WEST);
@@ -170,6 +171,16 @@ public class Tela_Principal {
         btnUtilizadores.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnUtilizadores.setFocusPainted(false);
         
+        JButton btnLogs = new JButton(" Acessar Logs");
+        btnLogs.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnLogs.setForeground(BRANCO);
+        btnLogs.setBackground(new Color(25, 52, 88));
+        btnLogs.setBorder(new LineBorder(new Color(40, 75, 120), 1, true));
+        btnLogs.setPreferredSize(new Dimension(150, 30));
+        btnLogs.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnLogs.setFocusPainted(false);
+        
+        
         btnUtilizadores.addActionListener(e -> {
             try {
                 new Tela_Utilizadores().setVisible(true);
@@ -180,6 +191,10 @@ public class Tela_Principal {
         
         if (nivelAcesso.equalsIgnoreCase("Administrador")) {
             panelTopoDireita.add(btnUtilizadores);
+            panelTopoDireita.add(btnLogs);
+        }
+        if (nivelAcesso.equalsIgnoreCase("Auditor")) {
+        	panelTopoDireita.add(btnLogs);
         }
         
         panelTopo.add(panelTopoDireita, BorderLayout.EAST);
@@ -249,6 +264,19 @@ public class Tela_Principal {
         panelConteudoDinamico.add(painelCadastroProfessor, "FormularioCadastroProfessor");
       
         
+        // Painel Embutido de Cadastro de Professor
+         Tela_cadastroSala painelCadastroSala = new Tela_cadastroSala(new Tela_cadastroSala.OnSalaCadastradoListener() {
+             @Override
+             public void onSalaCadastrado(int codigo, String designacao, String tipo) {
+                 String idGerado = "PRF-" + (10000 + modeloSalas.getRowCount() + 1);
+                 modeloSalas.addRow(new Object[]{idGerado, designacao, tipo});
+                 cardLayout.show(panelConteudoDinamico, "Sala");
+                 lblTituloPagina.setText("Salas");
+                 lblSubtituloPagina.setText("Gestão de Salas do Sistema");
+             }
+             @Override public void onCancelar() { cardLayout.show(panelConteudoDinamico, "Sala"); }
+         });
+         
         
         
         String[] menus = {"Dashboard", "Formações", "Formadores", "Inscrições", "Matrículas", "Salas", "Turmas", "Qualificações","Formandos", "Cadastros ▾"};
@@ -308,6 +336,13 @@ public class Tela_Principal {
                     menuPopupCadastros.add(itemNiveis);
                 }
                 menuPopupCadastros.add(itemCampo);
+//                if (!nivelAcesso.equalsIgnoreCase("Secretaria")) {
+//                    menuPopupCadastros.add(itemProfessores);
+//                    menuPopupCadastros.add(itemNiveis);
+//                }
+             
+                menuPopupCadastros.addSeparator();
+                
                 btnMenu.addActionListener(e -> menuPopupCadastros.show(btnMenu, btnMenu.getWidth(), 0));
             } else {
                 corPadraoFundo = AZUL_ESCURO_NAV;
@@ -342,8 +377,20 @@ public class Tela_Principal {
         btnSairLateral.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnSairLateral.addActionListener(e -> fecharAplicacao());
         panelMenuLateral.add(btnSairLateral);
-        frame.getContentPane().add(panelMenuLateral, BorderLayout.WEST);
+       frame.getContentPane().add(panelMenuLateral, BorderLayout.WEST);
 
+        JButton btnLogOut = new JButton("Sign out");
+        btnLogOut.setPreferredSize(new Dimension(200, 40));
+        btnLogOut.setBackground(new Color(217, 83, 79));
+        btnLogOut.setForeground(BRANCO);
+        btnLogOut.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnLogOut.setBorder(null);
+        btnLogOut.setFocusPainted(false);
+        btnLogOut.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnLogOut.addActionListener(e -> logOut());
+        panelMenuLateral.add(btnLogOut);
+        frame.getContentPane().add(panelMenuLateral, BorderLayout.WEST);
+        
         JPanel panelPrincipalContainer = new JPanel(new BorderLayout(0, 20));
         panelPrincipalContainer.setBackground(FUNDO_CLARO);
         panelPrincipalContainer.setBorder(new EmptyBorder(25, 30, 25, 30));
@@ -387,7 +434,7 @@ public class Tela_Principal {
 
         painel.add(painelCardsIndicadores, BorderLayout.NORTH);
 
-        JLabel lblBemVindo = new JLabel("Seja bem-vindo ao painel de controle da S.G.P.", SwingConstants.CENTER);
+        JLabel lblBemVindo = new JLabel("Seja bem-vindo ao painel de controle da Sistema de Gestao de Formadores", SwingConstants.CENTER);
         lblBemVindo.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         lblBemVindo.setForeground(TEXTO_MUTED);
         painel.add(lblBemVindo, BorderLayout.CENTER);
@@ -406,7 +453,7 @@ public class Tela_Principal {
         txtPesquisar.setPreferredSize(new Dimension(250, 35));
         panelPesquisa.add(txtPesquisar);
 
-        JButton btnFiltrar = new JButton("Filtrar");
+        JButton btnFiltrar = new JButton("Pesquisar");
         btnFiltrar.setPreferredSize(new Dimension(90, 35));
         btnFiltrar.setBackground(BRANCO);
         btnFiltrar.setFont(new Font("Segoe UI", Font.PLAIN, 13));
@@ -438,9 +485,7 @@ public class Tela_Principal {
             } else if(nomeCardView.equals("Formandos")) {
                 cardLayout.show(panelConteudoDinamico, "FormularioCadastroFormando");
             } else {
-                Object[] novaLinha = new Object[modeloReferencia.getColumnCount()];
-                novaLinha[0] = "NOVO";
-                modeloReferencia.addRow(novaLinha);
+                
             }
         });
 
@@ -457,16 +502,14 @@ public class Tela_Principal {
         btnEliminar.setPreferredSize(new Dimension(100, 35));
         btnEliminar.setBorder(new LineBorder(new Color(245, 198, 203), 1));
 
-        if (nivelAcesso.equalsIgnoreCase("Administrador")) {
-            panelBotoesCrud.add(btnNovo);
-            panelBotoesCrud.add(btnEditar);
-            panelBotoesCrud.add(btnEliminar);
-        } else if (nivelAcesso.equalsIgnoreCase("Secretaria")) {
-            if(!nomeCardView.equals("Formadores") && !nomeCardView.equals("Salas")) {
-                panelBotoesCrud.add(btnNovo);
-            }
-            panelBotoesCrud.add(btnEditar);
+        if(nivelAcesso.equalsIgnoreCase("Operador")) {
+        	btnEditar.setEnabled(false);
+        	btnEliminar.setEnabled(false);
         }
+        panelBotoesCrud.add(btnNovo);
+        panelBotoesCrud.add(btnEditar);
+        
+        panelBotoesCrud.add(btnEliminar);
 
         panelAcoes.add(panelBotoesCrud, BorderLayout.EAST);
         return panelAcoes;
@@ -620,6 +663,12 @@ public class Tela_Principal {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(frame, "Erro ao abrir a janela.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
+    }
+    private void logOut() {
+    	Tela_login tl = new Tela_login();
+    	tl.setVisible(true);
+    	frame.dispose();
+    	Seccao.terminarSeccao();
     }
 
     private void fecharAplicacao() {
