@@ -217,12 +217,26 @@ public class Cadastro_Formador extends JFrame {
 				boolean sucesso;
 				try {
 					FormadorController fc = new FormadorController();
-					sucesso = fc.cadastrarFormador(nome, apelido, email, genero, estadoCivil, contacto, salario, isDiretor,isCoordenador);
-					if(sucesso) {
-						JOptionPane.showMessageDialog(null, "Cadastrado com sucesso");
+					if(idUser == 0) {
+						sucesso = fc.cadastrarFormador(nome, apelido, email, genero, estadoCivil, contacto, salario, isDiretor,isCoordenador);
+						new Tela_Principal(Seccao.obterUtilizador()).listar();
+						if(sucesso) {
+							JOptionPane.showMessageDialog(null, "Cadastrado com sucesso");
+						}
+						else {
+							JOptionPane.showMessageDialog(null,"Falha ao cadastrar");
+						}
 					}
 					else {
-						JOptionPane.showMessageDialog(null,"Falha ao cadastrar");
+						sucesso = fc.atualizarFormador(idUser, nome, apelido, email, genero, estadoCivil, contacto, salario);
+						new Tela_Principal(Seccao.obterUtilizador()).listar();
+						if (sucesso){
+							idUser = 0;
+							JOptionPane.showMessageDialog(null,"Atualizado com sucesso");
+						}
+						else {
+							JOptionPane.showMessageDialog(null, "Falha ao atualizar");
+						}
 					}
 				}catch(Exception s) {
 					s.printStackTrace();
@@ -233,6 +247,7 @@ public class Cadastro_Formador extends JFrame {
 
 	}
 	public void buscarFormador(int codigo, String nome, String apelido, String email,String genero,String estadoCivil, int contacto, int salario) {
+		idUser = codigo;
 		textNome.setText(nome);
 		textApelido.setText(apelido);
 		textContacto.setText(String.valueOf(contacto));
@@ -257,4 +272,5 @@ public class Cadastro_Formador extends JFrame {
 		textValor_Hora.setText("");
 		textHoras_Mes.setText("");
 	}
+	
 }

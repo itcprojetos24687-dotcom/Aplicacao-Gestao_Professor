@@ -35,7 +35,7 @@ public class Tela_cadastroQualificação extends JPanel {
     private ArrayList<Coordenador> coordenadores;
     private ArrayList<Nivel> niveis;
     private ArrayList<Campo> campos;
-    private int codigo;
+    private int codigo = 0;
     
   
     // Paleta de Cores unificada AcademiaPro
@@ -188,13 +188,22 @@ public class Tela_cadastroQualificação extends JPanel {
         try{
 
 			QualificacaoController qc = new QualificacaoController();
-			sucesso = qc.cadastrarQualificacao(nome, coordenador, campo, nivel);
-        	if(sucesso) {
-        		JOptionPane.showMessageDialog(null, "Cadastrado com sucesso");
-        	}
-        	else {
-        		JOptionPane.showMessageDialog(null,"Falha no cadastro");
-        	}
+			if(codigo == 0) {
+				sucesso = qc.cadastrarQualificacao(nome, coordenador, campo, nivel);
+				if(sucesso) {
+					JOptionPane.showMessageDialog(null, "Cadastrado com sucesso");
+				}
+				else {
+					JOptionPane.showMessageDialog(null,"Falha no cadastro");
+				}
+			}else {
+				sucesso = qc.atualizarQualificacao(codigo, nome);
+				if(sucesso) {
+					JOptionPane.showMessageDialog(null,"Atualizado com sucesso");
+				}else {
+					JOptionPane.showMessageDialog(null,"Falha como sucesso");
+				}
+			}
         }catch(Exception e) {
         	JOptionPane.showMessageDialog(null,"Erro ao salvar");
         	e.printStackTrace();
@@ -210,18 +219,18 @@ public class Tela_cadastroQualificação extends JPanel {
     public void buscarQualificacao(int cod, String titulo,String coordenador,String nivel, String campo) {
     	codigo = cod;
     	txtNomeQualificacao.setText(titulo);
-    	for(int i = 0 ;i<cbCoordenador.getItemCount();i++) {
+    	for(int i = 0 ;i < cbCoordenador.getItemCount();i++) {
     		if(cbCoordenador.getItemAt(i).equals(coordenador)) {
     			cbCoordenador.setSelectedIndex(i);
     		}
     	}
-    	for(int i = 0 ;i<cbNivelQualificacao.getItemCount();i++) {
+    	for(int i = 0 ;i < cbNivelQualificacao.getItemCount();i++) {
     		if(cbNivelQualificacao.getItemAt(i).equals(nivel)) {
     			cbNivelQualificacao.setSelectedIndex(i);
     		}
     	}
-    	
-    	for(int i = 0 ;i<cbCampoPertencente.getItemCount();i++) {
+    	 
+    	for(int i = 0 ;i < cbCampoPertencente.getItemCount();i++) {
     		if(cbCampoPertencente.getItemAt(i).equals(campo)) {
     			cbCampoPertencente.setSelectedIndex(i);
     		}

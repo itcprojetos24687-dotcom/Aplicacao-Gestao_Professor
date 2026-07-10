@@ -598,7 +598,7 @@ public class Tela_Utilizadores extends JFrame {
          String sb = campoNome.getText()+"123";
          return sb;
      }
-     private void listar() throws Exception{
+     private  void listar() throws Exception{
     	 DefaultTableModel modelo = (DefaultTableModel) tableUtilizadores.getModel();
 			String pesquisar = txtPesquisar.getText();
 			usuarios = uc.listarUsuario(pesquisar);

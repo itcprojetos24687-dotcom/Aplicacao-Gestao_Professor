@@ -34,10 +34,10 @@ public class FormadorController {
 	}
 	public boolean atualizarFormador(int codigo, String nome, String apelido, String email, String genero, String estadoCivil,int contacto, double salario)
 			throws ExceptionDao{
-				if(nome != null && nome.length()>0 && nome.matches("[a-zA-Z]+") && codigo != 0&& apelido != null && apelido.matches("[a-zA-z]+") && apelido.length() > 0 && email != null && email.length() > 0 && contacto > 0){
+				if(codigo > 0 && nome != null && nome.length()>0 && nome.matches("[a-zA-Z]+") && codigo != 0&& apelido != null && apelido.matches("[a-zA-z]+") && apelido.length() > 0 && email != null && email.length() > 0 && contacto > 0){
 					Formador formador = new Formador(nome, apelido, email,genero,estadoCivil,contacto, salario);
 					formador.setCodigo(codigo);
-					formador.atualizarFormador(formador);;
+					formador.atualizarFormador(formador);
 					return true;
 				}
 				return false;

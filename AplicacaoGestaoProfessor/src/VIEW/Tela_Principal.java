@@ -55,6 +55,8 @@ public class Tela_Principal {
     private DefaultTableModel modeloQualificacoes;
     private DefaultTableModel modeloFormandos;
     
+    private JTextField txtPesquisar;
+    
     private JTable tabelaQualificacao;
     private JTable tabelaFormador;
     
@@ -469,7 +471,7 @@ public class Tela_Principal {
         JPanel panelPesquisa = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
         panelPesquisa.setBackground(BRANCO);
 
-        JTextField txtPesquisar = new JTextField();
+        txtPesquisar = new JTextField();
         txtPesquisar.setPreferredSize(new Dimension(250, 35));
         panelPesquisa.add(txtPesquisar);
 
@@ -499,6 +501,30 @@ public class Tela_Principal {
         							      q.getCoordenador().getFormador().getNome(),
         							      q.getNivel().getNome(),
         							      q.getCampo().getNome(),
+        					});
+        				}
+        			}catch(Exception s) {
+        				s.printStackTrace();
+        			}
+        		}
+        		if(nomeCardView.equals("Formadores")) {
+        			DefaultTableModel modelo = (DefaultTableModel) tabelaFormador.getModel();
+        			String texto = txtPesquisar.getText();
+        			try {
+        				
+        				FormadorController fc = new FormadorController();
+        				ArrayList<Formador> formadores = fc.listarFormador(texto);
+        				modelo.setRowCount(0);
+        				for(Formador f: formadores) {
+        					modelo.addRow(new Object[] {
+        							          f.getCodigo(),
+        							          f.getNome(),
+        							          f.getApelido(),
+        							          f.getGenero(),
+        							          f.getEmail(),
+        							          f.getEstadoCivil(),
+        							          f.getContacto(),
+        							          f.getSalario(),
         					});
         				}
         			}catch(Exception s) {
@@ -570,7 +596,7 @@ public class Tela_Principal {
 					String estadoCivil=(String)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 5);
 					String email=(String)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 4);
 					Integer contacto=(Integer)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 6);
-					Integer Salario=(Integer)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 7);
+					Double Salario=(Double)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 7);
 					try {
 						Cadastro_Formador cf = new Cadastro_Formador();
 						cf.setVisible(true);
@@ -579,9 +605,6 @@ public class Tela_Principal {
 					}catch(Exception s) {
 						s.printStackTrace();
 					}
-
-
-
 				}
 				
 			}
@@ -594,6 +617,29 @@ public class Tela_Principal {
         btnEliminar.setPreferredSize(new Dimension(100, 35));
         btnEliminar.setBorder(new LineBorder(new Color(245, 198, 203), 1));
 
+        btnEliminar.addActionListener(new ActionListener() {
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        		if(nomeCardView.equals("Formadores")) {
+        			Integer codigo = (Integer) tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 0);
+        			boolean sucesso;
+        			try {
+        				FormadorController fc = new FormadorController();        			
+        				int confirm = JOptionPane.showConfirmDialog(null,"Tens a certeza que deseja deletar","Confirmar",JOptionPane.YES_NO_OPTION);
+        				if(confirm == JOptionPane.YES_OPTION) {
+        					sucesso = fc.apagarFormador(codigo);
+        					if(sucesso) {
+        						JOptionPane.showMessageDialog(null, "Formador apagado com sucesso");
+        					}else {
+        						JOptionPane.showMessageDialog(null, "falha ao apagar");
+        					}
+        				}
+        			}catch(Exception s) {
+        				s.printStackTrace();
+        			}
+        		}
+        	}
+        });
         if(nivelAcesso.equalsIgnoreCase("Operador")) {
         	btnEditar.setEnabled(false);
         	btnEliminar.setEnabled(false);
@@ -628,9 +674,9 @@ public class Tela_Principal {
         painel.add(criarPainelBarraFerramentas("+ Novo Formador", modeloFormadores, "Formadores"), BorderLayout.NORTH);
 
         JScrollPane scrollPane = new JScrollPane();
-        JTable table = new JTable(modeloFormadores);
-        table.setRowHeight(35);
-        scrollPane.setViewportView(table);
+        tabelaFormador= new JTable(modeloFormadores);
+        tabelaFormador.setRowHeight(35);
+        scrollPane.setViewportView(tabelaFormador);
         painel.add(scrollPane, BorderLayout.CENTER);
         return painel;
     }
@@ -771,5 +817,27 @@ public class Tela_Principal {
     }
     public void abrir() {
     	frame.setVisible(true);
+    }
+    public void listar() throws Exception{
+    	DefaultTableModel modelo = (DefaultTableModel) tabelaFormador.getModel();
+		String texto = txtPesquisar.getText();
+		
+			
+			FormadorController fc = new FormadorController();
+			ArrayList<Formador> formadores = fc.listarFormador(texto);
+			modelo.setRowCount(0);
+			for(Formador f: formadores) {
+				modelo.addRow(new Object[] {
+						          f.getCodigo(),
+						          f.getNome(),
+						          f.getApelido(),
+						          f.getGenero(),
+						          f.getEmail(),
+						          f.getEstadoCivil(),
+						          f.getContacto(),
+						          f.getSalario(),
+				});
+			}
+		
     }
 }
