@@ -33,7 +33,7 @@ public class Tela_cadastroProfessor extends JPanel {
 
     private OnProfessorCadastradoListener listener;
 
-    public Tela_cadastroProfessor() {
+    public Tela_cadastroProfessor(OnProfessorCadastradoListener listener) {
         this.listener = listener;
 
         setLayout(new BorderLayout());

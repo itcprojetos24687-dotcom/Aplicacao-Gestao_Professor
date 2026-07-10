@@ -16,10 +16,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.DefaultComboBoxModel;
 
 public class Tela_cadastoTurma extends JPanel {
-	
-
-	public Tela_cadastoTurma() {
-	}
 
     private static final long serialVersionUID = 1L;
     
