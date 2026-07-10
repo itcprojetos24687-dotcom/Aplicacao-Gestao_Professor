@@ -17,7 +17,7 @@ public class Coordenador{
 		this.formador = formador;
 	}
 	public void cadastrarCoordenador(Coordenador coordenador) throws ExceptionDao {
-		
+		new CoordenadorDao().cadastrarCoordenador(coordenador);
 	}
 	public ArrayList<Coordenador> listarCoordenador() throws ExceptionDao{
 		return new CoordenadorDao().listarCoordenador();

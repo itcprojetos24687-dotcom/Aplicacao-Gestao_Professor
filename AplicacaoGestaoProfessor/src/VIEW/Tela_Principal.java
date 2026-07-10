@@ -56,6 +56,7 @@ public class Tela_Principal {
     private DefaultTableModel modeloFormandos;
     
     private JTable tabelaQualificacao;
+    private JTable tabelaFormador;
     
     private final Color AZUL_ESCURO_NAV = new Color(15, 38, 70);
     private final Color AZUL_DESTAQUE   = new Color(13, 110, 253);
@@ -109,9 +110,9 @@ public class Tela_Principal {
 
         modeloFormadores = new DefaultTableModel(
             new Object[][] {
-                {"12345", "Malik", "Mangue", "Masculino", "Malikmang@gmail.com", "876543211", "Programação web", "Ativo"}
+                
             },
-            new String[] { "Código", "Nome", "Apelido", "Sexo", "Email", "Telefone", "Área de Atuação", "Estado" }
+            new String[] { "Código", "Nome", "Apelido", "Genero", "Email","Estado Civil", "Contacto", "Salario" }
         );
 
         modeloFormacoes = new DefaultTableModel(
@@ -484,7 +485,7 @@ public class Tela_Principal {
         	@Override
         	public void actionPerformed(ActionEvent e) {
         		if(nomeCardView.equals("Qualificações")) {
-        			JOptionPane.showMessageDialog(null,"Entrado com sucesso");
+        			
         			DefaultTableModel modelo = (DefaultTableModel) tabelaQualificacao.getModel();
         			String texto = txtPesquisar.getText();
         			try {
@@ -504,6 +505,7 @@ public class Tela_Principal {
         				s.printStackTrace();
         			}
         		}
+        		
         		
         	}
         });
@@ -525,7 +527,7 @@ public class Tela_Principal {
             } else if(nomeCardView.equals("Matrículas")) {
                 cardLayout.show(panelConteudoDinamico, "FormularioCadastroMatricula");
             } else if(nomeCardView.equals("Formadores")) {
-                cardLayout.show(panelConteudoDinamico, "FormularioCadastroProfessor");
+               new Cadastro_Formador().setVisible(true); 
             } else if(nomeCardView.equals("Qualificações")) {
                 cardLayout.show(panelConteudoDinamico, "FormularioQualificacao");
             } else if(nomeCardView.equals("Formandos")) {
@@ -560,6 +562,27 @@ public class Tela_Principal {
 					
 				
 				};
+				if(nomeCardView.equals("Formadores")) {
+					Integer codigo=(Integer)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 0);
+					String nome=(String)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 1);
+					String apelido=(String)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 2);
+					String genero=(String)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 3);
+					String estadoCivil=(String)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 5);
+					String email=(String)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 4);
+					Integer contacto=(Integer)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 6);
+					Integer Salario=(Integer)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 7);
+					try {
+						Cadastro_Formador cf = new Cadastro_Formador();
+						cf.setVisible(true);
+						cf.buscarFormador(codigo, nome, apelido, email, genero, estadoCivil, contacto, 0);
+						
+					}catch(Exception s) {
+						s.printStackTrace();
+					}
+
+
+
+				}
 				
 			}
         });

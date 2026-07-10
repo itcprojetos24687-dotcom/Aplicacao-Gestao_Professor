@@ -14,41 +14,40 @@ public class CoordenadorDao {
 
 //	Connection con = null;
 //
-//	public void cadastrarCoordenador(Coordenador coordenador) throws ExceptionDao {
-//		String sql = "insert into Coordenador(formador) values(?)";
-//		PreparedStatement insertCoordenador = null;
-//
-//		try {
-//			con = new Conexao().getConnection();
-//			insertCoordenador = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-//			insertCoordenador.setInt(1, coordenador.getFormador().getCodigo());
-//			insertCoordenador.execute();
-//
-//			ResultSet rs = insertCoordenador.getGeneratedKeys();
-//			if (rs != null && rs.next()) {
-//				coordenador.setCodigo(rs.getInt(1));
-//			}
-//
-//		} catch (SQLException e) {
-//			throw new ExceptionDao("Erro ao inserir dados :" + e);
-//		} finally {
-//			try {
-//				if (insertCoordenador != null) {
-//					insertCoordenador.close();
-//				}
-//			} catch (SQLException sq) {
-//				throw new ExceptionDao("Erro ao fechar o statement");
-//			}
-//			try {
-//				if (con != null) {
-//					con.close();
-//				}
-//			} catch (SQLException f) {
-//				throw new ExceptionDao("Erro ao fechar a conexao ");
-//			}
-//		}
-//	}
-//
+	public void cadastrarCoordenador(Coordenador coordenador) throws ExceptionDao {
+		String sql = "insert into Coordenador values(?)";
+		PreparedStatement insertCoordenador = null;
+		Connection con =  null;
+
+		try {
+			con = new Conexao().getConnection();
+			insertCoordenador = con.prepareStatement(sql);
+			insertCoordenador.setInt(1, coordenador.getFormador().getCodigo());
+			insertCoordenador.execute();
+
+			
+			
+
+		} catch (SQLException e) {
+			throw new ExceptionDao("Erro ao inserir dados :" + e);
+		} finally {
+			try {
+				if (insertCoordenador != null) {
+					insertCoordenador.close();
+				}
+			} catch (SQLException sq) {
+				throw new ExceptionDao("Erro ao fechar o statement");
+			}
+			try {
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException f) {
+				throw new ExceptionDao("Erro ao fechar a conexao ");
+			}
+		}
+	}
+
 	public ArrayList<Coordenador> listarCoordenador() throws ExceptionDao {
 
 		String sql = "select cod_Formador,Formador.nome from Coordenador "

@@ -9,14 +9,21 @@ import servico.FormadorServico;
 public class FormadorController {
 	static Scanner sc = new Scanner(System.in);
 
-	public boolean cadastrarFormador(String nome, String apelido, String email, String genero, String estadoCivil,int contacto, double salario)
+	public boolean cadastrarFormador(String nome, String apelido, String email, String genero, String estadoCivil,int contacto, double salario, boolean isDiretor, boolean isCoordenador)
 
 	throws ExceptionDao{
 		if(nome != null && nome.length()>0 && nome.matches("[a-zA-Z]+")&& apelido != null && apelido.matches("[a-zA-z]+") && apelido.length() > 0 && email != null && email.length() > 0 && contacto > 0){
 			Formador formador = new Formador(nome, apelido, email,genero,estadoCivil,contacto, salario);
 			formador.cadastrarFormador(formador);
-//			FormadorServico fs = new FormadorServico(formador);
-//			fs.salvar(formador);
+			if(isDiretor) {
+				Diretor_TurmaController dt = new Diretor_TurmaController();
+				dt.cadastrarDiretor_Turma(formador);
+			}
+			else if(isCoordenador) {
+				CoordenadorController cc = new CoordenadorController();
+				cc.cadastrarCoordenador(formador);
+			}
+
 			return true;
 		}
 		return false;

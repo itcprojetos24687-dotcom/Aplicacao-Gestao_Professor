@@ -12,21 +12,16 @@ import model.Formador;
 
 public class Diretor_TurmaDao {
 	Connection con = null;
-	public void cadastrarDiretor_Turma(Formador formador) throws ExceptionDao {
-		String sql = "insert into Formador(nome, apelido, email, genero, estadoCivil, contacto, salario)" + "values(?,?,?,?,?,?,?)";
+	public void cadastrarDiretor_Turma(Diretor_Turma dt) throws ExceptionDao {
+		String sql = "insert into Diretor_Turma values (?)";
 		PreparedStatement InsertFormador = null;
 		try {
 			
 			con = new Conexao().getConnection();
 			InsertFormador = con.prepareStatement(sql);
-			Diretor_Turma diretor = new Diretor_Turma(formador);
-			InsertFormador.setString(1, formador.getNome());
-			InsertFormador.setString(2, formador.getApelido());
-			InsertFormador.setString(3, formador.getEmail() );
-			InsertFormador.setString(4, formador.getGenero());
-			InsertFormador.setString(5, formador.getEstadoCivil());
-			InsertFormador.setInt(6, formador.getContacto());
-			InsertFormador.setDouble(7, formador.getSalario());
+			
+			InsertFormador.setInt(1, dt.getFomador().getCodigo());
+			
 			InsertFormador.execute();
 			
 		}catch(SQLException e) {
