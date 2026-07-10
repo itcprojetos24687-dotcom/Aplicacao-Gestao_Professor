@@ -1,28 +1,30 @@
 package VIEW;
-
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.awt.Color;
+import java.awt.Cursor;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.JButton;
+import model.Campo;
+import dao.ExceptionDao;
 
 public class Tela_cadastroCampo extends JFrame {
-
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
+	private JTextField txtNomeCampo;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
+		try { 
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); 
+		} catch (Exception e) {}
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -35,75 +37,85 @@ public class Tela_cadastroCampo extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public Tela_cadastroCampo() {
+		setTitle("Cadastro de Campo");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 823, 572);
+		setSize(488, 323);
+		setLocationRelativeTo(null);
+		
 		contentPane = new JPanel();
-		contentPane.setBackground(Color.BLUE);
+		contentPane.setBackground(new Color(15, 38, 70));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblCadastrarCampo = new JLabel("Cadastrar Campo\r\n");
+		JLabel lblCadastrarCampo = new JLabel("Cadastrar Campo");
 		lblCadastrarCampo.setForeground(Color.WHITE);
-		lblCadastrarCampo.setFont(new Font("Arial Black", Font.BOLD, 24));
-		lblCadastrarCampo.setBounds(276, 59, 259, 34);
+		lblCadastrarCampo.setFont(new Font("Segoe UI", Font.BOLD, 22));
+		lblCadastrarCampo.setBounds(38, 20, 250, 34);
 		contentPane.add(lblCadastrarCampo);
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setLayout(null);
-		panel_1.setBackground(Color.WHITE);
-		panel_1.setBounds(134, 105, 523, 390);
-		contentPane.add(panel_1);
+		JPanel card = new JPanel();
+		card.setBackground(Color.WHITE);
+		card.setBounds(38, 65, 400, 185);
+		contentPane.add(card);
+		card.setLayout(null);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(10, 93, 212, 21);
-		panel_1.add(textField);
+		JLabel lblNomeCampo = new JLabel("Nome do Campo");
+		lblNomeCampo.setFont(new Font("Bahnschrift", Font.PLAIN, 13));
+		lblNomeCampo.setForeground(new Color(30, 41, 59));
+		lblNomeCampo.setBounds(40, 30, 200, 20);
+		card.add(lblNomeCampo);
 		
-		textField_1 = new JTextField();
-		textField_1.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		textField_1.setColumns(10);
-		textField_1.setBounds(111, 217, 306, 78);
-		panel_1.add(textField_1);
+		txtNomeCampo = new JTextField();
+		txtNomeCampo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+		txtNomeCampo.setBounds(40, 55, 320, 35);
+		card.add(txtNomeCampo);
+		txtNomeCampo.setColumns(10);
 		
-		JLabel lblNewLabel_3 = new JLabel("Nome do Campo");
-		lblNewLabel_3.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		lblNewLabel_3.setBounds(44, 47, 140, 21);
-		panel_1.add(lblNewLabel_3);
+		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.setForeground(new Color(114, 28, 36));
+		btnCancelar.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		btnCancelar.setBackground(new Color(248, 215, 218));
+		btnCancelar.setBorder(new LineBorder(new Color(245, 198, 203)));
+		btnCancelar.setBounds(40, 120, 150, 35);
+		btnCancelar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		btnCancelar.setFocusPainted(false);
+		btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				dispose();
+			}
+		});
+		card.add(btnCancelar);
 		
-		JLabel lblNewLabel_3_1 = new JLabel("Descrição do Campo\r\n");
-		lblNewLabel_3_1.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		lblNewLabel_3_1.setBounds(196, 185, 140, 21);
-		panel_1.add(lblNewLabel_3_1);
+		JButton btnGuardar = new JButton("Guardar");
+		btnGuardar.setForeground(Color.WHITE);
+		btnGuardar.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		btnGuardar.setBackground(new Color(13, 110, 253));
+		btnGuardar.setBorder(null);
+		btnGuardar.setBounds(210, 120, 150, 35);
+		btnGuardar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		btnGuardar.setFocusPainted(false);
 		
-		JButton btnNewButton = new JButton("Guardar");
-		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 13));
-		btnNewButton.setBackground(Color.WHITE);
-		btnNewButton.setBounds(392, 337, 101, 23);
-		panel_1.add(btnNewButton);
-		
-		JButton btnNewButton_1 = new JButton("Cancelar");
-		btnNewButton_1.setForeground(Color.WHITE);
-		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 13));
-		btnNewButton_1.setBackground(Color.BLUE);
-		btnNewButton_1.setBounds(281, 337, 101, 23);
-		panel_1.add(btnNewButton_1);
-		
-		JLabel lblNewLabel_3_6 = new JLabel("Área do Campo");
-		lblNewLabel_3_6.setFont(new Font("Bahnschrift", Font.BOLD, 14));
-		lblNewLabel_3_6.setBounds(323, 47, 120, 21);
-		panel_1.add(lblNewLabel_3_6);
-		
-		textField_2 = new JTextField();
-		textField_2.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		textField_2.setColumns(10);
-		textField_2.setBounds(281, 93, 212, 21);
-		panel_1.add(textField_2);
-
+		btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				String nome = txtNomeCampo.getText().trim();
+				
+				if (nome.isEmpty()) {
+					JOptionPane.showMessageDialog(Tela_cadastroCampo.this, "Por favor, insira o nome do campo!", "Aviso", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				
+				try {
+					Campo campo = new Campo(nome);
+					campo.cadastrarCampo(campo);
+					JOptionPane.showMessageDialog(Tela_cadastroCampo.this, "Campo '" + nome + "' guardado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+					dispose();
+				} catch (ExceptionDao ex) {
+					JOptionPane.showMessageDialog(Tela_cadastroCampo.this, "Erro ao guardar campo: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		card.add(btnGuardar);
 	}
-
 }
