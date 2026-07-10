@@ -273,21 +273,6 @@ public class Tela_Principal {
         panelConteudoDinamico.add(painelCadastroProfessor, "FormularioCadastroProfessor");
       
         
-        // Painel Embutido de Cadastro de Professor
-         Tela_cadastroSala painelCadastroSala = new Tela_cadastroSala(new Tela_cadastroSala.OnSalaCadastradoListener() {
-             @Override
-             public void onSalaCadastrado(int codigo, String designacao, String tipo) {
-                 String idGerado = "PRF-" + (10000 + modeloSalas.getRowCount() + 1);
-                 modeloSalas.addRow(new Object[]{idGerado, designacao, tipo});
-                 cardLayout.show(panelConteudoDinamico, "Sala");
-                 lblTituloPagina.setText("Salas");
-                 lblSubtituloPagina.setText("Gestão de Salas do Sistema");
-             }
-             @Override public void onCancelar() { cardLayout.show(panelConteudoDinamico, "Sala"); }
-         });
-         
-        
-        
         String[] menus = {"Dashboard", "Formações", "Formadores", "Inscrições", "Matrículas", "Salas", "Turmas", "Qualificações","Formandos", "Cadastros ▾"};
         
         for (String menu : menus) {
@@ -323,18 +308,8 @@ public class Tela_Principal {
                 JMenuItem itemCampo = new JMenuItem("Campo");
                 JMenuItem itemNiveis = new JMenuItem("Níveis");
                 
-
-                itemSala .addActionListener(e -> {
-                    cardLayout.show(panelConteudoDinamico, "FormularioCadastroSala");
-                    lblTituloPagina.setText("Cadastrar Sala");
-                    lblSubtituloPagina.setText("Insira os dados da sala ");
-                });
-
-                itemCampo.addActionListener(e -> {
-                    cardLayout.show(panelConteudoDinamico, "FormularioCampo");
-                    lblTituloPagina.setText("Novo Campo");
-                    lblSubtituloPagina.setText("Preencha o formulário para registar uma novo Campo");
-                });
+                itemSala.addActionListener(e -> abrirJanelaLegada("Tela_cadastroSala"));
+                itemCampo.addActionListener(e -> abrirJanelaLegada("Tela_cadastroCampo"));
                 
                 
                 itemNiveis.addActionListener(e -> abrirJanelaLegada("Tela_cadastroNivel"));
@@ -736,11 +711,12 @@ public class Tela_Principal {
 
         return card;
     }
-
     private void abrirJanelaLegada(String nomeClasse) {
         try {
-            if(nomeClasse.equals("Tela_cadastroQualificação")) new Tela_cadastroQualificação().setVisible(true);
-            else if(nomeClasse.equals("Tela_cadastroNivel")) new Tela_cadastroNivel().setVisible(true);
+            if (nomeClasse.equals("Tela_cadastroQualificação")) new Tela_cadastroQualificação().setVisible(true);
+            else if (nomeClasse.equals("Tela_cadastroNivel")) new Tela_cadastroNivel().setVisible(true);
+            else if (nomeClasse.equals("Tela_cadastroSala")) new Tela_cadastroSala().setVisible(true);
+            else if (nomeClasse.equals("Tela_cadastroCampo")) new Tela_cadastroCampo().setVisible(true);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(frame, "Erro ao abrir a janela.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
