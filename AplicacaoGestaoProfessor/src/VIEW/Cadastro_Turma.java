@@ -200,7 +200,7 @@ public class Cadastro_Turma {
 						sucesso = tc.cadastrarTurma(nome, ano_lectivo, turno, dt, q);
 						
 						if (sucesso) {
-							new Tela_Principal(Seccao.obterUtilizador()).listarTurmas();
+							//new Tela_Principal(Seccao.obterUtilizador()).listarTurmas();
 							JOptionPane.showMessageDialog(null, "Cadastrado com sucesso");
 						}
 						else {
@@ -209,7 +209,7 @@ public class Cadastro_Turma {
 					}else {
 						sucesso = tc.atualizarTurma(idUser, nome, ano_lectivo, turno, dt, q);
 						if(sucesso) {
-							new Tela_Principal(Seccao.obterUtilizador()).listarTurmas();
+							//new Tela_Principal(Seccao.obterUtilizador()).listarTurmas();
 							idUser = 0;
 							JOptionPane.showMessageDialog(null, "Atualizado com sucesso");
 						}else {
