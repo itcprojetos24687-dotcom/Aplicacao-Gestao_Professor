@@ -59,7 +59,7 @@ public class Tela_Principal {
     
     private JTable tabelaQualificacao;
     private JTable tabelaFormador;
-    
+    private JTable tabelaTurma;
     private final Color AZUL_ESCURO_NAV = new Color(15, 38, 70);
     private final Color AZUL_DESTAQUE   = new Color(13, 110, 253);
     private final Color FUNDO_CLARO      = new Color(244, 246, 249);
@@ -105,9 +105,9 @@ public class Tela_Principal {
 
         modeloTurmas = new DefaultTableModel(
             new Object[][] {
-                {"TURMA-A", "Programação Web", "Laboral", "Malik Mangue"}
+                
             },
-            new String[] { "Código Turma", "Curso/Formação", "Regime", "Formador Alocado" }
+            new String[] { "Código", "Nome Turma", "Ano_Lectivo", "turno","Diretor Turma", "Qualificacao" }
         );
 
         modeloFormadores = new DefaultTableModel(
@@ -495,6 +495,20 @@ public class Tela_Principal {
         				s.printStackTrace();
         			}
         		}
+        		if(nomeCardView.equals("")) {
+        			DefaultTableModel modelo =(DefaultTableModel) tabelaTurma.getModel();
+        			String texto = txtPesquisar.getText();
+        			try {
+        				TurmaController tc = new TurmaController();
+        				ArrayList<Turma> turmas = tc.listarTurma(texto);
+        				modelo.setRowCount(0);
+        				for(Turma t : turmas) {
+        					
+        				}
+        			}catch(Exception s) {
+        				s.printStackTrace();
+        			}
+        		}
         		
         		
         	}
@@ -694,7 +708,7 @@ public class Tela_Principal {
         painel.add(criarPainelBarraFerramentas("+ Nova Turma", modeloTurmas, "Turmas"), BorderLayout.NORTH);
 
         JScrollPane scrollPane = new JScrollPane();
-        JTable table = new JTable(modeloTurmas);
+        tabelaTurma = new JTable(modeloTurmas);
         table.setRowHeight(35);
         scrollPane.setViewportView(table);
         painel.add(scrollPane, BorderLayout.CENTER);

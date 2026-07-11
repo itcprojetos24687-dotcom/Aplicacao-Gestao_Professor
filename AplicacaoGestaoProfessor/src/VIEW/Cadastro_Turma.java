@@ -1,6 +1,8 @@
 package VIEW;
 
 import java.awt.Dimension;
+import model.*;
+import controller.*;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -9,12 +11,14 @@ import javax.swing.JButton;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
+import java.util.ArrayList;
 public class Cadastro_Turma {
 
 	private JFrame frame;
@@ -23,6 +27,9 @@ public class Cadastro_Turma {
 	private JTextField textAno_Lectivo;
 	private JComboBox comboDiretor_Turma;
 	private JComboBox comboQualificacaco ;
+	private ArrayList<Qualificacao> qualificacoes;
+	private ArrayList<Diretor_Turma> diretor_turma;
+	private int idUser = 0;
 
 	/**
 	 * Launch the application.
@@ -99,6 +106,16 @@ public class Cadastro_Turma {
 		panel.add(textAno_Lectivo);
 		
 		comboDiretor_Turma = new JComboBox();
+		try {
+			Diretor_TurmaController dc = new Diretor_TurmaController();
+			diretor_turma = dc.comboDiretor_Turma();
+			for(Diretor_Turma dt: diretor_turma) {
+				comboDiretor_Turma.addItem(dt);
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 		comboDiretor_Turma.setBounds(356, 113, 158, 28);
 		panel.add(comboDiretor_Turma);
 		
@@ -113,6 +130,15 @@ public class Cadastro_Turma {
 		panel.add(lblQualificacao);
 		
 		comboQualificacaco = new JComboBox();
+		try {
+			QualificacaoController qc = new QualificacaoController();
+			qualificacoes = qc.comboQualificacao();
+			for(Qualificacao q : qualificacoes) {
+				comboQualificacaco.addItem(q);
+			}
+		}catch(Exception s) {
+			s.printStackTrace();
+		}
 		comboQualificacaco.setBounds(356, 184, 158, 28);
 		panel.add(comboQualificacaco);
 		
@@ -135,10 +161,53 @@ public class Cadastro_Turma {
 		JButton btnNewButton = new JButton("Guardar\n\n");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				String nome = textNome.getText();
+				String turno = textTurno.getText();
+				int ano_lectivo = Integer.parseInt(textAno_Lectivo.getText());
+				Diretor_Turma dt = (Diretor_Turma)comboDiretor_Turma.getSelectedItem();
+				Qualificacao q = (Qualificacao) comboQualificacaco.getSelectedItem();
+				boolean sucesso;
+				try {
+					TurmaController tc = new TurmaController();
+					if(idUser == 0) {
+						sucesso = tc.cadastrarTurma(nome, ano_lectivo, turno, dt, q);
+						if (sucesso) {
+							JOptionPane.showMessageDialog(null, "Cadastrado com sucesso");
+						}
+						else {
+							JOptionPane.showMessageDialog(null, "Falha ao cadastrar");
+						}
+					}else {
+						sucesso = tc.atualizarTurma(idUser, nome, ano_lectivo, turno, dt, q);
+						if(sucesso) {
+							idUser = 0;
+							JOptionPane.showMessageDialog(null, "Atualizado com sucesso");
+						}else {
+							JOptionPane.showMessageDialog(null,"Falha ao atualizar");
+						}
+					}
+				}catch(Exception s) {
+					s.printStackTrace();
+				}
 			}
 		});
 		panel_1.add(btnNewButton);
+	}
+	public void buscarTurma(int codigo, String nome, int ano_lectivo, String turno, String diretor, String Qualificacao) {
+		idUser = codigo;
+		textNome.setText(nome);
+		textAno_Lectivo.setText(String.valueOf(ano_lectivo));
+		textTurno.setText(turno);
+		for(int i = 0; i< comboDiretor_Turma.getItemCount();i++) {
+			if(comboDiretor_Turma.getItemAt(i).equals(Qualificacao)) {
+				comboDiretor_Turma.setSelectedIndex(i);
+			}
+		}
+		for(int i = 0; i< comboQualificacaco.getItemCount();i++) {
+			if(comboQualificacaco.getItemAt(i).equals(Qualificacao)) {
+				comboQualificacaco.setSelectedIndex(i);
+			}
+		}
 	}
 
 }
