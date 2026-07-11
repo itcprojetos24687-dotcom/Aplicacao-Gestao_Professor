@@ -30,6 +30,7 @@ import javax.swing.table.DefaultTableModel;
 
 import model.*;
 import controller.*;
+import dao.ExceptionDao;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -146,7 +147,7 @@ public class Tela_Principal {
 
     private void initialize() {
         frame = new JFrame();
-        frame.setTitle("SGP - Sistema de Gestão de Formadores");
+        frame.setTitle("SGP - Sistema de Gestão de Formação");
         frame.setBounds(100, 100, 1280, 720);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null); 
@@ -230,9 +231,7 @@ public class Tela_Principal {
         
         
         
-        //Painel de cadastro de Qualificacao
-        
-        // Painel Embutido de Cadastro de Turma
+
         Tela_cadastoTurma painelCadastroTurma = new Tela_cadastoTurma(new Tela_cadastoTurma.OnTurmaCadastradaListener() {
             @Override
             public void onTurmaCadastrada(String codigo, String curso, String regime, String formador) {
@@ -495,7 +494,7 @@ public class Tela_Principal {
         				s.printStackTrace();
         			}
         		}
-        		if(nomeCardView.equals("Turmas")) {
+        		if(nomeCardView.equals("")) {
         			DefaultTableModel modelo =(DefaultTableModel) tabelaTurma.getModel();
         			String texto = txtPesquisar.getText();
         			try {
@@ -503,14 +502,7 @@ public class Tela_Principal {
         				ArrayList<Turma> turmas = tc.listarTurma(texto);
         				modelo.setRowCount(0);
         				for(Turma t : turmas) {
-        					modelo.addRow(new Object[] {
-        							          t.getCodigo(),
-        							          t.getNome(),
-        							          t.getAno_ingresso(),
-        							          t.getTurno(),
-        							          t.getDiretor_turma().getFomador().getNome(),
-        							          t.getQualificacao().getTitulo()
-        					});
+        					
         				}
         			}catch(Exception s) {
         				s.printStackTrace();
@@ -532,9 +524,9 @@ public class Tela_Principal {
 
         btnNovo.addActionListener(e -> {
             if(nomeCardView.equals("Inscrições")) {
-                //new Cadastro_Turma().frame.setVisible(true);
+                cardLayout.show(panelConteudoDinamico, "FormularioInscricao");
             } else if(nomeCardView.equals("Turmas")) {
-            	new Cadastro_Turma().frame.setVisible(true);
+                cardLayout.show(panelConteudoDinamico, "FormularioCadastroTurma");
             } else if(nomeCardView.equals("Matrículas")) {
                 cardLayout.show(panelConteudoDinamico, "FormularioCadastroMatricula");
             } else if(nomeCardView.equals("Formadores")) {
@@ -591,21 +583,6 @@ public class Tela_Principal {
 						s.printStackTrace();
 					}
 				}
-				if(nomeCardView.equals("Turmas")) {
-					Integer codigo=(Integer)tabelaTurma.getModel().getValueAt(tabelaTurma.getSelectedRow(), 0);
-					String nome=(String)tabelaTurma.getModel().getValueAt(tabelaTurma.getSelectedRow(), 1);
-					Integer ano_lectivo=(Integer)tabelaTurma.getModel().getValueAt(tabelaTurma.getSelectedRow(), 2);
-					String turno=(String)tabelaTurma.getModel().getValueAt(tabelaTurma.getSelectedRow(), 3);
-					String dt=(String)tabelaTurma.getModel().getValueAt(tabelaTurma.getSelectedRow(), 4);
-					String qualificacao=(String)tabelaTurma.getModel().getValueAt(tabelaTurma.getSelectedRow(), 5);
-					try {
-						Cadastro_Turma ct = new Cadastro_Turma();
-						ct.frame.setVisible(true);
-						ct.buscarTurma(codigo, nome, ano_lectivo, turno, dt, qualificacao);
-					}catch(Exception s) {
-						s.printStackTrace();
-					}
-				}
 				
 			}
         });
@@ -632,24 +609,6 @@ public class Tela_Principal {
         						JOptionPane.showMessageDialog(null, "Formador apagado com sucesso");
         					}else {
         						JOptionPane.showMessageDialog(null, "falha ao apagar");
-        					}
-        				}
-        			}catch(Exception s) {
-        				s.printStackTrace();
-        			}
-        		}
-        		if(nomeCardView.equals("Turmas")) {
-        			boolean sucesso;
-        			try {
-        					
-        				Integer codigo=(Integer)tabelaTurma.getModel().getValueAt(tabelaTurma.getSelectedRow(), 0);
-        				TurmaController tc = new TurmaController();
-        				int confirm = JOptionPane.showConfirmDialog(null,"Tens a certeza que deseja deletar","Confirmacao",JOptionPane.YES_NO_OPTION);
-        				
-        				if(confirm == JOptionPane.YES_OPTION) {
-        					sucesso = tc.apagarTurma(codigo);
-        					if(sucesso) {
-        						JOptionPane.showMessageDialog(null, "Deletado como sucesso");
         					}
         				}
         			}catch(Exception s) {
@@ -825,6 +784,11 @@ public class Tela_Principal {
     	Tela_login tl = new Tela_login();
     	tl.setVisible(true);
     	frame.dispose();
+    	try {
+    		new UsuarioController().logout(Seccao.obterUtilizador());
+    	} catch (ExceptionDao e) {
+    		JOptionPane.showMessageDialog(null, "Erro ao registar log de saída: " + e.getMessage());
+    	}
     	Seccao.terminarSeccao();
     }
 
@@ -858,27 +822,5 @@ public class Tela_Principal {
 				});
 			}
 		
-    }
-    public void listarTurmas() throws Exception{
-    	DefaultTableModel modelo =(DefaultTableModel) tabelaTurma.getModel();
-		String texto = txtPesquisar.getText();
-		JOptionPane.showMessageDialog(null, "Metodo chamado com o texto: "+texto);
-		try {
-			TurmaController tc = new TurmaController();
-			ArrayList<Turma> turmas = tc.listarTurma(texto);
-			modelo.setRowCount(0);
-			for(Turma t : turmas) {
-				modelo.addRow(new Object[] {
-						          t.getCodigo(),
-						          t.getNome(),
-						          t.getAno_ingresso(),
-						          t.getTurno(),
-						          t.getDiretor_turma().getFomador().getNome(),
-						          t.getQualificacao().getTitulo()
-				});
-			}
-		}catch(Exception s) {
-			s.printStackTrace();
-		}
     }
 }

@@ -7,8 +7,8 @@ import model.Perfil;
 import model.Turma;
 import model.*;;
 public class TurmaDao {
-	public void cadastrarTurma(Turma turma) {
-		String sql = "insert into Turma (nome,ano_lectivo,turno,id_Diretor_Turma,id_Qualificacao) values(?,?,?,?,?)";
+	public void cadastrarTurma(Turma turma) throws ExceptionDao {
+		String sql = "insert into Turma(nome,ano_ingresso,turno,id_Diretor_Turma,id_Qualificacao) values(?,?,?,?,?)";
 		Connection con = null;
 		PreparedStatement inserir = null;
 		try {
@@ -21,29 +21,33 @@ public class TurmaDao {
 			inserir.setInt(5, turma.getQualificacao().getCodigo());
 			
 			inserir.execute();
+
+			Usuario u = Seccao.obterUtilizador();
+			Logs log = new Logs("INSERT", "Turma: " + turma.getNome() + " cadastrada", u);
+			new LogDao().salvar(log);
 		}catch(SQLException e) {
-			e.printStackTrace();
+			throw new ExceptionDao("Erro ao inserir dados :" + e);
 		}finally {
 			try {
 				if(inserir != null) {
 					inserir.close();
 				}
 			}catch(SQLException ql) {
-				ql.printStackTrace();
+				throw new ExceptionDao("Erro ao fechar o statement");
 			}
 			try {
 				if (con != null) {
 					con.close();
 				}
 			}catch(SQLException sq) {
-				new ExceptionDao("Erro ao fechar conexao" +sq);
+				throw new ExceptionDao("Erro ao fechar conexao" +sq);
 			}
 		}
 		
 	}
 
 	public void atualizarTurma(Turma turma) throws ExceptionDao{
-		String sql = "update Turma set nome = ?, ano_lectivo = ?,  turno = ?,  id_Diretor_Turma = ?,  id_Qualificacao = ? where codigo = ?";
+		String sql = "update Turma set codigo = ?, set nome = ?, set ano_lectivo = ?, set turno = ?, set id_Diretor_Turma = ?, set id_Qualificacao = ? where codigo = ?";
 		PreparedStatement alterar = null;
 		Connection con = null;
 		
@@ -86,10 +90,10 @@ public class TurmaDao {
 	}
 	public ArrayList<Turma> listarTurma(String nome) throws ExceptionDao{
 
-		String sql = "select Turma.codigo, Turma.nome,ano_lectivo, turno, Formador.nome as diretor_turma,Qualificacao.titulo as titulo from Turma "
-				+ " join Diretor_Turma on cod_Formador = id_Diretor_Turma"
+		String sql = "select Turna.codigo, Turma.nome,ano_lectivo, turno, Formador.nome as diretor_turma,Qualificacao.titulo as titulo from Turma "
+				+ " join Diretor_Turma on cod_Formador = Formador.codigo"
 				+ " join Formador on Formador.codigo = cod_Formador "
-				+ "join Qualificacao on id_Qualificacao = cod_Quali "
+				+ "join Qualificacao on id_Qualificacao = cod_Quali"
 				+ "where Turma.nome like '%"+nome+"%'";
 		Connection con = null;
 		PreparedStatement listaTurma = null;
@@ -150,47 +154,5 @@ public class TurmaDao {
 
 		return turmas;
 	}
-	public void apagarTurma(int codigo) throws ExceptionDao {
-
-		String sql = "delete from Turma where codigo=?";
-		Connection con = null;
-		PreparedStatement stms = null;
-		
-
-		try {
-
-			con = new Conexao().getConnection();
-			stms = con.prepareStatement(sql);
-			//listarUsuario.setString(1, username);
-			stms.setInt(1, codigo);
-			stms.executeUpdate();
-			
-
-		} catch (SQLException ex) {
-			throw new ExceptionDao("Erro ao selecionar dados " + ex);
-
-		} finally {
-
-			try {
-				if (stms != null) {
-					stms.close();
-				}
-			} catch (Exception es) {
-				throw new ExceptionDao("Erro ao fechar o statement: " + es);
-			}
-
-			try {
-				if (con != null) {
-					con.close();
-				}
-			} catch (SQLException sq) {
-				throw new ExceptionDao("Erro ao fechar conexao: " + sql);
-			}
-		}
-
-		
 		
 	}
-		
-	}
-
