@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import model.Diretor_Turma;
 import model.Formador;
+import model.Qualificacao;
 
 
 public class Diretor_TurmaDao {
@@ -45,6 +46,49 @@ public class Diretor_TurmaDao {
 				throw new ExceptionDao("Erro ao fechar a conexao ");
 			}
 		}
+	}
+	public ArrayList<Diretor_Turma> comboDiretor_Turma()throws ExceptionDao{
+		String sql = "select * from Diretor_Turma";
+		Connection con = null;
+		PreparedStatement comboQualificacao = null;
+		ArrayList<Diretor_Turma> diretor_turma= null;
+
+		try {
+			con = new Conexao().getConnection();
+			comboQualificacao = con.prepareStatement(sql);
+			ResultSet rs = comboQualificacao.executeQuery();
+
+			if (rs != null) {
+				diretor_turma = new ArrayList();
+				while(rs.next()) {
+					Diretor_Turma dt = new Diretor_Turma();
+					Formador f = new Formador();
+					f.setCodigo(rs.getInt("cod_Formador"));
+					dt.setFormador(f);
+					
+					diretor_turma.add(dt);
+				}
+			}
+		}catch(SQLException ex) {
+			throw new ExceptionDao("Erro ao selecionar dados " + ex);
+		}finally {
+			try {
+				if(comboQualificacao != null) {
+					comboQualificacao.close();
+				}
+			}catch(Exception es) {
+				throw new ExceptionDao("Erro ao fechar o statement: " + es);
+			}
+			try {
+				if(con != null) {
+					con.close();
+				}
+			}
+			catch(SQLException sq) {
+				throw new ExceptionDao("Erro ao fechar conexao: " + sql);
+			}
+		}
+		return diretor_turma;
 	}
 	/*public ArrayList<Diretor_Turma> listaDiretor_Turma(String nome) throws ExceptionDao{
 
@@ -180,4 +224,42 @@ public class Diretor_TurmaDao {
 			}
 		}
 	}*/
+	public void atualizarDiretor_Turma(Diretor_Turma diretor, int codigo)throws ExceptionDao {
+		String sql = "update Turma set cod_Formador = ? where cod_Formador = "+codigo;
+		PreparedStatement alterar = null;
+		Connection con = null;
+		
+		try {
+			con = new Conexao().getConnection();
+			alterar = con.prepareStatement(sql);
+			alterar.setInt(1, diretor.getFomador().getCodigo());
+			
+			alterar.executeUpdate();
+			//JOptionPane.showMessageDialog(null,"Alterado com sucesso");
+		}catch(SQLException e) {
+			//JOptionPane.showMessageDialog(null,"Erro ao alterar");
+			throw new ExceptionDao("Erro ao fechar  a conexao"+ e);
+		}
+		finally {
+			try {
+				if(alterar != null) {
+					alterar.close();
+					//JOptionPane.showMessageDialog(null, "Fechado com sucesso");
+				}
+			}catch(SQLException sq) {
+				throw new ExceptionDao("Erro ao fechar  a conexao"+ sq);
+			}
+			try {
+				if(con != null) {
+					con.close();
+					//JOptionPane.showMessageDialog(null, "Fechado com sucesso");
+				}
+			}catch(SQLException l) {
+				throw new ExceptionDao("Erro ao fechar  a conexao"+ l);
+				//JOptionPane.showMessageDialog(null, "Falha de fechado ");
+			}
+			
+		}
+		
+	}
 }

@@ -63,6 +63,6 @@ public class Qualificacao {
 	}
 	@Override
 	public String toString() {
-		return "Qualificacao [codigo=" + codigo + ", titulo=" + titulo + "]";
+		return  titulo ;
 	}
 }

@@ -118,7 +118,7 @@ public class UsuarioDao {
 	}
 
 	public ArrayList<Usuario> listarUsuario(String username) throws ExceptionDao {
-
+		
 		String sql = "select idUser,Usuario.nome,username,apelido,Perfil.nome from Usuario "
 				+ " join Perfil on idPerfil = id "
 				+ "where username like '%"+username+"%'";

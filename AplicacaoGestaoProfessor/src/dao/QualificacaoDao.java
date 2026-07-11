@@ -58,7 +58,7 @@ public class QualificacaoDao {
 				qualificacoes = new ArrayList();
 				while(rs.next()) {
 					Qualificacao qc = new Qualificacao();
-					qc.setCodigo(rs.getInt("codigo"));
+					qc.setCodigo(rs.getInt("cod_Quali"));
 					qc.setTitulo(rs.getString("titulo"));
 					qualificacoes.add(qc);
 				}

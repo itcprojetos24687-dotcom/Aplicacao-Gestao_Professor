@@ -172,7 +172,7 @@ public class FormadorDao {
 			apagarFormador = con.prepareStatement(sql);
 			apagarFormador.setInt(1, formador.getCodigo());
 			apagarFormador.executeUpdate();
-			//JOptionPane.showMessageDialog(null, "Apagado com sucesso");
+			
 			
 		}catch(SQLException e) {
 			//JOptionPane.showMessageDialog(null, "Erro ao inserir dado");

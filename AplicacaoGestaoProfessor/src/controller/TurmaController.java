@@ -1,5 +1,5 @@
 package controller;
-import model.Turma;
+import model.*;
 
 import dao.ExceptionDao;
 import java.util.Scanner;
@@ -8,30 +8,43 @@ import java.util.ArrayList;
 public class TurmaController {
 	static Scanner sc = new Scanner(System.in);
 
-	public boolean cadastrarTurma(String nome, int ano_ingresso, String turno)
+	public boolean cadastrarTurma(String nome, int ano_ingresso, String turno,Diretor_Turma dt, Qualificacao q)
 
 	throws ExceptionDao{
-		if(nome != null && nome.length()>0 && ano_ingresso > 0 && turno != null && turno.length() > 0){
+		if(nome != null && nome.length()>0 && ano_ingresso > 0 && turno != null && turno.length() > 0 && dt != null && q != null){
 			Turma turma = new Turma(nome, ano_ingresso, turno);
-			turma.cadastrarTurma(turma);
+			turma.setDiretor_turma(dt);
+			turma.setQualificacao(q);
+			Diretor_TurmaController dc = new Diretor_TurmaController();
+			boolean sucesso = dc.cadastrarDiretor_Turma(dt.getFomador());
+			if(sucesso) {
+				turma.cadastrarTurma(turma);
+				
+			}
 			return true;
 		}
 		return false;
 		}
-//	public ArrayList<Turma> listarTurma(String nome) throws ExceptionDao{
-//
-//		return new Turma().listarTurma(nome);
-//	}
-//	public boolean atualizarTurma(int codigo, String nome, int ano_ingresso, String turno)
-//			throws ExceptionDao{
-//				if(nome != null && nome.length()>0 && codigo != 0 && ano_ingresso > 0 && turno != null && turno.length() > 0){
-//					Turma turma = new Turma(nome, ano_ingresso, turno);
-//					turma.setCodigo(codigo);
-//					turma.atualizarTurma(turma);;
-//					return true;
-//				}
-//				return false;
-//				}
+	public ArrayList<Turma> listarTurma(String nome) throws ExceptionDao{
+
+		return new Turma().listarTurma(nome);
+	}
+	public boolean atualizarTurma(int codigo, String nome, int ano_ingresso, String turno, Diretor_Turma dt, Qualificacao q)
+			throws ExceptionDao{
+				if(nome != null && nome.length()>0 && codigo != 0 && ano_ingresso > 0 && turno != null && turno.length() > 0){
+					Turma turma = new Turma(nome, ano_ingresso, turno);
+					turma.setCodigo(codigo);
+					turma.setDiretor_turma(dt);
+					turma.setQualificacao(q);
+					boolean sucesso = new Diretor_TurmaController().atualizarDiretor_Turma(dt.getFomador(),codigo);
+					if(sucesso) {
+						
+						turma.atualizarTurma(turma);;
+						return true;
+					}
+				}
+				return false;
+				}
 //	public boolean apagarTurma(int codigo) throws ExceptionDao{
 //
 //		if(codigo != 0) {

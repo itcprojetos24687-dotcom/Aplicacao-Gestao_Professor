@@ -10,6 +10,15 @@ public class Turma {
 	private String turno;
 	private ArrayList<Licao> licoes;
 	private Diretor_Turma diretor_turma;
+	private Qualificacao qualificacao;
+
+	public Qualificacao getQualificacao() {
+		return qualificacao;
+	}
+
+	public void setQualificacao(Qualificacao qualificacao) {
+		this.qualificacao = qualificacao;
+	}
 
 	public Turma() {
 
@@ -62,9 +71,9 @@ public class Turma {
 		new TurmaDao().cadastrarTurma(turma);
 	}
 
-//	public ArrayList<Turma> listarTurma(String nome) throws ExceptionDao {
-//		return new TurmaDao().listarTurma(nome);
-//	}
+	public ArrayList<Turma> listarTurma(String nome) throws ExceptionDao {
+		return new TurmaDao().listarTurma(nome);
+	}
 //
 //	public void atualizarTurma(Turma turma) throws ExceptionDao {
 //		new TurmaDao().atualizarTurma(turma);
@@ -76,8 +85,12 @@ public class Turma {
 
 	@Override
 	public String toString() {
-		return "Turma [codigo=" + codigo + ", nome_turma=" + nome + ", ano_ingresso=" + ano_ingresso
-				+ ", turno=" + turno + "]";
+		return  nome;
+	}
+
+	public void atualizarTurma(Turma turma) throws ExceptionDao{
+		new TurmaDao().atualizarTurma(turma);
+		
 	}
 
 }
