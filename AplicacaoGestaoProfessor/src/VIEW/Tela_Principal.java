@@ -709,8 +709,8 @@ public class Tela_Principal {
 
         JScrollPane scrollPane = new JScrollPane();
         tabelaTurma = new JTable(modeloTurmas);
-        table.setRowHeight(35);
-        scrollPane.setViewportView(table);
+        tabelaTurma.setRowHeight(35);
+        scrollPane.setViewportView(tabelaTurma);
         painel.add(scrollPane, BorderLayout.CENTER);
         return painel;
     }
