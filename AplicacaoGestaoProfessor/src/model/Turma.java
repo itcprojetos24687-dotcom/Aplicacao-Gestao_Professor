@@ -79,9 +79,9 @@ public class Turma {
 //		new TurmaDao().atualizarTurma(turma);
 //	}
 //
-//	public void apagarTurma(Turma turma) throws ExceptionDao {
-//		new TurmaDao().apagarTurma(turma);
-//	}
+	public void apagarTurma(int codigo) throws ExceptionDao {
+		new TurmaDao().apagarTurma(codigo);
+	}
 
 	@Override
 	public String toString() {

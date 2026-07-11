@@ -146,7 +146,7 @@ public class Tela_Principal {
 
     private void initialize() {
         frame = new JFrame();
-        frame.setTitle("SGP - Sistema de Gestão de Formação");
+        frame.setTitle("SGP - Sistema de Gestão de Formadores");
         frame.setBounds(100, 100, 1280, 720);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null); 
@@ -495,7 +495,7 @@ public class Tela_Principal {
         				s.printStackTrace();
         			}
         		}
-        		if(nomeCardView.equals("")) {
+        		if(nomeCardView.equals("Turmas")) {
         			DefaultTableModel modelo =(DefaultTableModel) tabelaTurma.getModel();
         			String texto = txtPesquisar.getText();
         			try {
@@ -503,7 +503,14 @@ public class Tela_Principal {
         				ArrayList<Turma> turmas = tc.listarTurma(texto);
         				modelo.setRowCount(0);
         				for(Turma t : turmas) {
-        					
+        					modelo.addRow(new Object[] {
+        							          t.getCodigo(),
+        							          t.getNome(),
+        							          t.getAno_ingresso(),
+        							          t.getTurno(),
+        							          t.getDiretor_turma().getFomador().getNome(),
+        							          t.getQualificacao().getTitulo()
+        					});
         				}
         			}catch(Exception s) {
         				s.printStackTrace();
@@ -525,9 +532,9 @@ public class Tela_Principal {
 
         btnNovo.addActionListener(e -> {
             if(nomeCardView.equals("Inscrições")) {
-                cardLayout.show(panelConteudoDinamico, "FormularioInscricao");
+                //new Cadastro_Turma().frame.setVisible(true);
             } else if(nomeCardView.equals("Turmas")) {
-                cardLayout.show(panelConteudoDinamico, "FormularioCadastroTurma");
+            	new Cadastro_Turma().frame.setVisible(true);
             } else if(nomeCardView.equals("Matrículas")) {
                 cardLayout.show(panelConteudoDinamico, "FormularioCadastroMatricula");
             } else if(nomeCardView.equals("Formadores")) {
@@ -584,6 +591,21 @@ public class Tela_Principal {
 						s.printStackTrace();
 					}
 				}
+				if(nomeCardView.equals("Turmas")) {
+					Integer codigo=(Integer)tabelaTurma.getModel().getValueAt(tabelaTurma.getSelectedRow(), 0);
+					String nome=(String)tabelaTurma.getModel().getValueAt(tabelaTurma.getSelectedRow(), 1);
+					Integer ano_lectivo=(Integer)tabelaTurma.getModel().getValueAt(tabelaTurma.getSelectedRow(), 2);
+					String turno=(String)tabelaTurma.getModel().getValueAt(tabelaTurma.getSelectedRow(), 3);
+					String dt=(String)tabelaTurma.getModel().getValueAt(tabelaTurma.getSelectedRow(), 4);
+					String qualificacao=(String)tabelaTurma.getModel().getValueAt(tabelaTurma.getSelectedRow(), 5);
+					try {
+						Cadastro_Turma ct = new Cadastro_Turma();
+						ct.frame.setVisible(true);
+						ct.buscarTurma(codigo, nome, ano_lectivo, turno, dt, qualificacao);
+					}catch(Exception s) {
+						s.printStackTrace();
+					}
+				}
 				
 			}
         });
@@ -610,6 +632,24 @@ public class Tela_Principal {
         						JOptionPane.showMessageDialog(null, "Formador apagado com sucesso");
         					}else {
         						JOptionPane.showMessageDialog(null, "falha ao apagar");
+        					}
+        				}
+        			}catch(Exception s) {
+        				s.printStackTrace();
+        			}
+        		}
+        		if(nomeCardView.equals("Turmas")) {
+        			boolean sucesso;
+        			try {
+        					
+        				Integer codigo=(Integer)tabelaTurma.getModel().getValueAt(tabelaTurma.getSelectedRow(), 0);
+        				TurmaController tc = new TurmaController();
+        				int confirm = JOptionPane.showConfirmDialog(null,"Tens a certeza que deseja deletar","Confirmacao",JOptionPane.YES_NO_OPTION);
+        				
+        				if(confirm == JOptionPane.YES_OPTION) {
+        					sucesso = tc.apagarTurma(codigo);
+        					if(sucesso) {
+        						JOptionPane.showMessageDialog(null, "Deletado como sucesso");
         					}
         				}
         			}catch(Exception s) {
@@ -818,5 +858,27 @@ public class Tela_Principal {
 				});
 			}
 		
+    }
+    public void listarTurmas() throws Exception{
+    	DefaultTableModel modelo =(DefaultTableModel) tabelaTurma.getModel();
+		String texto = txtPesquisar.getText();
+		JOptionPane.showMessageDialog(null, "Metodo chamado com o texto: "+texto);
+		try {
+			TurmaController tc = new TurmaController();
+			ArrayList<Turma> turmas = tc.listarTurma(texto);
+			modelo.setRowCount(0);
+			for(Turma t : turmas) {
+				modelo.addRow(new Object[] {
+						          t.getCodigo(),
+						          t.getNome(),
+						          t.getAno_ingresso(),
+						          t.getTurno(),
+						          t.getDiretor_turma().getFomador().getNome(),
+						          t.getQualificacao().getTitulo()
+				});
+			}
+		}catch(Exception s) {
+			s.printStackTrace();
+		}
     }
 }
