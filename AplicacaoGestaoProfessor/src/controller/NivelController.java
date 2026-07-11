@@ -12,6 +12,9 @@ public class NivelController {
 		}
 		return false;
 	}
+//	public ArrayList<Nivel> comboNivel()throws ExceptionDao{
+//		return new Nivel().comboNivel();
+//	}
 	public ArrayList<Nivel> listarNivel () throws ExceptionDao{
 		return new Nivel().listarNivel();
 	}

@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -19,7 +20,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-public class Tela_cadastroQualificação extends JPanel {
+public class Tela_cadastroQualificação extends JFrame {
 
     private static final long serialVersionUID = 1L;
     
@@ -45,13 +46,20 @@ public class Tela_cadastroQualificação extends JPanel {
     private final Color BRANCO          = Color.WHITE;
     private final Color TEXTO_MUTED     = new Color(108, 117, 125);
 
+//    public static void main(String[]args) {
+//    	Tela_cadastroQualificação tl = new Tela_cadastroQualificação();
+//    	tl.setVisible(true);
+//    }
     
     public Tela_cadastroQualificação() {
     	
         // Alinhado ao plano de design do painel central
         setLayout(new BorderLayout(0, 15));
         setBackground(BRANCO);
-        setBorder(new EmptyBorder(20, 20, 20, 20));
+        //setBorder(new EmptyBorder(20, 20, 20, 20));
+        setLocationRelativeTo(null);
+        setSize(800,420);
+        
 
  
         JPanel panelAcoes = new JPanel(new BorderLayout());
@@ -220,18 +228,21 @@ public class Tela_cadastroQualificação extends JPanel {
     	codigo = cod;
     	txtNomeQualificacao.setText(titulo);
     	for(int i = 0 ;i < cbCoordenador.getItemCount();i++) {
-    		if(cbCoordenador.getItemAt(i).equals(coordenador)) {
+    		String coordenador2 = coordenador;
+			if(cbCoordenador.getItemAt(i).equals(coordenador2)) {
     			cbCoordenador.setSelectedIndex(i);
     		}
     	}
     	for(int i = 0 ;i < cbNivelQualificacao.getItemCount();i++) {
-    		if(cbNivelQualificacao.getItemAt(i).equals(nivel)) {
+    		String nivel2 = nivel;
+			if(cbNivelQualificacao.getItemAt(i).equals(nivel2)) {
     			cbNivelQualificacao.setSelectedIndex(i);
     		}
     	}
     	 
     	for(int i = 0 ;i < cbCampoPertencente.getItemCount();i++) {
-    		if(cbCampoPertencente.getItemAt(i).equals(campo)) {
+    		String campo2 = campo;
+			if(cbCampoPertencente.getItemAt(i).equals(campo2)) {
     			cbCampoPertencente.setSelectedIndex(i);
     		}
     	}

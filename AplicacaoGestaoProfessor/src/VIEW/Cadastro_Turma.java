@@ -121,7 +121,7 @@ public class Cadastro_Turma {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		comboDiretor_Turma.setBounds(366, 113, 158, 28);
+		comboDiretor_Turma.setBounds(356, 113, 168, 28);
 		panel.add(comboDiretor_Turma);
 		
 		JLabel lblNewLabel = new JLabel("Diretor de Turma\n");
@@ -149,8 +149,18 @@ public class Cadastro_Turma {
 		panel.add(comboQualificacaco);
 		
 		comboNivel = new JComboBox();
+		try {
+			NivelController nc = new NivelController();
+			niveis = nc.listarNivel();
+			for(Nivel n : niveis) {
+				comboNivel.addItem(n);
+			}
+		}catch(Exception s) {
+			s.printStackTrace();
+		}
 		comboNivel.setFont(new Font("Dialog", Font.BOLD, 15));
-		comboNivel.setBounds(356, 261, 187, 28);
+		
+		comboNivel.setBounds(345, 261, 198, 28);
 		panel.add(comboNivel);
 		
 		JLabel lblNivel = new JLabel("Nivel");
@@ -182,6 +192,7 @@ public class Cadastro_Turma {
 				int ano_lectivo = Integer.parseInt(textAno_Lectivo.getText());
 				Diretor_Turma dt = (Diretor_Turma)comboDiretor_Turma.getSelectedItem();
 				Qualificacao q = (Qualificacao) comboQualificacaco.getSelectedItem();
+				Nivel n = (Nivel) comboNivel.getSelectedItem();
 				boolean sucesso;
 				try {
 					TurmaController tc = new TurmaController();

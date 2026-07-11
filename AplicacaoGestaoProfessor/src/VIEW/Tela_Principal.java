@@ -224,7 +224,7 @@ public class Tela_Principal {
         panelConteudoDinamico.add(criarPainelSalas(), "Salas");
         panelConteudoDinamico.add(criarPainelTurmas(), "Turmas");
         panelConteudoDinamico.add(criarPainelQualificacoes(), "Qualificações");
-        panelConteudoDinamico.add(new Tela_cadastroQualificação(), "FormularioQualificacao");
+        //panelConteudoDinamico.add(new Tela_cadastroQualificação(), "FormularioQualificacao");
         panelConteudoDinamico.add(criarPainelFormandos(), "Formandos");
         panelConteudoDinamico.add(new Tela_cadastroFormando(), "FormularioCadastroFormando");
         
@@ -540,6 +540,7 @@ public class Tela_Principal {
             } else if(nomeCardView.equals("Formadores")) {
                new Cadastro_Formador().setVisible(true); 
             } else if(nomeCardView.equals("Qualificações")) {
+            	new Tela_cadastroQualificação().setVisible(true);
                 cardLayout.show(panelConteudoDinamico, "FormularioQualificacao");
             } else if(nomeCardView.equals("Formandos")) {
                 cardLayout.show(panelConteudoDinamico, "FormularioCadastroFormando");
@@ -564,8 +565,10 @@ public class Tela_Principal {
 					String campo = (String)tabelaQualificacao.getModel().getValueAt(tabelaQualificacao.getSelectedRow(), 4);
 					
 					try {
-						new Tela_cadastroQualificação().buscarQualificacao(codigo, titulo, coordenador, nivel, campo);
-						cardLayout.show(panelConteudoDinamico, "FormularioQualificacao");
+						Tela_cadastroQualificação tq = new Tela_cadastroQualificação();
+						tq.buscarQualificacao(codigo, titulo, coordenador, nivel, campo);
+						tq.setVisible(true);
+						//cardLayout.show(panelConteudoDinamico, "FormularioQualificacao");
 						
 					}catch(Exception s) {
 						s.printStackTrace();
