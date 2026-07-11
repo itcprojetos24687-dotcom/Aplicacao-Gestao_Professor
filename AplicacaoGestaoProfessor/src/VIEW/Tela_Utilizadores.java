@@ -613,7 +613,7 @@ public class Tela_Utilizadores extends JFrame {
 				});
 			}
 			
-			uc.listarUsuario(pesquisar);
+			//uc.listarUsuario(pesquisar);
      }
     
 }

@@ -48,7 +48,7 @@ public class Diretor_TurmaDao {
 		}
 	}
 	public ArrayList<Diretor_Turma> comboDiretor_Turma()throws ExceptionDao{
-		String sql = "select * from Diretor_Turma";
+		String sql = "select cod_Formador,nome from Diretor_Turma join Formador on cod_Formador = codigo";
 		Connection con = null;
 		PreparedStatement comboQualificacao = null;
 		ArrayList<Diretor_Turma> diretor_turma= null;
@@ -64,6 +64,7 @@ public class Diretor_TurmaDao {
 					Diretor_Turma dt = new Diretor_Turma();
 					Formador f = new Formador();
 					f.setCodigo(rs.getInt("cod_Formador"));
+					f.setNome(rs.getString("nome"));
 					dt.setFormador(f);
 					
 					diretor_turma.add(dt);

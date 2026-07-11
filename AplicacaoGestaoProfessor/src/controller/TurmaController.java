@@ -16,11 +16,7 @@ public class TurmaController {
 			turma.setDiretor_turma(dt);
 			turma.setQualificacao(q);
 			Diretor_TurmaController dc = new Diretor_TurmaController();
-			boolean sucesso = dc.cadastrarDiretor_Turma(dt.getFomador());
-			if(sucesso) {
-				turma.cadastrarTurma(turma);
-				
-			}
+			turma.cadastrarTurma(turma);
 			return true;
 		}
 		return false;
@@ -36,27 +32,24 @@ public class TurmaController {
 					turma.setCodigo(codigo);
 					turma.setDiretor_turma(dt);
 					turma.setQualificacao(q);
-					boolean sucesso = new Diretor_TurmaController().atualizarDiretor_Turma(dt.getFomador(),codigo);
-					if(sucesso) {
-						
-						turma.atualizarTurma(turma);;
+					turma.atualizarTurma(turma);;
 						return true;
-					}
+					
 				}
 				return false;
 				}
-//	public boolean apagarTurma(int codigo) throws ExceptionDao{
-//
-//		if(codigo != 0) {
-//
-//			Turma turma = new Turma();
-//			turma.setCodigo(codigo);
-//			turma.apagarTurma(turma);
-//			return true;
-//
-//		}
-//		return false;
-//	}
+	public boolean apagarTurma(int codigo) throws ExceptionDao{
+
+		if(codigo != 0) {
+
+			Turma turma = new Turma();
+			
+			turma.apagarTurma(codigo);
+			return true;
+
+		}
+		return false;
+	}
 	/*public static void main( String[]args) throws ExceptionDao{
 		TurmaController controller = new TurmaController();
 		System.out.print("Adiciona o codigo");

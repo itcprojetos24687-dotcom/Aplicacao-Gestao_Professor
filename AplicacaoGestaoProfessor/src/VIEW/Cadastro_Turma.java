@@ -21,12 +21,14 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 public class Cadastro_Turma {
 
-	private JFrame frame;
+	public JFrame frame;
 	private JTextField textNome;
 	private JTextField textTurno;
 	private JTextField textAno_Lectivo;
 	private JComboBox comboDiretor_Turma;
 	private JComboBox comboQualificacaco ;
+	private JComboBox comboNivel;
+	private ArrayList<Nivel> niveis;
 	private ArrayList<Qualificacao> qualificacoes;
 	private ArrayList<Diretor_Turma> diretor_turma;
 	private int idUser = 0;
@@ -81,6 +83,7 @@ public class Cadastro_Turma {
 		panel.add(lblNome);
 		
 		textNome = new JTextField();
+		textNome.setFont(new Font("Dialog", Font.PLAIN, 15));
 		textNome.setBounds(79, 113, 152, 29);
 		panel.add(textNome);
 		textNome.setColumns(10);
@@ -91,6 +94,7 @@ public class Cadastro_Turma {
 		panel.add(lblTurno);
 		
 		textTurno = new JTextField();
+		textTurno.setFont(new Font("Dialog", Font.PLAIN, 15));
 		textTurno.setColumns(10);
 		textTurno.setBounds(79, 183, 152, 29);
 		panel.add(textTurno);
@@ -101,6 +105,7 @@ public class Cadastro_Turma {
 		panel.add(lblAnoLectivo);
 		
 		textAno_Lectivo = new JTextField();
+		textAno_Lectivo.setFont(new Font("Dialog", Font.PLAIN, 15));
 		textAno_Lectivo.setColumns(10);
 		textAno_Lectivo.setBounds(79, 260, 152, 29);
 		panel.add(textAno_Lectivo);
@@ -116,7 +121,7 @@ public class Cadastro_Turma {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		comboDiretor_Turma.setBounds(356, 113, 158, 28);
+		comboDiretor_Turma.setBounds(366, 113, 158, 28);
 		panel.add(comboDiretor_Turma);
 		
 		JLabel lblNewLabel = new JLabel("Diretor de Turma\n");
@@ -130,6 +135,7 @@ public class Cadastro_Turma {
 		panel.add(lblQualificacao);
 		
 		comboQualificacaco = new JComboBox();
+		comboQualificacaco.setFont(new Font("Dialog", Font.BOLD, 14));
 		try {
 			QualificacaoController qc = new QualificacaoController();
 			qualificacoes = qc.comboQualificacao();
@@ -139,8 +145,18 @@ public class Cadastro_Turma {
 		}catch(Exception s) {
 			s.printStackTrace();
 		}
-		comboQualificacaco.setBounds(356, 184, 158, 28);
+		comboQualificacaco.setBounds(356, 184, 187, 28);
 		panel.add(comboQualificacaco);
+		
+		comboNivel = new JComboBox();
+		comboNivel.setFont(new Font("Dialog", Font.BOLD, 15));
+		comboNivel.setBounds(356, 261, 187, 28);
+		panel.add(comboNivel);
+		
+		JLabel lblNivel = new JLabel("Nivel");
+		lblNivel.setFont(new Font("Dialog", Font.BOLD, 15));
+		lblNivel.setBounds(356, 229, 158, 17);
+		panel.add(lblNivel);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(12, 405, 616, 45);
@@ -153,7 +169,7 @@ public class Cadastro_Turma {
 		JButton btnCancelar = new JButton("Cancelar\n");
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				frame.dispose();
 			}
 		});
 		panel_1.add(btnCancelar);
@@ -171,7 +187,9 @@ public class Cadastro_Turma {
 					TurmaController tc = new TurmaController();
 					if(idUser == 0) {
 						sucesso = tc.cadastrarTurma(nome, ano_lectivo, turno, dt, q);
+						
 						if (sucesso) {
+							new Tela_Principal(Seccao.obterUtilizador()).listarTurmas();
 							JOptionPane.showMessageDialog(null, "Cadastrado com sucesso");
 						}
 						else {
@@ -180,6 +198,7 @@ public class Cadastro_Turma {
 					}else {
 						sucesso = tc.atualizarTurma(idUser, nome, ano_lectivo, turno, dt, q);
 						if(sucesso) {
+							new Tela_Principal(Seccao.obterUtilizador()).listarTurmas();
 							idUser = 0;
 							JOptionPane.showMessageDialog(null, "Atualizado com sucesso");
 						}else {
@@ -208,6 +227,9 @@ public class Cadastro_Turma {
 				comboQualificacaco.setSelectedIndex(i);
 			}
 		}
+	}
+	public void limpar() {
+		
 	}
 
 }
