@@ -22,6 +22,10 @@ public class QualificacaoDao {
 				qc.setCodigo(rs.getInt(1));
 			}
 
+			Usuario u = Seccao.obterUtilizador();
+			Logs log = new Logs("INSERT", "Qualificação: " + qc.getTitulo() + " cadastrada", u);
+			new LogDao().salvar(log);
+
 		}catch(SQLException e) {
 			throw new ExceptionDao("Erro ao inserir dados :" + e);
 		}finally {

@@ -26,6 +26,12 @@ public class UsuarioController {
 
 		}
 		return null;
+	}
+
+	public void logout(Usuario usuario) throws ExceptionDao {
+		if (usuario != null) {
+			new Usuario().logout(usuario);
+		}
 
 	}
 //	public void alterarPrimeiroAcesso(Usuario u) throws ExceptionDao {

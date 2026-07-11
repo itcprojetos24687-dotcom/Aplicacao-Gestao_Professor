@@ -47,6 +47,11 @@ public class UsuarioDao {
 				}
 			}
 
+			if (u != null) {
+				Logs log = new Logs("LOGIN", "Utilizador " + u.getUsername() + " iniciou sessão", u);
+				new LogDao().salvar(log);
+			}
+
 		} catch (SQLException e) {
 			throw new ExceptionDao("Erro ao fazer login" + e);
 
@@ -520,6 +525,13 @@ public class UsuarioDao {
 			}catch(SQLException f) {
 				throw new ExceptionDao("Erro ao fechar a conexao ");
 			}
+		}
+	}
+
+	public void registarLogout(Usuario usuario) throws ExceptionDao {
+		if (usuario != null) {
+			Logs log = new Logs("LOGOUT", "Utilizador " + usuario.getUsername() + " terminou sessão", usuario);
+			new LogDao().salvar(log);
 		}
 	}
 }

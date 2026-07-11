@@ -98,6 +98,9 @@ public class Usuario {
 	public Usuario login(String username,String password)throws ExceptionDao {
 		 return new UsuarioDao().login(username,password);
 	}
+	public void logout(Usuario usuario) throws ExceptionDao {
+		new UsuarioDao().registarLogout(usuario);
+	}
 	public void cadastrarUsuario(Usuario usuario) throws ExceptionDao {
 		new UsuarioDao().cadastrarUsuario(usuario);
 	}
