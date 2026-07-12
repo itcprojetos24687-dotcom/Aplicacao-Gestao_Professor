@@ -20,8 +20,6 @@ public class Tela_cadastroFormando extends JPanel {
 
     private static final long serialVersionUID = 1L;
     
-    // Componentes de Entrada de Dados
-    private JTextField txtCodigo;
     private JTextField txtNome;
     private JTextField txtApelido;
     private JTextField txtContacto;
@@ -29,7 +27,6 @@ public class Tela_cadastroFormando extends JPanel {
     private JTextField txtBi;
     private JButton btnSalvar, btnLimpar;
 
-    // Paleta de Cores unificada AcademiaPro
     private final Color AZUL_ESCURO_NAV = new Color(15, 38, 70);
     private final Color AZUL_DESTAQUE   = new Color(13, 110, 253);
     private final Color FUNDO_CLARO     = new Color(244, 246, 249);
@@ -37,12 +34,10 @@ public class Tela_cadastroFormando extends JPanel {
     private final Color TEXTO_MUTED     = new Color(108, 117, 125);
 
     public Tela_cadastroFormando() {
-        // Alinhado ao plano de design do painel central
         setLayout(new BorderLayout(0, 15));
         setBackground(BRANCO);
         setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        // --- Barra de Ações Superior (Idêntico ao padrão das outras telas) ---
         JPanel panelAcoes = new JPanel(new BorderLayout());
         panelAcoes.setBackground(BRANCO);
 
@@ -56,49 +51,41 @@ public class Tela_cadastroFormando extends JPanel {
         
         add(panelAcoes, BorderLayout.NORTH);
 
-        // --- Formulário Centralizado Customizado ---
         JPanel panelFormContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         panelFormContainer.setBackground(BRANCO);
 
-        // Grid Layout para organizar os 6 campos (6 linhas, 2 colunas)
-        JPanel panelGridCampos = new JPanel(new GridLayout(6, 2, 20, 20));
+        JPanel panelGridCampos = new JPanel(new GridLayout(5, 2, 20, 20));
         panelGridCampos.setBackground(BRANCO);
-        panelGridCampos.setPreferredSize(new Dimension(750, 330));
+        panelGridCampos.setPreferredSize(new Dimension(750, 270));
 
         Font fontLabel = new Font("Segoe UI", Font.BOLD, 14);
         Font fontText = new Font("Segoe UI", Font.PLAIN, 14);
 
-        // 1. Código
-        panelGridCampos.add(new JLabel("Código *") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
-        txtCodigo = new JTextField();
-        txtCodigo.setFont(fontText);
-        panelGridCampos.add(txtCodigo);
-
-        // 2. Nome
+        // 1. Nome
         panelGridCampos.add(new JLabel("Nome *") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
         txtNome = new JTextField();
         txtNome.setFont(fontText);
         panelGridCampos.add(txtNome);
 
-        // 3. Apelido
+        // 2. Apelido
         panelGridCampos.add(new JLabel("Apelido *") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
         txtApelido = new JTextField();
         txtApelido.setFont(fontText);
         panelGridCampos.add(txtApelido);
 
-        // 4. Contacto
+        // 3. Contacto
         panelGridCampos.add(new JLabel("Contacto") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
         txtContacto = new JTextField();
         txtContacto.setFont(fontText);
         panelGridCampos.add(txtContacto);
 
-        // 5. Email
+        // 4. Email
         panelGridCampos.add(new JLabel("Email") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
         txtEmail = new JTextField();
         txtEmail.setFont(fontText);
         panelGridCampos.add(txtEmail);
 
-        // 6. BI
+        // 5. BI
         panelGridCampos.add(new JLabel("BI *") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
         txtBi = new JTextField();
         txtBi.setFont(fontText);
@@ -107,7 +94,6 @@ public class Tela_cadastroFormando extends JPanel {
         panelFormContainer.add(panelGridCampos);
         add(panelFormContainer, BorderLayout.CENTER);
 
-        // --- Barra de Comando Inferior (Botões) ---
         JPanel panelBotoesRodape = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 10));
         panelBotoesRodape.setBackground(BRANCO);
         panelBotoesRodape.setBorder(new EmptyBorder(10, 0, 0, 0));
@@ -137,23 +123,18 @@ public class Tela_cadastroFormando extends JPanel {
         add(panelBotoesRodape, BorderLayout.SOUTH);
     }
 
-    /**
-     * Validação básica e persistência fictícia
-     */
     private void acaoSalvar() {
-        String codigo = txtCodigo.getText().trim();
         String nome = txtNome.getText().trim();
         String apelido = txtApelido.getText().trim();
         String contacto = txtContacto.getText().trim();
         String email = txtEmail.getText().trim();
         String bi = txtBi.getText().trim();
 
-        if (codigo.isEmpty() || nome.isEmpty() || apelido.isEmpty() || bi.isEmpty()) {
+        if (nome.isEmpty() || apelido.isEmpty() || bi.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Por favor, preencha os campos obrigatórios (*).", "Aviso", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // Validação simples: contacto deve ser numérico, se preenchido
         if (!contacto.isEmpty()) {
             try {
                 Integer.parseInt(contacto);
@@ -163,14 +144,13 @@ public class Tela_cadastroFormando extends JPanel {
             }
         }
 
-        String resumo = "Código: " + codigo + "\nNome: " + nome + " " + apelido + "\nBI: " + bi;
+        String resumo = "Nome: " + nome + " " + apelido + "\nBI: " + bi;
         JOptionPane.showMessageDialog(this, "Formando guardado com sucesso!\n\n" + resumo, "Sucesso", JOptionPane.INFORMATION_MESSAGE);
         
         limparCampos();
     }
 
     private void limparCampos() {
-        txtCodigo.setText("");
         txtNome.setText("");
         txtApelido.setText("");
         txtContacto.setText("");

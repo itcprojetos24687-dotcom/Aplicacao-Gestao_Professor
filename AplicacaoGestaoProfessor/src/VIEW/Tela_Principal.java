@@ -303,7 +303,9 @@ public class Tela_Principal {
         panelConteudoDinamico.add(painelCadastroProfessor, "FormularioCadastroProfessor");
       
         
-        String[] menus = {"Dashboard", "Formadores", "Turmas", "Qualificações", "Cadastros ▾"};
+        
+
+        String[] menus = {"Dashboard", "Formadores", "Inscrições", "Matrículas", "Turmas", "Qualificações","Formandos", "Cadastros ▾"};
         
         for (String menu : menus) {
         	if (nivelAcesso.equalsIgnoreCase("Formador") && (menu.equals("Cadastros ▾") || menu.equals("Formadores") || menu.equals("Formandos") || menu.equals("Inscrições") || menu.equals("Matrículas") || menu.equals("Salas") || menu.equals("Qualificações"))) {
@@ -550,26 +552,34 @@ public class Tela_Principal {
         btnNovo.setFont(new Font("Segoe UI", Font.BOLD, 13));
         btnNovo.setPreferredSize(new Dimension(150, 35));
         btnNovo.setBorder(null);
-
+        
         btnNovo.addActionListener(e -> {
-            if(nomeCardView.equals("Inscrições")) {
-                cardLayout.show(panelConteudoDinamico, "FormularioInscricao");
+            if(nomeCardView.equals("Formações")) {
+                new Tela_cadastroFormacao().setVisible(true);
+            } else if(nomeCardView.equals("Inscrições")) {
+                abrirEmJanela(new Tela_Incrição(), "Nova Inscrição", 550, 320);
             } else if(nomeCardView.equals("Turmas")) {
-                cardLayout.show(panelConteudoDinamico, "FormularioCadastroTurma");
+                new Tela_cadastoTurma().setVisible(true);
             } else if(nomeCardView.equals("Matrículas")) {
-                cardLayout.show(panelConteudoDinamico, "FormularioCadastroMatricula");
+                new Tela_Matricula().setVisible(true);
             } else if(nomeCardView.equals("Formadores")) {
                new Cadastro_Formador().setVisible(true); 
             } else if(nomeCardView.equals("Qualificações")) {
+
             	new Tela_cadastroQualificação().setVisible(true);
                 cardLayout.show(panelConteudoDinamico, "FormularioQualificacao");
+
+                //abrirEmJanela(new Tela_cadastroQualificação(), "Cadastro de Qualificação", 800, 400);
+
             } else if(nomeCardView.equals("Formandos")) {
-                cardLayout.show(panelConteudoDinamico, "FormularioCadastroFormando");
+                abrirEmJanela(new Tela_cadastroFormando(), "Cadastro de Formando", 800, 480);
             } else {
-                
+                Object[] novaLinha = new Object[modeloReferencia.getColumnCount()];
+                novaLinha[0] = "NOVO";
+                modeloReferencia.addRow(novaLinha);
             }
         });
-
+        
         JButton btnEditar = new JButton("Editar");
         btnEditar.setBackground(BRANCO);
         btnEditar.setFont(new Font("Segoe UI", Font.PLAIN, 13));
@@ -823,6 +833,14 @@ public class Tela_Principal {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(frame, "Erro ao abrir a janela.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
+    }
+    private void abrirEmJanela(JPanel painel, String titulo, int largura, int altura) {
+        JFrame janela = new JFrame(titulo);
+        janela.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        janela.setSize(largura, altura);
+        janela.setLocationRelativeTo(frame);
+        janela.getContentPane().add(painel);
+        janela.setVisible(true);
     }
     private void logOut() {
     	Tela_login tl = new Tela_login();

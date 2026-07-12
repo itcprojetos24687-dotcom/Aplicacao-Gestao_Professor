@@ -22,7 +22,7 @@ public class Conexao {
 		
 		//Carregando o driver com a classe class
 		try {
-			Class.forName(driver);
+			Class.forName(driver); 
 			//JOptionPane.showMessageDialog(null, "Driver carregado com sucessso");
 		}catch(ClassNotFoundException e) {
 			//JOptionPane.showMessageDialog(null, "Class nao encontrada");
