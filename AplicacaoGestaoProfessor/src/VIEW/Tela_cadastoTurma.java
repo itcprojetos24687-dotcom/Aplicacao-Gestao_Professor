@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -108,6 +109,27 @@ public class Tela_cadastoTurma extends JPanel {
         panelCard.add(btnSalvar);
 
         add(panelCard, BorderLayout.CENTER);
+    }
+
+    // Construtor sem listener: abre como janela independente, igual ao Cadastro_Formador
+    public Tela_cadastoTurma() {
+        this(null);
+        JFrame janela = new JFrame("Cadastro de Turma");
+        janela.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        janela.setSize(650, 480);
+        janela.setLocationRelativeTo(null);
+        janela.getContentPane().add(this);
+        this.listener = new OnTurmaCadastradaListener() {
+            @Override
+            public void onTurmaCadastrada(String codigo, String curso, String regime, String formador) {
+                janela.dispose();
+            }
+            @Override
+            public void onCancelar() {
+                janela.dispose();
+            }
+        };
+        janela.setVisible(true);
     }
 
     private void acaoSalvar() {

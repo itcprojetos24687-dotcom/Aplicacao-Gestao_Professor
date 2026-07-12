@@ -18,11 +18,11 @@ public class Conexao {
 		final String driver = "com.mysql.cj.jdbc.Driver";
 		final String url = "jdbc:mysql://localhost:3306/GestaoProfessor";
 		final String user = "root";
-		final String senha = "Malikdb123!";
+		final String senha = "846533793";
 		
 		//Carregando o driver com a classe class
 		try {
-			Class.forName(driver);
+			Class.forName(driver); 
 			//JOptionPane.showMessageDialog(null, "Driver carregado com sucessso");
 		}catch(ClassNotFoundException e) {
 			//JOptionPane.showMessageDialog(null, "Class nao encontrada");
