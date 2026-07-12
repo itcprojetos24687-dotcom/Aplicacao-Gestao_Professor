@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import controller.FormandoController;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -26,6 +27,8 @@ public class Tela_cadastroFormando extends JPanel {
     private JTextField txtEmail;
     private JTextField txtBi;
     private JButton btnSalvar, btnLimpar;
+    private int codigoEdicao = 0;
+    private boolean modoEdicao = false;
 
     private final Color AZUL_ESCURO_NAV = new Color(15, 38, 70);
     private final Color AZUL_DESTAQUE   = new Color(13, 110, 253);
@@ -122,7 +125,7 @@ public class Tela_cadastroFormando extends JPanel {
         
         add(panelBotoesRodape, BorderLayout.SOUTH);
     }
-
+    
     private void acaoSalvar() {
         String nome = txtNome.getText().trim();
         String apelido = txtApelido.getText().trim();
@@ -136,20 +139,52 @@ public class Tela_cadastroFormando extends JPanel {
         }
 
         if (!contacto.isEmpty()) {
-            try {
-                Integer.parseInt(contacto);
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "O campo Contacto deve conter apenas números.", "Aviso", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
+        	try {
+        	    FormandoController fc = new FormandoController();
+        	    boolean sucesso;
+        	    if(modoEdicao) {
+        	        sucesso = fc.atualizarFormando(
+        	            nome, apelido,
+        	            contacto.isEmpty() ? 0 : Integer.parseInt(contacto),
+        	            email, bi, codigoEdicao
+        	        );
+        	        if(sucesso) {
+        	            JOptionPane.showMessageDialog(this, "Formando actualizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        	            modoEdicao = false;
+        	            codigoEdicao = 0;
+        	            limparCampos();
+        	        } else {
+        	            JOptionPane.showMessageDialog(this, "Dados inválidos.", "Aviso", JOptionPane.WARNING_MESSAGE);
+        	        }
+        	    } else {
+        	        sucesso = fc.cadastrarFormando(
+        	            nome, apelido,
+        	            contacto.isEmpty() ? 0 : Integer.parseInt(contacto),
+        	            email, bi
+        	        );
+        	        if(sucesso) {
+        	            JOptionPane.showMessageDialog(this, "Formando guardado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        	            limparCampos();
+        	        } else {
+        	            JOptionPane.showMessageDialog(this, "Dados inválidos.", "Aviso", JOptionPane.WARNING_MESSAGE);
+        	        }
+        	    }
+        	} catch (Exception ex) {
+        	    ex.printStackTrace();
+        	    JOptionPane.showMessageDialog(this, "Erro: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        	}
         }
-
-        String resumo = "Nome: " + nome + " " + apelido + "\nBI: " + bi;
-        JOptionPane.showMessageDialog(this, "Formando guardado com sucesso!\n\n" + resumo, "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-        
-        limparCampos();
     }
-
+    public void buscarFormando(int codigo, String nome, String apelido, int contacto, String email, String bi) {
+        this.codigoEdicao = codigo;
+        this.modoEdicao = true;
+        txtNome.setText(nome);
+        txtApelido.setText(apelido);
+        txtContacto.setText(String.valueOf(contacto));
+        txtEmail.setText(email);
+        txtBi.setText(bi);
+    }
+    
     private void limparCampos() {
         txtNome.setText("");
         txtApelido.setText("");

@@ -29,6 +29,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import model.*;
+
 import controller.*;
 import dao.ExceptionDao;
 import javax.swing.JScrollPane;
@@ -51,7 +52,7 @@ public class Tela_Principal {
     private DefaultTableModel modeloMatriculas;
     private DefaultTableModel modeloTurmas;
     private DefaultTableModel modeloFormadores;
-    private DefaultTableModel modeloFormacoes;
+    private DefaultTableModel modeloModulos;
     private DefaultTableModel modeloSalas;
     private DefaultTableModel modeloQualificacoes;
     private DefaultTableModel modeloFormandos;
@@ -61,6 +62,7 @@ public class Tela_Principal {
     private JTable tabelaQualificacao;
     private JTable tabelaFormador;
     private JTable tabelaTurma;
+    private JTable tabelaFormando;
     private final Color AZUL_ESCURO_NAV = new Color(15, 38, 70);
     private final Color AZUL_DESTAQUE   = new Color(13, 110, 253);
     private final Color FUNDO_CLARO      = new Color(244, 246, 249);
@@ -118,13 +120,12 @@ public class Tela_Principal {
             new String[] { "Código", "Nome", "Apelido", "Genero", "Email","Estado Civil", "Contacto", "Salario" }
         );
 
-        modeloFormacoes = new DefaultTableModel(
-            new Object[][] {
-                {"FOR-001", "Programação Web Full Stack", "240 horas", "Profissionalizante", "Ativo"}
-            },
-            new String[] { "Código", "Nome da Formação", "Carga Horária", "Tipo de Curso", "Estado" }
-        );
-
+        modeloModulos = new DefaultTableModel(
+                new Object[][] {
+                    {"Programação Web Full Stack", "240 horas", "2º Semestre", "Licenciatura", "Nível 3"}
+                },
+                new String[] { "Nome do Módulo", "Carga Horária", "Semestres", "Qualificação", "Nível da Qualificação" }
+            );
         modeloSalas = new DefaultTableModel(
             new Object[][] {
                 {"Sala 01", "Bloco A", "30 Lugares", "Laboratório de Informática"}
@@ -217,7 +218,7 @@ public class Tela_Principal {
         panelConteudoDinamico = new JPanel(cardLayout);
 
         panelConteudoDinamico.add(criarPainelDashboard(), "Dashboard");
-        panelConteudoDinamico.add(criarPainelFormacoes(), "Formações");
+        panelConteudoDinamico.add(criarPainelModulos(), "Modulos");
         panelConteudoDinamico.add(criarPainelFormadores(), "Formadores");
         panelConteudoDinamico.add(criarPainelListaInscricoes(), "Inscrições"); 
         panelConteudoDinamico.add(new Tela_Incrição(), "FormularioInscricao");
@@ -274,10 +275,10 @@ public class Tela_Principal {
         panelConteudoDinamico.add(painelCadastroProfessor, "FormularioCadastroProfessor");
       
         
-        String[] menus = {"Dashboard", "Formadores", "Inscrições", "Matrículas", "Turmas", "Qualificações","Formandos", "Cadastros ▾"};
+        String[] menus = {"Dashboard", "Formadores","Modulos", "Inscrições", "Matrículas", "Turmas", "Qualificações","Formandos", "Cadastros ▾"};
         
         for (String menu : menus) {
-        	if (nivelAcesso.equalsIgnoreCase("Formador") && (menu.equals("Cadastros ▾") || menu.equals("Formadores") || menu.equals("Formandos") || menu.equals("Inscrições") || menu.equals("Matrículas") || menu.equals("Salas") || menu.equals("Qualificações"))) {
+        	if (nivelAcesso.equalsIgnoreCase("Formador") && (menu.equals("Cadastros ▾") || menu.equals("Formadores") || menu.equals("Formandos") || menu.equals("Inscrições") || menu.equals("Matrículas") || menu.equals("Modulo") || menu.equals("Qualificações"))) {
                 continue;
             }
 
@@ -494,6 +495,27 @@ public class Tela_Principal {
         				s.printStackTrace();
         			}
         		}
+        		if(nomeCardView.equals("Formandos")) {
+        		    DefaultTableModel modelo = (DefaultTableModel) tabelaFormando.getModel();
+        		    String texto = txtPesquisar.getText();
+        		    try {
+        		        FormandoController fc = new FormandoController();
+        		        ArrayList<Formando> formandos = fc.listarFormando(texto);
+        		        modelo.setRowCount(0);
+        		        for(Formando f : formandos) {
+        		            modelo.addRow(new Object[] {
+        		                f.getCodigo(),
+        		                f.getNome(),
+        		                f.getApelido(),
+        		                f.getContacto(),
+        		                f.getEmail(),
+        		                f.getBi()
+        		            });
+        		        }
+        		    }catch(Exception s) {
+        		        s.printStackTrace();
+        		    }
+        		}
         		if(nomeCardView.equals("")) {
         			DefaultTableModel modelo =(DefaultTableModel) tabelaTurma.getModel();
         			String texto = txtPesquisar.getText();
@@ -523,8 +545,10 @@ public class Tela_Principal {
         btnNovo.setBorder(null);
         
         btnNovo.addActionListener(e -> {
-            if(nomeCardView.equals("Formações")) {
-                new Tela_cadastroFormacao().setVisible(true);
+        	
+           if (nomeCardView.equals("Modulos")) {
+           Tela_cadastroModulo tela = new Tela_cadastroModulo();
+                    tela.setVisible(true);
             } else if(nomeCardView.equals("Inscrições")) {
                 abrirEmJanela(new Tela_Incrição(), "Nova Inscrição", 550, 320);
             } else if(nomeCardView.equals("Turmas")) {
@@ -587,8 +611,28 @@ public class Tela_Principal {
 						s.printStackTrace();
 					}
 				}
-				
+				if(nomeCardView.equals("Formandos")) {
+				    int linhaSelecionada = tabelaFormando.getSelectedRow();
+				    if(linhaSelecionada == -1) {
+				        JOptionPane.showMessageDialog(null, "Seleccione um formando para editar.");
+				        return;
+				    }
+				    Integer codigo = (Integer) tabelaFormando.getModel().getValueAt(linhaSelecionada, 0);
+				    String nome = (String) tabelaFormando.getModel().getValueAt(linhaSelecionada, 1);
+				    String apelido = (String) tabelaFormando.getModel().getValueAt(linhaSelecionada, 2);
+				    Integer contacto = (Integer) tabelaFormando.getModel().getValueAt(linhaSelecionada, 3);
+				    String email = (String) tabelaFormando.getModel().getValueAt(linhaSelecionada, 4);
+				    String bi = (String) tabelaFormando.getModel().getValueAt(linhaSelecionada, 5);
+				    try {
+				        Tela_cadastroFormando tela = new Tela_cadastroFormando();
+				        tela.buscarFormando(codigo, nome, apelido, contacto, email, bi);
+				        abrirEmJanela(tela, "Editar Formando", 800, 480);
+				    }catch(Exception s) {
+				        s.printStackTrace();
+				    }
+				}
 			}
+			
         });
 
         JButton btnEliminar = new JButton("Eliminar");
@@ -619,6 +663,29 @@ public class Tela_Principal {
         				s.printStackTrace();
         			}
         		}
+        		if(nomeCardView.equals("Formandos")) {
+        		    int linhaSelecionada = tabelaFormando.getSelectedRow();
+        		    if(linhaSelecionada == -1) {
+        		        JOptionPane.showMessageDialog(null, "Seleccione um formando para eliminar.");
+        		        return;
+        		    }
+        		    Integer codigo = (Integer) tabelaFormando.getModel().getValueAt(linhaSelecionada, 0);
+        		    try {
+        		        int confirm = JOptionPane.showConfirmDialog(null, "Tens a certeza que deseja eliminar?", "Confirmar", JOptionPane.YES_NO_OPTION);
+        		        if(confirm == JOptionPane.YES_OPTION) {
+        		            FormandoController fc = new FormandoController();
+        		            boolean sucesso = fc.apagarFormando(codigo);
+        		            if(sucesso) {
+        		                JOptionPane.showMessageDialog(null, "Formando eliminado com sucesso");
+        		                ((DefaultTableModel) tabelaFormando.getModel()).removeRow(linhaSelecionada);
+        		            } else {
+        		                JOptionPane.showMessageDialog(null, "Falha ao eliminar");
+        		            }
+        		        }
+        		    }catch(Exception s) {
+        		        s.printStackTrace();
+        		    }
+        		}
         	}
         });
         if(nivelAcesso.equalsIgnoreCase("Operador")) {
@@ -634,19 +701,20 @@ public class Tela_Principal {
         return panelAcoes;
     }
 
-    private JPanel criarPainelFormacoes() {
+    private JPanel criarPainelModulos() {                        
         JPanel painel = new JPanel(new BorderLayout(0, 15));
         painel.setBackground(BRANCO);
         painel.setBorder(new EmptyBorder(15, 15, 15, 15));
-        painel.add(criarPainelBarraFerramentas("+ Nova Formação", modeloFormacoes, "Formações"), BorderLayout.NORTH);
+        painel.add(criarPainelBarraFerramentas("+ Novo Módulo", modeloModulos, "Modulos"), BorderLayout.NORTH);
 
         JScrollPane scrollPane = new JScrollPane();
-        JTable table = new JTable(modeloFormacoes);
+        JTable table = new JTable(modeloModulos);
         table.setRowHeight(35);
         scrollPane.setViewportView(table);
         painel.add(scrollPane, BorderLayout.CENTER);
         return painel;
     }
+
 
     private JPanel criarPainelFormadores() {
         JPanel painel = new JPanel(new BorderLayout(0, 15));
@@ -738,9 +806,9 @@ public class Tela_Principal {
         painel.add(criarPainelBarraFerramentas("+ Novo Formando", modeloFormandos, "Formandos"), BorderLayout.NORTH);
 
         JScrollPane scrollPane = new JScrollPane();
-        JTable table = new JTable(modeloFormandos);
-        table.setRowHeight(35);
-        scrollPane.setViewportView(table);
+        tabelaFormando = new JTable(modeloFormandos);
+        tabelaFormando.setRowHeight(35);
+        scrollPane.setViewportView(tabelaFormando);
         painel.add(scrollPane, BorderLayout.CENTER);
         return painel;
     }
