@@ -153,4 +153,44 @@ public class NivelDao {
 			}
 		}
 	}
+	public ArrayList<Nivel> comboNivel() throws ExceptionDao{
+		String sql = "select * from Nivel ";
+		Connection con = null;
+		PreparedStatement select = null;
+		ArrayList<Nivel> niveis = null;
+		try {
+			con = new Conexao().getConnection();
+			select = con.prepareStatement(sql);
+			ResultSet rs = select.executeQuery();
+			if(rs != null) {
+				niveis = new ArrayList<Nivel>();
+				while (rs.next()) {
+					Nivel nivel = new Nivel();
+					nivel.setCodigo(rs.getInt("codigo"));
+					nivel.setNome(rs.getString("nome"));
+					//JOptionPane.showMessageDialog(null, nivel.getCodigo()+" "+nivel.getNome());
+					niveis.add(nivel);
+					
+				}
+			}
+		}catch(SQLException sq) {
+			throw new ExceptionDao("Erro ao inserir dados");
+		}finally {
+			try{
+				if(select != null) {
+					select.close();
+				}
+			}catch(SQLException e) {
+				throw new ExceptionDao("Erro ao fechar o statemnt"+e);
+			}
+			try {
+				if(con != null) {
+					con.close();
+				}
+			}catch(SQLException s) {
+				throw new ExceptionDao("Erro ao fechar a conexao"+s);
+			}
+		}
+		return niveis;
+	}
 }

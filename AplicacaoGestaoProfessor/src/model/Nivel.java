@@ -48,6 +48,10 @@ public class Nivel {
 	public String toString() {
 		return nome;
 	}
+//	public ArrayList<Nivel> comboNivel() {
+//		
+//		return new NivelDao().comboNivel();
+//	}
 	
 	
 }

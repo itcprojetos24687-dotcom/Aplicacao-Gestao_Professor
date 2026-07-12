@@ -1,8 +1,7 @@
 package dao;
 
 import java.sql.*;
-
-
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import model.*;
@@ -49,6 +48,8 @@ public class UsuarioDao {
 
 			if (u != null) {
 				Logs log = new Logs("LOGIN", "Utilizador " + u.getUsername() + " iniciou sessão", u);
+				
+				log.setData(LocalDateTime.now());
 				new LogDao().salvar(log);
 			}
 
@@ -95,7 +96,7 @@ public class UsuarioDao {
 			insertUsuario.setInt(5, idPerfil);
 			insertUsuario.execute();
 			Usuario u = Seccao.obterUtilizador();
-			Logs log = new Logs("INSERT","Operador"+usuario.getNome()+"cadastrado",u);
+			Logs log = new Logs("INSERT","Operador "+usuario.getNome()+ " foi cadastrado",u);
 			log.salvar(log);
 			
 
@@ -531,6 +532,7 @@ public class UsuarioDao {
 	public void registarLogout(Usuario usuario) throws ExceptionDao {
 		if (usuario != null) {
 			Logs log = new Logs("LOGOUT", "Utilizador " + usuario.getUsername() + " terminou sessão", usuario);
+			log.setData(LocalDateTime.now());
 			new LogDao().salvar(log);
 		}
 	}

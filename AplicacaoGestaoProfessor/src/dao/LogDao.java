@@ -1,12 +1,16 @@
 package dao;
 import model.*;
 
-import java.sql.*;
 
+import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
 public class LogDao {
 
 	public void salvar(Logs log) throws ExceptionDao {
-		String sql = "insert into Log (id_Usuario,acao,descricao) values (?,?,?)";
+		String sql = "insert into Log (id_Usuario,acao,descricao, data) values (?,?,?,?)";
 		Connection con = null;
 		PreparedStatement stms = null;
 		try {
@@ -15,6 +19,8 @@ public class LogDao {
 			stms.setInt(1, log.getUsuario().getCodigo());
 			stms.setString(2, log.getAcao());
 			stms.setString(3, log.getDescricao());
+			stms.setObject(4, log.getData());
+			
 			stms.execute();
 
 		} catch (SQLException s) {
@@ -35,5 +41,60 @@ public class LogDao {
 				throw new ExceptionDao("Erro ao fechar a conexao ");
 			}
 		}
+	}
+	public ArrayList<Logs> listarlogs() throws ExceptionDao{
+		String sql = "select Usuario.username,Perfil.nome,acao, descricao,data from Log join Usuario on id_Usuario = idUser join Perfil on idPerfil = id";
+		Connection con = null;
+		PreparedStatement stms = null;
+		ArrayList<Logs> logs = null;
+		
+		try {
+			con = new Conexao().getConnection();
+			stms = con.prepareStatement(sql);
+			ResultSet rs = stms.executeQuery();
+			if (rs != null) {
+				logs = new ArrayList<Logs>();
+				JOptionPane.showMessageDialog(null, "NAo esta null: ");
+				while (rs.next()) {
+					Logs log = new Logs();
+					Usuario u = new Usuario();
+					Perfil p = new Perfil();
+					u.setNome(rs.getString("username"));
+					
+					p.setNome(rs.getString("nome"));
+					
+					u.setPerfil(p);
+					log.setAcao(rs.getString("acao"));
+					
+					log.setDescricao(rs.getString("descricao"));
+					
+					
+					log.setData((LocalDateTime) rs.getObject("data"));
+					
+					
+					log.setUsuario(u);
+					
+					logs.add(log);
+				}
+			}
+		}catch(SQLException s) {
+			new ExceptionDao("Erro ao fazer select de logs");
+		}finally {
+			try {
+				if(stms != null) {
+					stms.close();
+				}
+			}catch(SQLException s) {
+				new ExceptionDao("Erro ao fechar statement: "+ s);
+			}
+			try {
+				if(con != null) {
+					con.close();
+				}
+			}catch(SQLException d) {
+				new ExceptionDao("Erro ao fechar conexao " +d);
+			}
+		}
+		return logs;
 	}
 }

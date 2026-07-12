@@ -152,7 +152,7 @@ public class QualificacaoDao {
 
 	public void atualizarQualificacao(Qualificacao qc) throws ExceptionDao{
 
-		String sql = "update Qualificacao set titulo = ? where codigo = ?";
+		String sql = "update Qualificacao set titulo = ? where cod_Quali = ?";
 		Connection con = null;
 		PreparedStatement alterarQualificacao = null;
 

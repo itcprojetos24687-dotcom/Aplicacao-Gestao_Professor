@@ -144,6 +144,7 @@ public class Tela_Principal {
         	    },
         	    new String[] { "Código", "Nome", "Apelido", "Contacto", "Email", "BI" }
         	);
+        
     }
 
     private void initialize() {
@@ -198,6 +199,20 @@ public class Tela_Principal {
                 JOptionPane.showMessageDialog(frame, "Não foi possível abrir a gestão de utilizadores.", "Erro", JOptionPane.ERROR_MESSAGE);
             }
         });
+        btnLogs.addActionListener(new ActionListener () {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					cardLayout.show(panelConteudoDinamico, "Logs");
+                    
+				}catch(Exception s) {
+				
+				}
+				
+			}
+        	
+        });
         
         if (nivelAcesso.equalsIgnoreCase("Administrador")) {
             panelTopoDireita.add(btnUtilizadores);
@@ -218,21 +233,37 @@ public class Tela_Principal {
         panelConteudoDinamico = new JPanel(cardLayout);
 
         panelConteudoDinamico.add(criarPainelDashboard(), "Dashboard");
+
         panelConteudoDinamico.add(criarPainelModulos(), "Modulos");
+
         panelConteudoDinamico.add(criarPainelFormadores(), "Formadores");
         panelConteudoDinamico.add(criarPainelListaInscricoes(), "Inscrições"); 
-        panelConteudoDinamico.add(new Tela_Incrição(), "FormularioInscricao");
+        //panelConteudoDinamico.add(new Tela_Incrição(), "FormularioInscricao");
         panelConteudoDinamico.add(criarPainelMatriculas(), "Matrículas");
-        panelConteudoDinamico.add(criarPainelSalas(), "Salas");
+        //panelConteudoDinamico.add(criarPainelSalas(), "Salas");
         panelConteudoDinamico.add(criarPainelTurmas(), "Turmas");
         panelConteudoDinamico.add(criarPainelQualificacoes(), "Qualificações");
-        panelConteudoDinamico.add(new Tela_cadastroQualificação(), "FormularioQualificacao");
+        //panelConteudoDinamico.add(new Tela_cadastroQualificação(), "FormularioQualificacao");
         panelConteudoDinamico.add(criarPainelFormandos(), "Formandos");
-        panelConteudoDinamico.add(new Tela_cadastroFormando(), "FormularioCadastroFormando");
+        //panelConteudoDinamico.add(new Tela_cadastroFormando(), "FormularioCadastroFormando");
+        panelConteudoDinamico.add(new Tela_Logs(), "Logs");
         
         
         
-
+        /*Tela_Logs painelCadastradaLogs = new Tela_Logs(new Tela_Logs.OnLogsCadastradaListener() {
+			@Override
+			public void onLogsCadastrada() {
+				cardLayout.show(panelConteudoDinamico, "Logs");
+				lblTituloPagina.setText("Logs");
+				lblSubtituloPagina.setText("Gestao de Logs do Sistema");
+			}
+			@Override
+			public void oncancelar() {
+				cardLayout.show(painelCadastradaLogs, null);
+				
+			}
+		});
+        panelConteudoDinamico.add(painelCadastradaLogs, "Logs");*/
         Tela_cadastoTurma painelCadastroTurma = new Tela_cadastoTurma(new Tela_cadastoTurma.OnTurmaCadastradaListener() {
             @Override
             public void onTurmaCadastrada(String codigo, String curso, String regime, String formador) {
@@ -275,6 +306,7 @@ public class Tela_Principal {
         panelConteudoDinamico.add(painelCadastroProfessor, "FormularioCadastroProfessor");
       
         
+
         String[] menus = {"Dashboard", "Formadores","Modulos", "Inscrições", "Matrículas", "Turmas", "Qualificações","Formandos", "Cadastros ▾"};
         
         for (String menu : menus) {
@@ -413,10 +445,10 @@ public class Tela_Principal {
         JPanel painelCardsIndicadores = new JPanel(new GridLayout(1, 4, 15, 0));
         painelCardsIndicadores.setBackground(BRANCO);
 
-        painelCardsIndicadores.add(criarCardMetrica("Formadores Ativos", "3", new Color(13, 110, 253)));
-        painelCardsIndicadores.add(criarCardMetrica("Turmas em Andamento", "5", new Color(25, 135, 84)));
-        painelCardsIndicadores.add(criarCardMetrica("Total de Inscrições", "3", new Color(241, 196, 15)));
-        painelCardsIndicadores.add(criarCardMetrica("Cursos Ofertados", "8", new Color(111, 66, 193)));
+//        painelCardsIndicadores.add(criarCardMetrica("Formadores Ativos", "3", new Color(13, 110, 253)));
+//        painelCardsIndicadores.add(criarCardMetrica("Turmas em Andamento", "5", new Color(25, 135, 84)));
+//        painelCardsIndicadores.add(criarCardMetrica("Total de Inscrições", "3", new Color(241, 196, 15)));
+//        painelCardsIndicadores.add(criarCardMetrica("Cursos Ofertados", "8", new Color(111, 66, 193)));
 
         painel.add(painelCardsIndicadores, BorderLayout.NORTH);
 
@@ -558,7 +590,12 @@ public class Tela_Principal {
             } else if(nomeCardView.equals("Formadores")) {
                new Cadastro_Formador().setVisible(true); 
             } else if(nomeCardView.equals("Qualificações")) {
-                abrirEmJanela(new Tela_cadastroQualificação(), "Cadastro de Qualificação", 800, 400);
+
+            	new Tela_cadastroQualificação().setVisible(true);
+                cardLayout.show(panelConteudoDinamico, "FormularioQualificacao");
+
+                //abrirEmJanela(new Tela_cadastroQualificação(), "Cadastro de Qualificação", 800, 400);
+
             } else if(nomeCardView.equals("Formandos")) {
                 abrirEmJanela(new Tela_cadastroFormando(), "Cadastro de Formando", 800, 480);
             } else {
@@ -584,8 +621,10 @@ public class Tela_Principal {
 					String campo = (String)tabelaQualificacao.getModel().getValueAt(tabelaQualificacao.getSelectedRow(), 4);
 					
 					try {
-						new Tela_cadastroQualificação().buscarQualificacao(codigo, titulo, coordenador, nivel, campo);
-						cardLayout.show(panelConteudoDinamico, "FormularioQualificacao");
+						Tela_cadastroQualificação tq = new Tela_cadastroQualificação();
+						tq.buscarQualificacao(codigo, titulo, coordenador, nivel, campo);
+						tq.setVisible(true);
+						//cardLayout.show(panelConteudoDinamico, "FormularioQualificacao");
 						
 					}catch(Exception s) {
 						s.printStackTrace();
@@ -714,8 +753,19 @@ public class Tela_Principal {
         painel.add(scrollPane, BorderLayout.CENTER);
         return painel;
     }
+    private JPanel criarPainelLogs() {
+    	JPanel painel = new JPanel(new BorderLayout(0, 15));
+        painel.setBackground(BRANCO);
+        painel.setBorder(new EmptyBorder(15, 15, 15, 15));
+        painel.add(criarPainelBarraFerramentas("Log", modeloFormadores, "Formadores"), BorderLayout.NORTH);
 
-
+        JScrollPane scrollPane = new JScrollPane();
+        tabelaFormador= new JTable(modeloFormadores);
+        tabelaFormador.setRowHeight(35);
+        scrollPane.setViewportView(tabelaFormador);
+        painel.add(scrollPane, BorderLayout.CENTER);
+        return painel;
+    }
     private JPanel criarPainelFormadores() {
         JPanel painel = new JPanel(new BorderLayout(0, 15));
         painel.setBackground(BRANCO);
