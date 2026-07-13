@@ -7,14 +7,16 @@ import java.util.ArrayList;
 public class Quali_moduloDao {
 	
 		public void  cadastrarQuali_modulo(Quali_modulo quali_modulo) throws ExceptionDao{
-			String sql = "insert into Quali_modulo (semestre, ano_curricular) values(?,?)";
+			String sql = "insert into Quali_modulo (cod_modulo,cod_Quai,semestre) values(?,?,?)";
 			Connection con = null;
 			PreparedStatement inserir = null;
 			try {
 				con = new Conexao().getConnection();
 				inserir = con.prepareStatement(sql);
+				inserir.setInt(1, quali_modulo.getModulo().getCodigo());
+				inserir.setInt(1, quali_modulo.getQualificacao().getCodigo());
 				inserir.setString(1, quali_modulo.getSemestre());
-				inserir.setInt(2,quali_modulo.getAno_curricular());
+				
 				inserir.execute();
 			}catch(SQLException e) {
 				e.printStackTrace();
@@ -78,16 +80,17 @@ public class Quali_moduloDao {
 			return quali_modulos;
 		}
 		public void atualizarQuali_modulo(Quali_modulo quali_modulo) throws ExceptionDao{
-			String sql = "update Quali_modulo set semestre = ?, ano_curricular = ? where codigo = ?";
+			String sql = "update Quali_modulo set cod_modulo = ?, cod_Quali = ?, semestre = ? where codigo = ?";
 			PreparedStatement alterar = null;
 			Connection con = null;
 			
 			try {
 				con = new Conexao().getConnection();
 				alterar = con.prepareStatement(sql);
-				alterar.setString(1, quali_modulo.getSemestre());
-				alterar.setInt(2, quali_modulo.getAno_curricular());
-				alterar.setInt(3, quali_modulo.getCodigo());
+				alterar.setInt(1, quali_modulo.getModulo().getCodigo());
+				alterar.setInt(2, quali_modulo.getQualificacao().getCodigo());
+				alterar.setString(3, quali_modulo.getSemestre());
+				alterar.setInt(4, quali_modulo.getCodigo());
 				alterar.executeUpdate();
 				//JOptionPane.showMessageDialog(null,"Alterado com sucesso");
 			}catch(SQLException e) {

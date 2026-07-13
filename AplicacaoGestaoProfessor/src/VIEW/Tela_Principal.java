@@ -65,6 +65,7 @@ public class Tela_Principal {
     private JTable tabelaFormando;
    private  JTable tabelaMatricula;
    private JTable tabelaSala;
+   private JTable tabelaModulo;
     private final Color AZUL_ESCURO_NAV = new Color(15, 38, 70);
     private final Color AZUL_DESTAQUE   = new Color(13, 110, 253);
     private final Color FUNDO_CLARO      = new Color(244, 246, 249);
@@ -594,6 +595,27 @@ public class Tela_Principal {
         				s.printStackTrace();
         			}
         		}
+        		if(nomeCardView.equals("Modulos")) {
+        			DefaultTableModel modelo =(DefaultTableModel) tabelaModulo.getModel();
+        			String texto = txtPesquisar.getText();
+        			try {
+        				ModuloController mc = new ModuloController();
+        				
+        				ArrayList<Modulo> modulos = mc.listarModulo(texto);
+        				modelo.setRowCount(0);
+        				for(Modulo m : modulos) {
+        					modelo.addRow(new Object[] {
+        							     m.getCodigo(),
+        							     m.getCarga_horaria(),
+        							     m.getQuali_Nivel().getNivel(),
+        							    m.getQuali_Nivel().getQualificacao(),
+        							    m.getQuali_Nivel().getNivel()
+        					});
+        				}
+        			}catch(Exception s) {
+        				s.printStackTrace();
+        			}
+        		}
         		
         		
         	}
@@ -743,6 +765,28 @@ public class Tela_Principal {
 				        s.printStackTrace();
 				    }
 				}
+				if(nomeCardView.equals("Modulos")) {
+				    int linhaSelecionada = tabelaModulo.getSelectedRow();
+				    if(linhaSelecionada == -1) {
+				        JOptionPane.showMessageDialog(null, "Seleccione um Modulo para editar.");
+				        return;
+				    }
+				    Integer codigo = (Integer) tabelaModulo.getModel().getValueAt(linhaSelecionada, 0);
+				    String nome = (String) tabelaModulo.getModel().getValueAt(linhaSelecionada, 1);
+				    Integer carga_horaria = (Integer) tabelaModulo.getModel().getValueAt(linhaSelecionada, 2);
+				    String semestre = (String) tabelaModulo.getModel().getValueAt(linhaSelecionada, 3);
+				    Qualificacao q = (Qualificacao) tabelaModulo.getModel().getValueAt(linhaSelecionada, 4);
+				    Nivel nivel = (Nivel) tabelaModulo.getModel().getValueAt(linhaSelecionada, 5);
+				    try {
+				    	Tela_cadastroModulo tela = new Tela_cadastroModulo();
+				    	tela.buscarModulo(codigo, nome, carga_horaria, semestre, q, nivel);
+				    	tela.setVisible(true);
+				       
+				        
+				    }catch(Exception s) {
+				        s.printStackTrace();
+				    }
+				}
 				
 			}
 			
@@ -814,7 +858,7 @@ public class Tela_Principal {
         		            boolean sucesso = tc.apagarTurma(codigo);
         		            if(sucesso) {
         		                JOptionPane.showMessageDialog(null, "Turma eliminada com sucesso");
-        		                ((DefaultTableModel) tabelaFormando.getModel()).removeRow(linhaSelecionada);
+        		                ((DefaultTableModel) tabelaTurma.getModel()).removeRow(linhaSelecionada);
         		            } else {
         		                JOptionPane.showMessageDialog(null, "Falha ao eliminar");
         		            }
@@ -829,7 +873,7 @@ public class Tela_Principal {
         		        JOptionPane.showMessageDialog(null, "Seleccione uma Matricula para eliminar.");
         		        return;
         		    }
-        		    Integer codigo = (Integer) tabelaTurma.getModel().getValueAt(linhaSelecionada, 0);
+        		    Integer codigo = (Integer) tabelaMatricula.getModel().getValueAt(linhaSelecionada, 0);
         		    try {
         		        int confirm = JOptionPane.showConfirmDialog(null, "Tens a certeza que deseja eliminar?", "Confirmar", JOptionPane.YES_NO_OPTION);
         		        if(confirm == JOptionPane.YES_OPTION) {
@@ -838,7 +882,31 @@ public class Tela_Principal {
         		            boolean sucesso = mc.apagarMatricula(codigo);
         		            if(sucesso) {
         		                JOptionPane.showMessageDialog(null, "Matricula eliminada com sucesso");
-        		                ((DefaultTableModel) tabelaFormando.getModel()).removeRow(linhaSelecionada);
+        		                ((DefaultTableModel) tabelaModulo.getModel()).removeRow(linhaSelecionada);
+        		            } else {
+        		                JOptionPane.showMessageDialog(null, "Falha ao eliminar");
+        		            }
+        		        }
+        		    }catch(Exception s) {
+        		        s.printStackTrace();
+        		    }
+        		}
+        		if(nomeCardView.equals("Modulos")) {
+        		    int linhaSelecionada = tabelaModulo.getSelectedRow();
+        		    if(linhaSelecionada == -1) {
+        		        JOptionPane.showMessageDialog(null, "Seleccione uma Modulo para eliminar.");
+        		        return;
+        		    }
+        		    Integer codigo = (Integer) tabelaModulo.getModel().getValueAt(linhaSelecionada, 0);
+        		    try {
+        		        int confirm = JOptionPane.showConfirmDialog(null, "Tens a certeza que deseja eliminar?", "Confirmar", JOptionPane.YES_NO_OPTION);
+        		        if(confirm == JOptionPane.YES_OPTION) {
+        		            ModuloController mc = new ModuloController();
+        		       
+        		            boolean sucesso = mc.apagarModulo(codigo);
+        		            if(sucesso) {
+        		                JOptionPane.showMessageDialog(null, "Modulo eliminada com sucesso");
+        		                ((DefaultTableModel) tabelaModulo.getModel()).removeRow(linhaSelecionada);
         		            } else {
         		                JOptionPane.showMessageDialog(null, "Falha ao eliminar");
         		            }
@@ -869,9 +937,9 @@ public class Tela_Principal {
         painel.add(criarPainelBarraFerramentas("+ Novo Módulo", modeloModulos, "Modulos"), BorderLayout.NORTH);
 
         JScrollPane scrollPane = new JScrollPane();
-        JTable table = new JTable(modeloModulos);
-        table.setRowHeight(35);
-        scrollPane.setViewportView(table);
+        tabelaModulo = new JTable(modeloModulos);
+        tabelaModulo.setRowHeight(35);
+        scrollPane.setViewportView(tabelaModulo);
         painel.add(scrollPane, BorderLayout.CENTER);
         return painel;
     }

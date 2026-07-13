@@ -10,8 +10,22 @@ public class Modulo {
 	private String nome;
 	private int carga_horaria;
 	private ArrayList<Licao> licoes;
-	private ArrayList<Quali_modulo> quali_modulo;
+	private Quali_modulo quali_modulo;
+	public void setQuali_modulo(Quali_modulo quali_modulo) {
+		this.quali_modulo = quali_modulo;
+	}
+	private Quali_Nivel quali_Nivel;
 	
+	
+
+	public Quali_Nivel getQuali_Nivel() {
+		return quali_Nivel;
+	}
+
+	public void setQuali_Nivel(Quali_Nivel quali_Nivel) {
+		this.quali_Nivel = quali_Nivel;
+	}
+
 	public Modulo() {
 		
 	}
