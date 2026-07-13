@@ -1,5 +1,5 @@
 package dao;
-import model.Matricula;
+import model.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -14,14 +14,16 @@ public class MatriculaDao {
 	public void cadastrarMatricula(Matricula matricula) throws ExceptionDao{
 		
 		
-		String sql = "insert into Matricula(data_matricula, ano_lectivo)" + "values(?,?)";
+		String sql = "insert into Matricula(cod_formando,cod_Quali,data)" + " values(?,?,?)";
 		PreparedStatement InsertMatricula = null;
 		try {
 			
 			con = new Conexao().getConnection();
 			InsertMatricula = con.prepareStatement(sql);
-			InsertMatricula.setInt(1, matricula.getData_matricula());
-			InsertMatricula.setInt(2, matricula.getAno_lectivo());
+			InsertMatricula.setInt(1, matricula.getFormando().getCodigo());
+			InsertMatricula.setInt(2, matricula.getQualificacao().getCodigo());
+			InsertMatricula.setString(3, matricula.getData_matricula());
+			
 			InsertMatricula.execute();
 			
 		}catch(SQLException e) {
@@ -46,9 +48,13 @@ public class MatriculaDao {
 		}
 	}
 }
-	public ArrayList<Matricula> listarMatricula(String ano_lectivo ) throws ExceptionDao{
+	public ArrayList<Matricula> listarMatricula(String data) throws ExceptionDao{
 		
-		String sql = "select * from Matricula where ano_lectivo like '%" + ano_lectivo + "%'";
+		String sql = "select Matricula.codigo, nome_formando,apelido_formando, titulo, Nivel.nome as nivel, data from Matricula"
+				+ " join Formando on codigo_formando = cod_formando "
+				+ "join Qualificacao on Qualificacao.cod_Quali = Matricula.cod_Quali "
+				+ "join Quali_Nivel on Qualificacao.cod_Quali= Quali_Nivel.cod_Quali "
+				+ "join Nivel on Nivel.codigo= cod_Nivel";
 		PreparedStatement listarMatricula = null;
 		ArrayList <Matricula> matriculas = null;
 		
@@ -60,13 +66,21 @@ public class MatriculaDao {
 				if (rs != null) {
 					matriculas = new ArrayList();
 					while(rs.next()) {
-					Matricula matricula = new Matricula(); 
+					Formando f = new Formando();
+					Qualificacao q = new Qualificacao();
+					Nivel n = new Nivel();
+					int codigo = rs.getInt("codigo");
+					f.setNome(rs.getString("nome_formando"));
+					f.setApelido(rs.getString("apelido_formando"));
 					
-					matricula.setCodigo(rs.getInt("codigo"));
-					matricula.setData_matricula(rs.getInt("data_matricula"));
-					matricula.setAno_lectivo(rs.getInt("ano_lectivo"));
+					q.setTitulo(rs.getString("titulo"));
+					n.setNome(rs.getString("nivel"));
+					String data1 = rs.getString("data");
+					
+					 Matricula matricula = new Matricula(f,q,n,data1); 
+					 matricula.setCodigo(codigo);
 					matriculas.add(matricula);
-					//JOptionPane.showMessageDialog(null, "Adicionado com sucesso");
+				
 					
 					}
 				}
@@ -98,14 +112,16 @@ public class MatriculaDao {
 			
 	}
 	public void atualizarMatricula(Matricula matricula) {
-		String  sql = "update Matricula set data_matricula = ?, ano_lectivo = ? where codigo = ?";
+		String  sql = "update Matricula set cod_formando = ?, cod_Quali = ? ,data_matricula = ? where codigo = ?";
 		PreparedStatement alterarMatricula = null;
 		
 		try {
 			con = new Conexao().getConnection();
 			alterarMatricula = con.prepareStatement(sql);
-			alterarMatricula.setInt(1, matricula.getData_matricula());
-			alterarMatricula.setInt(2, matricula.getAno_lectivo());
+			alterarMatricula.setInt(1, matricula.getFormando().getCodigo());
+			alterarMatricula.setInt(2, matricula.getQualificacao().getCodigo());
+			alterarMatricula.setString(3, matricula.getData_matricula());
+			
 			alterarMatricula.setInt(3, matricula.getCodigo());
 		}catch(SQLException e) {
 			//JOptionPane.showMessageDialog(null,"Erro ao alterar");

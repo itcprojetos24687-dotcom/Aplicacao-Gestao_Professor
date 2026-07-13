@@ -19,7 +19,9 @@ public class FormandoController {
         }
         return false;
     }
-    
+    public ArrayList<Formando> comboFormando() throws ExceptionDao {
+        return new Formando().comboFormando();
+    }
     public ArrayList<Formando> listarFormando(String nome) throws ExceptionDao {
         return new Formando().listarFormando(nome);
     }

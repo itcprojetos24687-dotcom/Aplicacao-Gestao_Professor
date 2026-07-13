@@ -2,6 +2,9 @@ package dao;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+
 import model.*;
 public class QualificacaoDao {
 
@@ -53,6 +56,7 @@ public class QualificacaoDao {
 		Connection con = null;
 		PreparedStatement comboQualificacao = null;
 		ArrayList<Qualificacao> qualificacoes = null;
+		
 
 		try {
 			con = new Conexao().getConnection();

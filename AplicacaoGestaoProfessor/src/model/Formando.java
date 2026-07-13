@@ -77,6 +77,10 @@ public class Formando {
     public void cadastrarFormando(Formando formando) throws ExceptionDao {
         new FormandoDao().cadastrarFormando(formando);
     }
+    public ArrayList<Formando> comboFormando() throws ExceptionDao {
+    	
+        return new FormandoDao().comboFormando();
+    }
     
     public ArrayList<Formando> listarFormando(String nome) throws ExceptionDao {
         return new FormandoDao().listarFormando(nome);
@@ -87,13 +91,12 @@ public class Formando {
     }
     
     public void apagarFormando(Formando formando) throws ExceptionDao {
-        JOptionPane.showMessageDialog(null, "Chamado no model com sucesso");
+        
         new FormandoDao().apagarFormando(formando);
     }
 
     @Override
     public String toString() {
-        return "Formando [codigo=" + codigo + ", nome=" + nome + ", apelido=" + apelido + ", contacto=" + contacto
-                + ", email=" + email + ", bi=" + bi + "]";
+        return nome + " "+ apelido ;
     }
 }

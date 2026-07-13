@@ -11,17 +11,20 @@ public class Matricula {
 	private int codigo;
 	private Qualificacao qualificacao;
 	private Formando formando;
-	private int data_matricula;
-	private int ano_lectivo;
+	private String data_matricula;
+	private Nivel nivel;
 	
 	
 	public Matricula () {
 		
 	}
 	
-	public Matricula(int data_matricula, int ano_lectivo) {
+	public Matricula(Formando f, Qualificacao q,Nivel n, String data_matricula) {
+		formando = f;
+		qualificacao = q;
+		nivel = n;
 		this.data_matricula = data_matricula;
-		this.ano_lectivo = ano_lectivo;
+		
 	}
 
 	
@@ -33,24 +36,44 @@ public class Matricula {
 		this.codigo = codigo;
 	}
 	
-	public int getData_matricula() {
+	public String getData_matricula() {
 		return data_matricula;
 	}
-	public void setData_matricula(int data_matricula) {
+	public void setData_matricula(String data_matricula) {
 		this.data_matricula = data_matricula;
 	}
 
 
 
-	public int getAno_lectivo() {
-		return ano_lectivo;
+	
+	public Qualificacao getQualificacao() {
+		return qualificacao;
+	}
+
+	public void setQualificacao(Qualificacao qualificacao) {
+		this.qualificacao = qualificacao;
+	}
+
+	public Formando getFormando() {
+		return formando;
+	}
+
+	public void setFormando(Formando formando) {
+		this.formando = formando;
+	}
+
+	public Nivel getNivel() {
+		return nivel;
+	}
+
+	public void setNivel(Nivel nivel) {
+		this.nivel = nivel;
 	}
 
 
 
-	public void setAno_lectivo(int ano_lectivo) {
-		this.ano_lectivo = ano_lectivo;
-	}
+
+	
 	public void cadastrarMatricula(Matricula matricula) throws ExceptionDao{
 		new MatriculaDao().cadastrarMatricula(matricula);
 	}
@@ -68,7 +91,7 @@ public class Matricula {
 
 	@Override
 	public String toString() {
-		return "Matricula [codigo=" + codigo + ", data_matricula=" + data_matricula + ", ano_lectivo=" + ano_lectivo
+		return "Matricula [codigo=" + codigo + ", data_matricula=" + data_matricula + ", ano_lectivo=" 
 				+ "]";
 	}
 	

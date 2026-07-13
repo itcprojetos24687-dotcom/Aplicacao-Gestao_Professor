@@ -6,6 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+
 import dao.Conexao; 
 
 public class FormandoDao {
@@ -45,6 +48,53 @@ public class FormandoDao {
         }
     }
 
+    public ArrayList<Formando> comboFormando() throws ExceptionDao {
+        // CORRIGIDO: O filtro agora busca na coluna 'nome_formando'
+        String sql = "select * from Formando ";
+        PreparedStatement listarFormando = null;
+        ArrayList<Formando> formandos = null;
+        
+        
+        try {
+            con = new Conexao().getConnection();
+            listarFormando = con.prepareStatement(sql);
+            ResultSet rs = listarFormando.executeQuery();
+            
+            if (rs != null) {
+                formandos = new ArrayList<>();
+                while (rs.next()) {
+                    Formando formando = new Formando(); 
+                    // CORRIGIDO: rs.get de acordo com os nomes reais da tabela SQL
+                    formando.setCodigo(rs.getInt("codigo_formando"));
+                    formando.setNome(rs.getString("nome_formando"));
+                    formando.setApelido(rs.getString("apelido_formando"));
+                    formando.setContacto(rs.getInt("contacto_formando"));
+                    formando.setEmail(rs.getString("email"));
+                    formando.setBi(rs.getString("BI"));
+                    
+                    formandos.add(formando);
+                }
+            }
+        } catch (SQLException ex) {
+            throw new ExceptionDao("Erro ao selecionar dados: " + ex);
+        } finally {
+            try {
+                if (listarFormando != null) {
+                    listarFormando.close();
+                }
+            } catch (SQLException es) {
+                throw new ExceptionDao("Erro ao fechar o statement: " + es);
+            }
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException sq) {
+                throw new ExceptionDao("Erro ao fechar conexao: " + sq);
+            }
+        }
+        return formandos;
+    }
     public ArrayList<Formando> listarFormando(String nome) throws ExceptionDao {
         // CORRIGIDO: O filtro agora busca na coluna 'nome_formando'
         String sql = "select * from Formando where nome_formando like '%" + nome + "%'";

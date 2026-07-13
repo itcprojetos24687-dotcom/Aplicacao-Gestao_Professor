@@ -1,5 +1,5 @@
 package controller;
-import model.Matricula;
+import model.*;
 import dao.ExceptionDao;
 import java.util.Scanner;
 import javax.swing.JOptionPane;
@@ -7,10 +7,10 @@ import java.util.ArrayList;
 public class MatriculaController {
 	static Scanner sc = new Scanner(System.in);
 	
-	public boolean cadastrarMatricula(int data_matricula, int ano_lectivo)
+	public boolean cadastrarMatricula(Formando f, Qualificacao q, Nivel n,String data_matricula)
 	throws ExceptionDao{
-		if(data_matricula > 0 && ano_lectivo > 0){
-			Matricula matricula = new Matricula(data_matricula, ano_lectivo);
+		if(f != null && q != null &&n != null && data_matricula.length() > 0 ){
+			Matricula matricula = new Matricula(f,q,n,data_matricula);
 			matricula.cadastrarMatricula(matricula);
 			return true;
 		}
@@ -19,16 +19,18 @@ public class MatriculaController {
 	public ArrayList<Matricula> listarMatricula(String ano_lectivo) throws ExceptionDao{
 		return new Matricula().listarMatricula(ano_lectivo);
 	}
-	public boolean atualizarMatricula(int codigo, int data_matricula, int ano_lectivo)
+	public boolean atualizarMatricula(int codigo,Formando f, Qualificacao q, Nivel n,String data_matricula)
 			throws ExceptionDao{
-				if(codigo != 0 && data_matricula > 0 && ano_lectivo > 0){
-					Matricula matricula = new Matricula(data_matricula, ano_lectivo);
+				if(codigo > 0 && f != null && q != null &&n != null && data_matricula.length() > 0 ){
+					Matricula matricula = new Matricula(f,q,n,data_matricula);
 					matricula.setCodigo(codigo);
+					JOptionPane.showMessageDialog(null, matricula);
 					matricula.atualizarMatricula(matricula);
 					return true;
 				}
 				return false;
 				}
+	
 	public boolean apagarMatricula(int codigo) throws ExceptionDao{
 		if(codigo != 0) {
 			Matricula matricula = new Matricula();
