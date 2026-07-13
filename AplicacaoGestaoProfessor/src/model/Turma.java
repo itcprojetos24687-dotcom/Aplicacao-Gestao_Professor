@@ -11,6 +11,15 @@ public class Turma {
 	private ArrayList<Licao> licoes;
 	private Diretor_Turma diretor_turma;
 	private Qualificacao qualificacao;
+	private Quali_Nivel quali_nivel;
+
+	public Quali_Nivel getQuali_nivel() {
+		return quali_nivel;
+	}
+
+	public void setQuali_nivel(Quali_Nivel quali_nivel) {
+		this.quali_nivel = quali_nivel;
+	}
 
 	public Qualificacao getQualificacao() {
 		return qualificacao;

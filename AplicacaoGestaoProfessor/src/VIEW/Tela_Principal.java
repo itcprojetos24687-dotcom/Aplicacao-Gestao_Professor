@@ -63,6 +63,8 @@ public class Tela_Principal {
     private JTable tabelaFormador;
     private JTable tabelaTurma;
     private JTable tabelaFormando;
+   private  JTable tabelaMatricula;
+   private JTable tabelaSala;
     private final Color AZUL_ESCURO_NAV = new Color(15, 38, 70);
     private final Color AZUL_DESTAQUE   = new Color(13, 110, 253);
     private final Color FUNDO_CLARO      = new Color(244, 246, 249);
@@ -103,14 +105,14 @@ public class Tela_Principal {
             new Object[][] {
                 {"MAT-101", "Ana Martins", "Turma A", "Sala 03", "06/07/2026"}
             },
-            new String[] { "Nº Matrícula", "Aluno", "Turma", "Sala Alocada", "Data Matrícula" }
+            new String[] { "Nº Matrícula", "Formando", "Qualificacao", "Nivel", "Data Matrícula" }
         );
 
         modeloTurmas = new DefaultTableModel(
             new Object[][] {
                 
             },
-            new String[] { "Código", "Nome Turma", "Ano_Lectivo", "turno","Diretor Turma", "Qualificacao" }
+            new String[] { "Código", "Nome Turma", "Ano_Lectivo", "turno","Diretor Turma", "Qualificacao", "Nivel" }
         );
 
         modeloFormadores = new DefaultTableModel(
@@ -122,25 +124,25 @@ public class Tela_Principal {
 
         modeloModulos = new DefaultTableModel(
                 new Object[][] {
-                    {"Programação Web Full Stack", "240 horas", "2º Semestre", "Licenciatura", "Nível 3"}
+                    
                 },
                 new String[] { "Nome do Módulo", "Carga Horária", "Semestres", "Qualificação", "Nível da Qualificação" }
             );
         modeloSalas = new DefaultTableModel(
             new Object[][] {
-                {"Sala 01", "Bloco A", "30 Lugares", "Laboratório de Informática"}
+                
             },
             new String[] { "Identificação", "Localização", "Capacidade", "Tipo de Sala" }
         );
         modeloQualificacoes = new DefaultTableModel(
         	    new Object[][] {
-        	        {"QUAL-001", "Programação Web","Edmundo Mapotere", "CV4", "Informatica"}
+        	        
         	    },
         	    new String[] { "Codigo","Nome da Qualificacao","Coordenador", "Nivel da Qualificacao", "Campo Pertencente" }
         	);
         modeloFormandos = new DefaultTableModel(
         	    new Object[][] {
-        	        {"FORM-001", "Edmundo", "Mapotere", "876543211", "edmundo@gmail.com", "123456789A"}
+        	        
         	    },
         	    new String[] { "Código", "Nome", "Apelido", "Contacto", "Email", "BI" }
         	);
@@ -503,6 +505,29 @@ public class Tela_Principal {
         				s.printStackTrace();
         			}
         		}
+        		if(nomeCardView.equals("Turmas")) {
+        			
+        			DefaultTableModel modelo = (DefaultTableModel) tabelaTurma.getModel();
+        			String texto = txtPesquisar.getText();
+        			try {
+        				TurmaController tc = new TurmaController();
+        				ArrayList<Turma> turmas = tc.listarTurma(texto);
+        				modelo.setRowCount(0);
+        				for(Turma t: turmas) {
+        					modelo.addRow(new Object[] {
+        							      t.getCodigo(),
+        							      t.getNome(),
+        							      t.getAno_ingresso(),
+        							      t.getTurno(),
+        							      t.getDiretor_turma().getFomador().getNome(),
+        							      t.getQuali_nivel().getQualificacao().getTitulo(),
+        							      t.getQuali_nivel().getNivel().getNome()
+        					});
+        				}
+        			}catch(Exception s) {
+        				s.printStackTrace();
+        			}
+        		}
         		if(nomeCardView.equals("Formadores")) {
         			DefaultTableModel modelo = (DefaultTableModel) tabelaFormador.getModel();
         			String texto = txtPesquisar.getText();
@@ -548,15 +573,22 @@ public class Tela_Principal {
         		        s.printStackTrace();
         		    }
         		}
-        		if(nomeCardView.equals("")) {
-        			DefaultTableModel modelo =(DefaultTableModel) tabelaTurma.getModel();
+        		if(nomeCardView.equals("Matrículas")) {
+        			DefaultTableModel modelo =(DefaultTableModel) tabelaMatricula.getModel();
         			String texto = txtPesquisar.getText();
         			try {
-        				TurmaController tc = new TurmaController();
-        				ArrayList<Turma> turmas = tc.listarTurma(texto);
+        				MatriculaController mc = new MatriculaController();
+        				
+        				ArrayList<Matricula> matriculas = mc.listarMatricula(texto);
         				modelo.setRowCount(0);
-        				for(Turma t : turmas) {
-        					
+        				for(Matricula m : matriculas) {
+        					modelo.addRow(new Object[] {
+        							     m.getCodigo(),
+        							     m.getFormando(),
+        							     m.getQualificacao(),
+        							    m.getNivel(),
+        							    m.getData_matricula()
+        					});
         				}
         			}catch(Exception s) {
         				s.printStackTrace();
@@ -584,7 +616,7 @@ public class Tela_Principal {
             } else if(nomeCardView.equals("Inscrições")) {
                 abrirEmJanela(new Tela_Incrição(), "Nova Inscrição", 550, 320);
             } else if(nomeCardView.equals("Turmas")) {
-                new Tela_cadastoTurma().setVisible(true);
+                new Cadastro_Turma().frame.setVisible(true);
             } else if(nomeCardView.equals("Matrículas")) {
                 new Tela_Matricula().setVisible(true);
             } else if(nomeCardView.equals("Formadores")) {
@@ -650,10 +682,31 @@ public class Tela_Principal {
 						s.printStackTrace();
 					}
 				}
+				if(nomeCardView.equals("Turmas")) {
+				    int linhaSelecionada = tabelaTurma.getSelectedRow();
+				    if(linhaSelecionada == -1) {
+				        JOptionPane.showMessageDialog(null, "Seleccione um formando para editar.");
+				        return;
+				    }
+				    Integer codigo = (Integer) tabelaTurma.getModel().getValueAt(linhaSelecionada, 0);
+				    String nome = (String) tabelaTurma.getModel().getValueAt(linhaSelecionada, 1);
+				    Integer Ano_Lectivo = (Integer) tabelaTurma.getModel().getValueAt(linhaSelecionada, 2);
+				    String turno = (String) tabelaTurma.getModel().getValueAt(linhaSelecionada, 3);
+				    String Diretor_Turma = (String) tabelaTurma.getModel().getValueAt(linhaSelecionada, 4);
+				    String Qualificacao = (String) tabelaTurma.getModel().getValueAt(linhaSelecionada, 5);
+				    String nivel = (String) tabelaTurma.getModel().getValueAt(linhaSelecionada, 6);
+				    try {
+				        Cadastro_Turma cd = new Cadastro_Turma();
+				        cd.buscarTurma(codigo, nome, Ano_Lectivo,turno,Diretor_Turma,Qualificacao,nivel);
+				       cd.frame.setVisible(true);
+				    }catch(Exception s) {
+				        s.printStackTrace();
+				    }
+				}
 				if(nomeCardView.equals("Formandos")) {
 				    int linhaSelecionada = tabelaFormando.getSelectedRow();
 				    if(linhaSelecionada == -1) {
-				        JOptionPane.showMessageDialog(null, "Seleccione um formando para editar.");
+				        JOptionPane.showMessageDialog(null, "Seleccione uma Turma para editar.");
 				        return;
 				    }
 				    Integer codigo = (Integer) tabelaFormando.getModel().getValueAt(linhaSelecionada, 0);
@@ -670,6 +723,27 @@ public class Tela_Principal {
 				        s.printStackTrace();
 				    }
 				}
+				if(nomeCardView.equals("Matrículas")) {
+				    int linhaSelecionada = tabelaMatricula.getSelectedRow();
+				    if(linhaSelecionada == -1) {
+				        JOptionPane.showMessageDialog(null, "Seleccione uma Matricula para editar.");
+				        return;
+				    }
+				    Integer codigo = (Integer) tabelaMatricula.getModel().getValueAt(linhaSelecionada, 0);
+				    Formando formando = (Formando) tabelaMatricula.getModel().getValueAt(linhaSelecionada, 1);
+				    Qualificacao qualificacao = (Qualificacao) tabelaMatricula.getModel().getValueAt(linhaSelecionada, 2);
+				    Nivel nivel = (Nivel) tabelaMatricula.getModel().getValueAt(linhaSelecionada, 3);
+				    String data = (String) tabelaMatricula.getModel().getValueAt(linhaSelecionada, 4);
+				   
+				    try {
+				        Tela_Matricula tm = new Tela_Matricula();
+				        tm.buscarMatricula(codigo,formando, qualificacao, nivel, data);
+				        tm.setVisible(true);
+				    }catch(Exception s) {
+				        s.printStackTrace();
+				    }
+				}
+				
 			}
 			
         });
@@ -716,6 +790,54 @@ public class Tela_Principal {
         		            boolean sucesso = fc.apagarFormando(codigo);
         		            if(sucesso) {
         		                JOptionPane.showMessageDialog(null, "Formando eliminado com sucesso");
+        		                ((DefaultTableModel) tabelaFormando.getModel()).removeRow(linhaSelecionada);
+        		            } else {
+        		                JOptionPane.showMessageDialog(null, "Falha ao eliminar");
+        		            }
+        		        }
+        		    }catch(Exception s) {
+        		        s.printStackTrace();
+        		    }
+        		}
+        		if(nomeCardView.equals("Turmas")) {
+        		    int linhaSelecionada = tabelaTurma.getSelectedRow();
+        		    if(linhaSelecionada == -1) {
+        		        JOptionPane.showMessageDialog(null, "Seleccione uma Turma para eliminar.");
+        		        return;
+        		    }
+        		    Integer codigo = (Integer) tabelaTurma.getModel().getValueAt(linhaSelecionada, 0);
+        		    try {
+        		        int confirm = JOptionPane.showConfirmDialog(null, "Tens a certeza que deseja eliminar?", "Confirmar", JOptionPane.YES_NO_OPTION);
+        		        if(confirm == JOptionPane.YES_OPTION) {
+        		            TurmaController tc= new TurmaController();
+        		       
+        		            boolean sucesso = tc.apagarTurma(codigo);
+        		            if(sucesso) {
+        		                JOptionPane.showMessageDialog(null, "Turma eliminada com sucesso");
+        		                ((DefaultTableModel) tabelaFormando.getModel()).removeRow(linhaSelecionada);
+        		            } else {
+        		                JOptionPane.showMessageDialog(null, "Falha ao eliminar");
+        		            }
+        		        }
+        		    }catch(Exception s) {
+        		        s.printStackTrace();
+        		    }
+        		}
+        		if(nomeCardView.equals("Matrículas")) {
+        		    int linhaSelecionada = tabelaMatricula.getSelectedRow();
+        		    if(linhaSelecionada == -1) {
+        		        JOptionPane.showMessageDialog(null, "Seleccione uma Matricula para eliminar.");
+        		        return;
+        		    }
+        		    Integer codigo = (Integer) tabelaTurma.getModel().getValueAt(linhaSelecionada, 0);
+        		    try {
+        		        int confirm = JOptionPane.showConfirmDialog(null, "Tens a certeza que deseja eliminar?", "Confirmar", JOptionPane.YES_NO_OPTION);
+        		        if(confirm == JOptionPane.YES_OPTION) {
+        		            MatriculaController mc = new MatriculaController();
+        		       
+        		            boolean sucesso = mc.apagarMatricula(codigo);
+        		            if(sucesso) {
+        		                JOptionPane.showMessageDialog(null, "Matricula eliminada com sucesso");
         		                ((DefaultTableModel) tabelaFormando.getModel()).removeRow(linhaSelecionada);
         		            } else {
         		                JOptionPane.showMessageDialog(null, "Falha ao eliminar");
@@ -801,9 +923,9 @@ public class Tela_Principal {
         painel.add(criarPainelBarraFerramentas("+ Nova Matrícula", modeloMatriculas, "Matrículas"), BorderLayout.NORTH);
 
         JScrollPane scrollPane = new JScrollPane();
-        JTable table = new JTable(modeloMatriculas);
-        table.setRowHeight(35);
-        scrollPane.setViewportView(table);
+        tabelaMatricula = new JTable(modeloMatriculas);
+        tabelaMatricula.setRowHeight(35);
+        scrollPane.setViewportView(tabelaMatricula);
         painel.add(scrollPane, BorderLayout.CENTER);
         return painel;
     }
@@ -815,9 +937,9 @@ public class Tela_Principal {
         painel.add(criarPainelBarraFerramentas("+ Nova Sala", modeloSalas, "Salas"), BorderLayout.NORTH);
 
         JScrollPane scrollPane = new JScrollPane();
-        JTable table = new JTable(modeloSalas);
-        table.setRowHeight(35);
-        scrollPane.setViewportView(table);
+        tabelaSala = new JTable(modeloSalas);
+        tabelaSala.setRowHeight(35);
+        scrollPane.setViewportView(tabelaSala);
         painel.add(scrollPane, BorderLayout.CENTER);
         return painel;
     }

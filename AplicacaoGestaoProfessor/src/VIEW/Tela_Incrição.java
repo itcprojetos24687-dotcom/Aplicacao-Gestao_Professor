@@ -17,6 +17,8 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.DefaultComboBoxModel;
+import controller.InscricaoController;
+import dao.ExceptionDao;
 
 public class Tela_Incrição extends JPanel {
 
@@ -25,6 +27,8 @@ public class Tela_Incrição extends JPanel {
     private JTextField txtNomeFormando, txtDataInscricao;
     private JComboBox<String> comboModulo, comboSemestre;
     private JButton btnGravar, btnLimpar;
+    
+    private InscricaoController inscricaoController;
 
     private final Color AZUL_ESCURO_NAV = new Color(15, 38, 70);
     private final Color AZUL_DESTAQUE   = new Color(13, 110, 253);
@@ -35,6 +39,9 @@ public class Tela_Incrição extends JPanel {
         setLayout(new BorderLayout(0, 15));
         setBackground(BRANCO);
         setBorder(new EmptyBorder(15, 15, 15, 15));
+        
+        // Inicializar o controller
+        inscricaoController = new InscricaoController();
 
         Font fontLabel = new Font("Segoe UI", Font.BOLD, 13);
         Font fontText = new Font("Segoe UI", Font.PLAIN, 13);
@@ -117,8 +124,27 @@ public class Tela_Incrição extends JPanel {
             return;
         }
 
-        JOptionPane.showMessageDialog(this, "Inscrição efetuada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-        limparCampos();
+        try {
+            // Converter data de String (dd/MM/yyyy) para int (timestamp ou apenas o valor)
+            // Aqui estou usando apenas o comprimento da string como exemplo
+            // Ajuste conforme sua lógica de data_inscricao
+            int dataInscricao = Integer.parseInt(data.replaceAll("[^0-9]", "").substring(0, 8));
+            
+            // Chamar o controller para salvar na base de dados
+            boolean sucesso = inscricaoController.cadastrarInscricao(dataInscricao, semestre);
+            
+            if (sucesso) {
+                JOptionPane.showMessageDialog(this, "Inscrição efetuada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                limparCampos();
+            } else {
+                JOptionPane.showMessageDialog(this, "Erro ao salvar a inscrição. Verifique os dados.", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (ExceptionDao e) {
+            JOptionPane.showMessageDialog(this, "Erro na base de dados: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Erro ao processar a data. Use o formato dd/MM/yyyy.", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void limparCampos() {

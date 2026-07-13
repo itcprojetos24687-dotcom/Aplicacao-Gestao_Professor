@@ -22,7 +22,7 @@ public class QualificacaoController {
 				
 				if(sucesso) {
 					Quali_NivelController qn = new Quali_NivelController();
-					sucesso = qn.cadastrarQuali_Nivel(nivel,qc);
+					Quali_Nivel QN = qn.cadastrarQuali_Nivel(nivel,qc);
 					return true;
 			}
 		}

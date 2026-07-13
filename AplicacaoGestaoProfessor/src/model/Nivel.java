@@ -12,6 +12,10 @@ public class Nivel {
 	public Nivel() {
 		
 	}
+	public Nivel(int codigo, String nome) {
+		this.codigo = codigo;
+		this.nome = nome;
+	}
 	public Nivel(String nome) {
 		this.nome = nome;
 	}

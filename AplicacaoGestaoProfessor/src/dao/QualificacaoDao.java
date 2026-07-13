@@ -2,6 +2,9 @@ package dao;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+
 import model.*;
 public class QualificacaoDao {
 
@@ -25,7 +28,6 @@ public class QualificacaoDao {
 			Usuario u = Seccao.obterUtilizador();
 			if (u != null) {
 				Logs log = new Logs("INSERT", "Qualificação " + qc.getTitulo() + " Foi cadastrada ", u);
-				
 				log.setData(LocalDateTime.now());
 				new LogDao().salvar(log);
 			}
@@ -55,6 +57,7 @@ public class QualificacaoDao {
 		Connection con = null;
 		PreparedStatement comboQualificacao = null;
 		ArrayList<Qualificacao> qualificacoes = null;
+		
 
 		try {
 			con = new Conexao().getConnection();
@@ -187,7 +190,7 @@ public class QualificacaoDao {
 
 	public void apagarQualificacao(Qualificacao qc) throws ExceptionDao{
 
-		String sql = "delete from Qualificacao where codigo=?";
+		String sql = "delete from Qualificacao where cod_Quali=?";
 		Connection con = null;
 		PreparedStatement apagarQualificacao = null;
 		try {

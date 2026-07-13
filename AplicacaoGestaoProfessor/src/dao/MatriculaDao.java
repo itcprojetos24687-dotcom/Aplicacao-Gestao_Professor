@@ -3,6 +3,9 @@ import model.Matricula;
 import model.Logs;
 import model.Seccao;
 import model.Usuario;
+import model.Formando;
+import model.Qualificacao;
+import model.Nivel;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -18,20 +21,22 @@ public class MatriculaDao {
 	public void cadastrarMatricula(Matricula matricula) throws ExceptionDao{
 		
 		
-		String sql = "insert into Matricula(data_matricula, ano_lectivo)" + "values(?,?)";
+		String sql = "insert into Matricula(cod_formando,cod_Quali,data)" + " values(?,?,?)";
 		PreparedStatement InsertMatricula = null;
 		try {
 			
 			con = new Conexao().getConnection();
 			InsertMatricula = con.prepareStatement(sql);
-			InsertMatricula.setInt(1, matricula.getData_matricula());
-			InsertMatricula.setInt(2, matricula.getAno_lectivo());
+			InsertMatricula.setInt(1, matricula.getFormando().getCodigo());
+			InsertMatricula.setInt(2, matricula.getQualificacao().getCodigo());
+			InsertMatricula.setString(3, matricula.getData_matricula());
+			
 			InsertMatricula.execute();
 
 			// LOG: Cadastro de matrícula (estilo UsuarioDao)
 			Usuario u = Seccao.obterUtilizador();
 			if (u != null) {
-				Logs log = new Logs("INSERT", "Matrícula para o ano " + matricula.getAno_lectivo() + " foi cadastrada", u);
+				Logs log = new Logs("INSERT", "Matrícula para a data " + matricula.getData_matricula() + " foi cadastrada", u);
 				log.setData(LocalDateTime.now());
 				new LogDao().salvar(log);
 			}
@@ -58,9 +63,13 @@ public class MatriculaDao {
 		}
 	}
 }
-	public ArrayList<Matricula> listarMatricula(String ano_lectivo ) throws ExceptionDao{
+	public ArrayList<Matricula> listarMatricula(String data) throws ExceptionDao{
 		
-		String sql = "select * from Matricula where ano_lectivo like '%" + ano_lectivo + "%'";
+		String sql = "select Matricula.codigo, nome_formando,apelido_formando, titulo, Nivel.nome as nivel, data from Matricula"
+				+ " join Formando on codigo_formando = cod_formando "
+				+ "join Qualificacao on Qualificacao.cod_Quali = Matricula.cod_Quali "
+				+ "join Quali_Nivel on Qualificacao.cod_Quali= Quali_Nivel.cod_Quali "
+				+ "join Nivel on Nivel.codigo= cod_Nivel";
 		PreparedStatement listarMatricula = null;
 		ArrayList <Matricula> matriculas = null;
 		
@@ -72,13 +81,21 @@ public class MatriculaDao {
 				if (rs != null) {
 					matriculas = new ArrayList();
 					while(rs.next()) {
-					Matricula matricula = new Matricula(); 
+					Formando f = new Formando();
+					Qualificacao q = new Qualificacao();
+					Nivel n = new Nivel();
+					int codigo = rs.getInt("codigo");
+					f.setNome(rs.getString("nome_formando"));
+					f.setApelido(rs.getString("apelido_formando"));
 					
-					matricula.setCodigo(rs.getInt("codigo"));
-					matricula.setData_matricula(rs.getInt("data_matricula"));
-					matricula.setAno_lectivo(rs.getInt("ano_lectivo"));
+					q.setTitulo(rs.getString("titulo"));
+					n.setNome(rs.getString("nivel"));
+					String data1 = rs.getString("data");
+					
+					 Matricula matricula = new Matricula(f,q,n,data1); 
+					 matricula.setCodigo(codigo);
 					matriculas.add(matricula);
-					//JOptionPane.showMessageDialog(null, "Adicionado com sucesso");
+				
 					
 					}
 				}
@@ -110,21 +127,23 @@ public class MatriculaDao {
 			
 	}
 	public void atualizarMatricula(Matricula matricula) throws ExceptionDao {
-		String  sql = "update Matricula set data_matricula = ?, ano_lectivo = ? where codigo = ?";
+		String  sql = "update Matricula set cod_formando = ?, cod_Quali = ? ,data_matricula = ? where codigo = ?";
 		PreparedStatement alterarMatricula = null;
 		
 		try {
 			con = new Conexao().getConnection();
 			alterarMatricula = con.prepareStatement(sql);
-			alterarMatricula.setInt(1, matricula.getData_matricula());
-			alterarMatricula.setInt(2, matricula.getAno_lectivo());
-			alterarMatricula.setInt(3, matricula.getCodigo());
+			alterarMatricula.setInt(1, matricula.getFormando().getCodigo());
+			alterarMatricula.setInt(2, matricula.getQualificacao().getCodigo());
+			alterarMatricula.setString(3, matricula.getData_matricula());
+			
+			alterarMatricula.setInt(4, matricula.getCodigo());
 			alterarMatricula.executeUpdate();
 
 			// LOG: Atualização de matrícula (estilo UsuarioDao)
 			Usuario u = Seccao.obterUtilizador();
 			if (u != null) {
-				Logs log = new Logs("UPDATE", "Matrícula (ID: " + matricula.getCodigo() + ") para o ano " + matricula.getAno_lectivo() + " foi atualizada", u);
+				Logs log = new Logs("UPDATE", "Matrícula (ID: " + matricula.getCodigo() + ") para a data " + matricula.getData_matricula() + " foi atualizada", u);
 				log.setData(LocalDateTime.now());
 				new LogDao().salvar(log);
 			}
@@ -159,15 +178,15 @@ public void apagarMatricula(Matricula matricula) throws ExceptionDao {
 	PreparedStatement apagarMatricula = null;
 
 	// Buscar dados da matrícula antes de apagar para o log
-	int anoLectivo = 0;
+	String data = "";
 	PreparedStatement buscar = null;
 	try {
 		con = new Conexao().getConnection();
-		buscar = con.prepareStatement("select ano_lectivo from Matricula where codigo = ?");
+		buscar = con.prepareStatement("select data from Matricula where codigo = ?");
 		buscar.setInt(1, matricula.getCodigo());
 		ResultSet rs = buscar.executeQuery();
 		if (rs.next()) {
-			anoLectivo = rs.getInt("ano_lectivo");
+			data = rs.getString("data");
 		}
 	} catch (SQLException e) {
 		// Se não conseguir buscar, continua com dados vazios
@@ -192,7 +211,7 @@ public void apagarMatricula(Matricula matricula) throws ExceptionDao {
 		// LOG: Exclusão de matrícula (estilo UsuarioDao)
 		Usuario u = Seccao.obterUtilizador();
 		if (u != null) {
-			Logs log = new Logs("DELETE", "Matrícula (ID: " + matricula.getCodigo() + ") para o ano " + anoLectivo + " foi removida", u);
+			Logs log = new Logs("DELETE", "Matrícula (ID: " + matricula.getCodigo() + ") da data " + data + " foi removida", u);
 			log.setData(LocalDateTime.now());
 			new LogDao().salvar(log);
 		}

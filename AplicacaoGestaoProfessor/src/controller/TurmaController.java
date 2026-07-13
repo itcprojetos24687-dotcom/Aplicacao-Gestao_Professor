@@ -8,16 +8,29 @@ import java.util.ArrayList;
 public class TurmaController {
 	static Scanner sc = new Scanner(System.in);
 
-	public boolean cadastrarTurma(String nome, int ano_ingresso, String turno,Diretor_Turma dt, Qualificacao q)
+	public boolean cadastrarTurma(String nome, int ano_ingresso, String turno,Diretor_Turma dt, Qualificacao q, Nivel n)
 
 	throws ExceptionDao{
-		if(nome != null && nome.length()>0 && ano_ingresso > 0 && turno != null && turno.length() > 0 && dt != null && q != null){
+		if(nome != null && nome.length()>0 && ano_ingresso > 0 && turno != null && turno.length() > 0 && dt != null ){
 			Turma turma = new Turma(nome, ano_ingresso, turno);
 			turma.setDiretor_turma(dt);
 			turma.setQualificacao(q);
-			Diretor_TurmaController dc = new Diretor_TurmaController();
-			turma.cadastrarTurma(turma);
-			return true;
+			if(q != null && n != null) {
+				JOptionPane.showMessageDialog(null, "Qualificacao: "+ q+" Nivel: "+n);
+				Quali_NivelController qc = new Quali_NivelController();
+				int codigo = qc.buscarCodigo(q,n);
+				JOptionPane.showMessageDialog(null, codigo);
+				if(codigo >0) {
+					Diretor_TurmaController dc = new Diretor_TurmaController();
+					Quali_Nivel qn = new Quali_Nivel();
+					qn.setCodigo(codigo);
+					turma.setQuali_nivel(qn);
+					JOptionPane.showMessageDialog(null,turma.toString());
+					turma.cadastrarTurma(turma);
+					return true;
+					
+				}
+			}
 		}
 		return false;
 		}
@@ -25,15 +38,27 @@ public class TurmaController {
 
 		return new Turma().listarTurma(nome);
 	}
-	public boolean atualizarTurma(int codigo, String nome, int ano_ingresso, String turno, Diretor_Turma dt, Qualificacao q)
+	public boolean atualizarTurma(int codigo, String nome, int ano_ingresso, String turno, Diretor_Turma dt, Qualificacao q, Nivel n)
 			throws ExceptionDao{
 				if(nome != null && nome.length()>0 && codigo != 0 && ano_ingresso > 0 && turno != null && turno.length() > 0){
 					Turma turma = new Turma(nome, ano_ingresso, turno);
 					turma.setCodigo(codigo);
 					turma.setDiretor_turma(dt);
 					turma.setQualificacao(q);
-					turma.atualizarTurma(turma);;
-						return true;
+					
+					if(q != null && n != null) {
+						Quali_NivelController qc = new Quali_NivelController();
+						int codigoQuali_Nivel = qc.buscarCodigo(q,n);
+
+						if(codigo >0) {
+
+							Quali_Nivel qn = new Quali_Nivel();
+							qn.setCodigo(codigoQuali_Nivel);
+							turma.setQuali_nivel(qn);
+							turma.atualizarTurma(turma);;
+							return true;
+						}
+					}
 					
 				}
 				return false;

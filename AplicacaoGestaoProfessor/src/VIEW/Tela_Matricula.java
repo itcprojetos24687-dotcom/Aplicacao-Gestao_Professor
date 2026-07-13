@@ -1,4 +1,7 @@
 package VIEW;
+import model.*;
+import controller.*;
+import java.util.ArrayList;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -6,6 +9,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -13,16 +17,22 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.border.EmptyBorder;
-
+import javax.swing.text.MaskFormatter;
 public class Tela_Matricula extends JPanel {
     private static final long serialVersionUID = 1L;
 
-    private JComboBox<String> comboFormando;
-    private JComboBox<String> comboQualificacao;
-    private JComboBox<String> comboNivel;
+    private JComboBox<Formando> comboFormando;
+    private JComboBox<Qualificacao> comboQualificacao;
+    private JComboBox<Nivel> comboNivel;
+    private ArrayList<Formando> formandos;
+    private ArrayList<Qualificacao> qualificacoes;
+    private ArrayList<Nivel> niveis;
+    private FormandoController fc = null;
     private JTextField txtDataMatricula;
     private JButton btnConfirmar, btnCancelar;
-
+    private JFormattedTextField campoData ;
+    
+    private int idUser = 0;
     private final Color AZUL_DESTAQUE = new Color(13, 110, 253);
     private final Color FUNDO_CLARO   = new Color(244, 246, 249);
     private final Color BRANCO        = Color.WHITE;
@@ -49,25 +59,56 @@ public class Tela_Matricula extends JPanel {
 
         // Nome do Formando
         panelCard.add(new JLabel("Nome do Formando *") {{ setFont(fontLabel); }});
-        comboFormando = new JComboBox<>(new DefaultComboBoxModel<>(new String[] {
-            "Edmundo Mapotere", "Malik Mangue", "Keany pessula"   }));
+        comboFormando = new JComboBox<>();
         comboFormando.setFont(fontText);
+        try {
+        	fc =new FormandoController();
+        	formandos = fc.comboFormando();
+        	for(Formando f: formandos) {
+        		comboFormando.addItem(f);
+        	}
+        	
+        }catch(Exception s) {
+        	s.printStackTrace();
+        }
         panelCard.add(comboFormando);
+        
 
         // Qualificação
         panelCard.add(new JLabel("Qualificação *") {{ setFont(fontLabel); }});
-        comboQualificacao = new JComboBox<>(new DefaultComboBoxModel<>(new String[] {
-            "Suporte Informatico", "Programção Web", "Administração de Redes"
-        }));
+        comboQualificacao = new JComboBox<>();
         comboQualificacao.setFont(fontText);
         panelCard.add(comboQualificacao);
+        try {
+    		QualificacaoController qc = new QualificacaoController();
+    		qualificacoes = qc.comboQualificacao();
+    		for(Qualificacao q: qualificacoes) {
+    			comboQualificacao.addItem(q);
+    		}
+        }catch(Exception e) {
+        	e.printStackTrace();
+        }
 
         // Nível
         panelCard.add(new JLabel("Nível *") {{ setFont(fontLabel); }});
-        comboNivel = new JComboBox<>(new DefaultComboBoxModel<>(new String[] {
-             "CV 3", "CV 4", "CV 5"
-        }));
+        comboNivel = new JComboBox<>();
         comboNivel.setFont(fontText);
+        comboQualificacao.addActionListener(e -> {
+        	try {
+        		
+        		Qualificacao q= (Qualificacao) comboQualificacao.getSelectedItem();
+        		comboNivel.removeAllItems();
+        		Quali_Nivel qn = new Quali_Nivel();
+        		niveis = qn.getQualificacao_Nivel(q);
+        		for(Nivel n : niveis) {
+        			comboNivel.addItem(n);
+        		}
+        		
+        		
+        	}catch(Exception s) {
+        		s.printStackTrace();
+        	}
+        });
         panelCard.add(comboNivel);
 
         // Data da Matrícula
@@ -75,7 +116,18 @@ public class Tela_Matricula extends JPanel {
         txtDataMatricula = new JTextField();
         txtDataMatricula.setFont(fontText);
         txtDataMatricula.setToolTipText("dd/mm/aaaa");
-        panelCard.add(txtDataMatricula);
+        try {
+        	
+        	MaskFormatter mascaraData = new MaskFormatter("##/##/####");
+        	
+        	mascaraData.setPlaceholder("_");
+        	 campoData = new JFormattedTextField(mascaraData);
+        	campoData.setColumns(10);
+        }catch(Exception s) {
+        	s.printStackTrace();
+        }
+        panelCard.add(campoData);
+        //panelCard.add(txtDataMatricula);
 
         // Barra de botões
         JPanel barraBotoes = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
@@ -86,7 +138,7 @@ public class Tela_Matricula extends JPanel {
         btnCancelar.setBackground(BRANCO);
         btnCancelar.addActionListener(e -> {
             limparCampos();
-            if (listener != null) listener.onCancelar();
+            setVisible(false);
         });
 
         btnConfirmar = new JButton("Efectuar Matrícula");
@@ -128,23 +180,68 @@ public class Tela_Matricula extends JPanel {
     }
 
     private void acaoSalvar() {
-        String formando = (String) comboFormando.getSelectedItem();
-        String data     = txtDataMatricula.getText().trim();
-
-        if (data.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Por favor, preencha a data da matrícula.", "Aviso", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        JOptionPane.showMessageDialog(this, "Matrícula efetivada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-
-        if (listener != null) {
-            listener.onMatriculaCadastrada("MAT-TMP", formando,
-                (String) comboQualificacao.getSelectedItem(),
-                (String) comboNivel.getSelectedItem(),
-                data);
-        }
-        limparCampos();
+    	boolean sucesso;
+    	
+    	try {
+    		
+    		Formando formando = (Formando) comboFormando.getSelectedItem();
+    		//String data     = txtDataMatricula.getText().trim();
+    		Qualificacao q = (Qualificacao) comboQualificacao.getSelectedItem();
+    		Nivel n = (Nivel) comboNivel.getSelectedItem();
+    		String data = campoData.getText();
+    		
+    		
+    		if (data.isEmpty()) {
+    			JOptionPane.showMessageDialog(this, "Por favor, preencha a data da matrícula.", "Aviso", JOptionPane.WARNING_MESSAGE);
+    			return;
+    		}
+    		if(idUser == 0) {
+    			MatriculaController mc = new MatriculaController();
+    			sucesso = mc.cadastrarMatricula(formando,q,n,data);
+    			if(sucesso) {
+    				JOptionPane.showMessageDialog(null, "Matricula Efectuada com sucesso");
+    			}
+    			else {
+    				JOptionPane.showMessageDialog(null, "falha ao efectuar Matricula");
+    			}
+    			limparCampos();
+    		}
+    		else {
+    			MatriculaController mc = new MatriculaController();
+    			sucesso = mc.atualizarMatricula(idUser,(Formando)comboFormando.getSelectedItem(), (Qualificacao)comboQualificacao.getSelectedItem(), (Nivel)comboNivel.getSelectedItem(),data);
+    		}if(sucesso) {
+				JOptionPane.showMessageDialog(null, "Matricula atualizada com sucesso");
+			}
+			else {
+				JOptionPane.showMessageDialog(null, "falha ao atualizar Matricula");
+			}
+			limparCampos();
+    		
+    		
+    		
+    		
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    	}
+    }
+    public void buscarMatricula(int codigo,Formando f, Qualificacao q, Nivel n,String data) {
+    	idUser = codigo;
+    	for(int i = 0; i<comboFormando.getItemCount();i++) {
+    		if(comboFormando.getItemAt(i).equals(f)) {
+    			comboFormando.setSelectedIndex(i);
+    		}
+    	}
+    	for(int i = 0; i<comboQualificacao.getItemCount();i++) {
+    		if(comboQualificacao.getItemAt(i).equals(q)) {
+    			comboQualificacao.setSelectedIndex(i);
+    		}
+    	}
+    	for(int i = 0; i<comboNivel.getItemCount();i++) {
+    		if(comboNivel.getItemAt(i).equals(n)) {
+    			comboNivel.setSelectedIndex(i);
+    		}
+    	}
+    	campoData.setText(data);
     }
 
     private void limparCampos() {
