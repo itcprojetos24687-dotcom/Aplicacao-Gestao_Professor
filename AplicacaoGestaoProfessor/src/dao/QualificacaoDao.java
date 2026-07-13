@@ -1,6 +1,6 @@
 package dao;
 import java.sql.*;
-
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import model.*;
 public class QualificacaoDao {
@@ -24,6 +24,7 @@ public class QualificacaoDao {
 
 			Usuario u = Seccao.obterUtilizador();
 			Logs log = new Logs("INSERT", "Qualificação: " + qc.getTitulo() + " cadastrada", u);
+			log.setData(LocalDateTime.now());
 			new LogDao().salvar(log);
 
 		}catch(SQLException e) {
