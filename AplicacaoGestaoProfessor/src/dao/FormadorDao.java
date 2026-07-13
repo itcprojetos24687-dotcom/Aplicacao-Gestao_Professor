@@ -122,7 +122,7 @@ public class FormadorDao {
 		
 	}
 	public void atualizarFormador(Formador formador) {
-		String sql = "update Formador set nome = ?, apelido = ?, email = ?, genero = ?, estadoCivil = ?, contacto = ?, salario = ? where codigo = ?";
+		String sql = "update Formador set nome = ?, apelido = ?, email = ?, genero = ?, estadoCivil = ?, contacto = ? where codigo = ?";
 		PreparedStatement alterarFormador = null;
 		
 		try {
@@ -134,8 +134,8 @@ public class FormadorDao {
 			alterarFormador.setString(4, formador.getGenero());
 			alterarFormador.setString(5, formador.getEstadoCivil());
 			alterarFormador.setInt(6, formador.getContacto());
-			alterarFormador.setDouble(7, formador.getSalario());
-			alterarFormador.setInt(8, formador.getCodigo());
+			//alterarFormador.setDouble(7, formador.getSalario());
+			alterarFormador.setInt(7, formador.getCodigo());
 			alterarFormador.executeUpdate();
 			//JOptionPane.showMessageDialog(null,"Alterado com sucesso");
 		}catch(SQLException e) {

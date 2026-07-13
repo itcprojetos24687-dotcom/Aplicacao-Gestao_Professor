@@ -20,7 +20,7 @@ public class CoordenadorController {
 	public ArrayList<Coordenador> listarCoordenador() throws ExceptionDao {
 		return new Coordenador().listarCoordenador();
 	}
-//
+
 //	public boolean atualizarCoordenador(int codigo, Formador formador) throws ExceptionDao {
 //		if (codigo != 0 && formador != null && formador.getCodigo() != 0) {
 //			Coordenador coordenador = new Coordenador();

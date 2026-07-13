@@ -237,10 +237,10 @@ public class Tela_Principal {
 
         panelConteudoDinamico.add(criarPainelDashboard(), "Dashboard");
 
-        panelConteudoDinamico.add(criarPainelModulos(), "Modulos");
+       //panelConteudoDinamico.add(criarPainelModulos(), "Modulos");
 
         panelConteudoDinamico.add(criarPainelFormadores(), "Formadores");
-        panelConteudoDinamico.add(criarPainelListaInscricoes(), "Inscrições"); 
+        //panelConteudoDinamico.add(criarPainelListaInscricoes(), "Inscrições"); 
         //panelConteudoDinamico.add(new Tela_Incrição(), "FormularioInscricao");
         panelConteudoDinamico.add(criarPainelMatriculas(), "Matrículas");
         //panelConteudoDinamico.add(criarPainelSalas(), "Salas");
@@ -310,7 +310,7 @@ public class Tela_Principal {
       
         
 
-        String[] menus = {"Dashboard", "Formadores","Modulos", "Inscrições", "Matrículas", "Turmas", "Qualificações","Formandos", "Cadastros ▾"};
+        String[] menus = {"Dashboard", "Formadores", "Turmas", "Qualificações","Formandos", "Cadastros ▾"};
         
         for (String menu : menus) {
         	if (nivelAcesso.equalsIgnoreCase("Formador") && (menu.equals("Cadastros ▾") || menu.equals("Formadores") || menu.equals("Formandos") || menu.equals("Inscrições") || menu.equals("Matrículas") || menu.equals("Modulo") || menu.equals("Qualificações"))) {
