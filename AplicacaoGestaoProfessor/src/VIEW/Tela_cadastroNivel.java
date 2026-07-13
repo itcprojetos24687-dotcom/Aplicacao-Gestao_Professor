@@ -1,6 +1,8 @@
 package VIEW;
 
 import java.awt.EventQueue;
+import controller.NivelController;
+import dao.ExceptionDao;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -94,12 +96,23 @@ public class Tela_cadastroNivel extends JFrame {
 		btnGuardar.setFocusPainted(false);
 		
 		btnGuardar.addActionListener(e -> {
-			if (txtNomeNivel.getText().trim().isEmpty()) {
-				JOptionPane.showMessageDialog(this, "Por favor, insira o nome do nível!", "Aviso", JOptionPane.WARNING_MESSAGE);
-			} else {
-				JOptionPane.showMessageDialog(this, "Nível '" + txtNomeNivel.getText().trim() + "' guardado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-				dispose();
-			}
+		    String nome = txtNomeNivel.getText().trim();
+		    if (nome.isEmpty()) {
+		        JOptionPane.showMessageDialog(this, "Por favor, insira o nome do nível!", "Aviso", JOptionPane.WARNING_MESSAGE);
+		        return;
+		    }
+		    try {
+		        NivelController nc = new NivelController();
+		        boolean sucesso = nc.cadastrarNivel(nome);
+		        if(sucesso) {
+		            JOptionPane.showMessageDialog(this, "Nível guardado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+		            dispose();
+		        } else {
+		            JOptionPane.showMessageDialog(this, "Dados inválidos.", "Aviso", JOptionPane.WARNING_MESSAGE);
+		        }
+		    } catch (Exception ex) {
+		        JOptionPane.showMessageDialog(this, "Erro ao guardar nível: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+		    }
 		});
 		card.add(btnGuardar);
 	}

@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 
 import javax.swing.JOptionPane;
 import java.sql.ResultSet;
@@ -30,9 +31,14 @@ public class FormadorDao {
 			InsertFormador.setInt(6, formador.getContacto());
 			InsertFormador.setDouble(7, formador.getSalario());
 			InsertFormador.execute();
+			
+			// LOG: Cadastro de formador (estilo UsuarioDao)
 			Usuario u = Seccao.obterUtilizador();
-			Logs log = new Logs("INSERT","Formador: "+formador.getNome()+"cadastro",u );
-			new LogDao().salvar(log);
+			if (u != null) {
+				Logs log = new Logs("INSERT", "Formador " + formador.getNome() + " foi cadastrado", u);
+				log.setData(LocalDateTime.now());
+				new LogDao().salvar(log);
+			}
 			
 			ResultSet rs = InsertFormador.getGeneratedKeys();
 			if(rs != null  && rs.next()) {
@@ -121,7 +127,7 @@ public class FormadorDao {
 		return formadores;
 		
 	}
-	public void atualizarFormador(Formador formador) {
+	public void atualizarFormador(Formador formador) throws ExceptionDao {
 		String sql = "update Formador set nome = ?, apelido = ?, email = ?, genero = ?, estadoCivil = ?, contacto = ?, salario = ? where codigo = ?";
 		PreparedStatement alterarFormador = null;
 		
@@ -137,10 +143,18 @@ public class FormadorDao {
 			alterarFormador.setDouble(7, formador.getSalario());
 			alterarFormador.setInt(8, formador.getCodigo());
 			alterarFormador.executeUpdate();
+			
+			// LOG: Atualização de formador (estilo UsuarioDao)
+			Usuario u = Seccao.obterUtilizador();
+			if (u != null) {
+				Logs log = new Logs("UPDATE", "Formador " + formador.getNome() + " (ID: " + formador.getCodigo() + ") foi atualizado", u);
+				log.setData(LocalDateTime.now());
+				new LogDao().salvar(log);
+			}
 			//JOptionPane.showMessageDialog(null,"Alterado com sucesso");
 		}catch(SQLException e) {
 			//JOptionPane.showMessageDialog(null,"Erro ao alterar");
-			e.printStackTrace();
+			throw new ExceptionDao("Erro ao alterar dados: " + e);
 		}
 		finally {
 			try {
@@ -149,7 +163,7 @@ public class FormadorDao {
 					//JOptionPane.showMessageDialog(null, "Fechado com sucesso");
 				}
 			}catch(SQLException sq) {
-				sq.printStackTrace();
+				throw new ExceptionDao("Erro ao fechar o statement: " + sq);
 			}
 			try {
 				if(con != null) {
@@ -157,7 +171,7 @@ public class FormadorDao {
 					//JOptionPane.showMessageDialog(null, "Fechado com sucesso");
 				}
 			}catch(SQLException l) {
-				//JOptionPane.showMessageDialog(null, "Falha de fechado ");
+				throw new ExceptionDao("Erro ao fechar a conexao: " + l);
 			}
 			
 		}
@@ -166,17 +180,49 @@ public class FormadorDao {
 
 		String sql = "delete from Formador where codigo=?";
 		PreparedStatement apagarFormador = null;
+		
+		// Buscar nome do formador antes de apagar para o log
+		String nomeFormador = "";
+		PreparedStatement buscar = null;
 		try {
-			
 			con = new Conexao().getConnection();
+			buscar = con.prepareStatement("select nome from Formador where codigo = ?");
+			buscar.setInt(1, formador.getCodigo());
+			ResultSet rs = buscar.executeQuery();
+			if (rs.next()) {
+				nomeFormador = rs.getString("nome");
+			}
+		} catch (SQLException e) {
+			// Se não conseguir buscar, continua com nome vazio
+		} finally {
+			try {
+				if (buscar != null) {
+					buscar.close();
+				}
+			} catch (SQLException e) {
+				// Ignorar erro ao fechar
+			}
+		}
+		
+		try {
+			if (con == null || con.isClosed()) {
+				con = new Conexao().getConnection();
+			}
 			apagarFormador = con.prepareStatement(sql);
 			apagarFormador.setInt(1, formador.getCodigo());
 			apagarFormador.executeUpdate();
 			
+			// LOG: Exclusão de formador (estilo UsuarioDao)
+			Usuario u = Seccao.obterUtilizador();
+			if (u != null) {
+				Logs log = new Logs("DELETE", "Formador " + nomeFormador + " (ID: " + formador.getCodigo() + ") foi removido", u);
+				log.setData(LocalDateTime.now());
+				new LogDao().salvar(log);
+			}
 			
 		}catch(SQLException e) {
 			//JOptionPane.showMessageDialog(null, "Erro ao inserir dado");
-			 throw new ExceptionDao("Erro ao inserir dados :" + e);
+			 throw new ExceptionDao("Erro ao apagar dados :" + e);
 		}finally {
 			try {
 				if(apagarFormador != null) {
@@ -197,4 +243,3 @@ public class FormadorDao {
 		}
 	}
 }
-

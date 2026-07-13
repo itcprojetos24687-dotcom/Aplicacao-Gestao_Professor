@@ -1,10 +1,14 @@
 package dao;
 
 import model.Formando;
+import model.Logs;
+import model.Seccao;
+import model.Usuario;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import dao.Conexao; 
 
@@ -25,6 +29,15 @@ public class FormandoDao {
             insertFormando.setString(4, formando.getEmail());
             insertFormando.setString(5, formando.getBi());
             insertFormando.execute();
+
+            // LOG: Cadastro de formando (estilo UsuarioDao)
+            Usuario u = Seccao.obterUtilizador();
+            if (u != null) {
+                Logs log = new Logs("INSERT", "Formando " + formando.getNome() + " foi cadastrado", u);
+                log.setData(LocalDateTime.now());
+                new LogDao().salvar(log);
+            }
+
         } catch (SQLException e) {
             throw new ExceptionDao("Erro ao inserir dados: " + e);
         } finally {
@@ -106,7 +119,16 @@ public class FormandoDao {
             alterarFormando.setString(5, formando.getBi());    
             alterarFormando.setInt(6, formando.getCodigo());   
             
-            alterarFormando.executeUpdate(); 
+            alterarFormando.executeUpdate();
+
+            // LOG: Atualização de formando (estilo UsuarioDao)
+            Usuario u = Seccao.obterUtilizador();
+            if (u != null) {
+                Logs log = new Logs("UPDATE", "Formando " + formando.getNome() + " (ID: " + formando.getCodigo() + ") foi atualizado", u);
+                log.setData(LocalDateTime.now());
+                new LogDao().salvar(log);
+            }
+
         } catch (SQLException e) {
             throw new ExceptionDao("Erro ao alterar dados: " + e);
         } finally {
@@ -131,11 +153,46 @@ public class FormandoDao {
         // CORRIGIDO: Chave primária é 'codigo_formando'
         String sql = "delete from Formando where codigo_formando=?"; 
         PreparedStatement apagarFormando = null;
+
+        // Buscar nome do formando antes de apagar para o log
+        String nomeFormando = "";
+        PreparedStatement buscar = null;
         try {
             con = new Conexao().getConnection();
+            buscar = con.prepareStatement("select nome_formando from Formando where codigo_formando = ?");
+            buscar.setInt(1, formando.getCodigo());
+            ResultSet rs = buscar.executeQuery();
+            if (rs.next()) {
+                nomeFormando = rs.getString("nome_formando");
+            }
+        } catch (SQLException e) {
+            // Se não conseguir buscar, continua com nome vazio
+        } finally {
+            try {
+                if (buscar != null) {
+                    buscar.close();
+                }
+            } catch (SQLException e) {
+                // Ignorar erro ao fechar
+            }
+        }
+
+        try {
+            if (con == null || con.isClosed()) {
+                con = new Conexao().getConnection();
+            }
             apagarFormando = con.prepareStatement(sql);
             apagarFormando.setInt(1, formando.getCodigo());
             apagarFormando.executeUpdate();
+
+            // LOG: Exclusão de formando (estilo UsuarioDao)
+            Usuario u = Seccao.obterUtilizador();
+            if (u != null) {
+                Logs log = new Logs("DELETE", "Formando " + nomeFormando + " (ID: " + formando.getCodigo() + ") foi removido", u);
+                log.setData(LocalDateTime.now());
+                new LogDao().salvar(log);
+            }
+
         } catch (SQLException e) {
              throw new ExceptionDao("Erro ao apagar dados: " + e);
         } finally {

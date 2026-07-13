@@ -1,7 +1,8 @@
 package dao;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import model.Turma;
+
 import model.*;
 
 public class TurmaDao {
@@ -21,8 +22,12 @@ public class TurmaDao {
 			inserir.execute();
 
 			Usuario u = Seccao.obterUtilizador();
-			Logs log = new Logs("INSERT", "Turma: " + turma.getNome() + " cadastrada", u);
-			new LogDao().salvar(log);
+			if (u != null) {
+				Logs log = new Logs("INSERT", "Turma" + turma.getNome() + " foi cadastrada", u);
+				
+				log.setData(LocalDateTime.now());
+				new LogDao().salvar(log);
+			}
 		}catch(SQLException e) {
 			throw new ExceptionDao("Erro ao inserir dados :" + e);
 		}finally {

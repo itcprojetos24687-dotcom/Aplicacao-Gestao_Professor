@@ -8,7 +8,11 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import model.Logs;
+import model.Seccao;
+import model.Usuario;
 
 public class CoordenadorDao {
 
@@ -25,8 +29,13 @@ public class CoordenadorDao {
 			insertCoordenador.setInt(1, coordenador.getFormador().getCodigo());
 			insertCoordenador.execute();
 
-			
-			
+			// LOG: Cadastro de coordenador
+			Usuario u = Seccao.obterUtilizador();
+			if (u != null) {
+				Logs log = new Logs("INSERT", "Coordenador " + coordenador.getFormador().getNome() + " foi cadastrado", u);
+				log.setData(LocalDateTime.now());
+				new LogDao().salvar(log);
+			}
 
 		} catch (SQLException e) {
 			throw new ExceptionDao("Erro ao inserir dados :" + e);

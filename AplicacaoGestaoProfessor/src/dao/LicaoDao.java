@@ -1,8 +1,13 @@
 package dao;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import model.Licao;
+import model.Logs;
+import model.Seccao;
+import model.Usuario;
+
 public class LicaoDao {
 
 	public void cadastrarlicao(Licao licao) throws ExceptionDao{
@@ -17,6 +22,14 @@ public class LicaoDao {
 			InsertLicao.setInt(1, licao.getHoras_inicio());
 			InsertLicao.setInt(2, licao.getHoras_fim());
 			InsertLicao.execute();
+
+			// LOG: Cadastro de lição (estilo UsuarioDao)
+			Usuario u = Seccao.obterUtilizador();
+			if (u != null) {
+				Logs log = new Logs("INSERT", "Lição das " + licao.getHoras_inicio() + "h às " + licao.getHoras_fim() + "h foi cadastrada", u);
+				log.setData(LocalDateTime.now());
+				new LogDao().salvar(log);
+			}
 
 		}catch(SQLException e) {
 			throw new ExceptionDao("Erro ao inserir dados :" + e );
@@ -95,6 +108,15 @@ public class LicaoDao {
 			alterarLicao.setInt(2, licao.getHoras_fim());
 			alterarLicao.setInt(3, licao.getCodigo());
 			alterarLicao.executeUpdate();
+
+			// LOG: Atualização de lição (estilo UsuarioDao)
+			Usuario u = Seccao.obterUtilizador();
+			if (u != null) {
+				Logs log = new Logs("UPDATE", "Lição (ID: " + licao.getCodigo() + ") das " + licao.getHoras_inicio() + "h às " + licao.getHoras_fim() + "h foi atualizada", u);
+				log.setData(LocalDateTime.now());
+				new LogDao().salvar(log);
+			}
+
 		}catch(SQLException e) {
 			throw new ExceptionDao("Erro ao alterar dados :" + e);
 		}finally {
@@ -120,12 +142,47 @@ public class LicaoDao {
 		String sql = "delete from Licao where codigo=?";
 		Connection con = null;
 		PreparedStatement apagarLicao = null;
-		try {
 
+		// Buscar dados da lição antes de apagar para o log
+		int horasInicio = 0;
+		int horasFim = 0;
+		PreparedStatement buscar = null;
+		try {
 			con = new Conexao().getConnection();
+			buscar = con.prepareStatement("select horas_inicio, horas_fim from Licao where codigo = ?");
+			buscar.setInt(1, licao.getCodigo());
+			ResultSet rs = buscar.executeQuery();
+			if (rs.next()) {
+				horasInicio = rs.getInt("horas_inicio");
+				horasFim = rs.getInt("horas_fim");
+			}
+		} catch (SQLException e) {
+			// Se não conseguir buscar, continua com dados vazios
+		} finally {
+			try {
+				if (buscar != null) {
+					buscar.close();
+				}
+			} catch (SQLException e) {
+				// Ignorar erro ao fechar
+			}
+		}
+
+		try {
+			if (con == null || con.isClosed()) {
+				con = new Conexao().getConnection();
+			}
 			apagarLicao = con.prepareStatement(sql);
 			apagarLicao.setInt(1, licao.getCodigo());
 			apagarLicao.executeUpdate();
+
+			// LOG: Exclusão de lição (estilo UsuarioDao)
+			Usuario u = Seccao.obterUtilizador();
+			if (u != null) {
+				Logs log = new Logs("DELETE", "Lição (ID: " + licao.getCodigo() + ") das " + horasInicio + "h às " + horasFim + "h foi removida", u);
+				log.setData(LocalDateTime.now());
+				new LogDao().salvar(log);
+			}
 
 		}catch(SQLException e) {
 			throw new ExceptionDao("Erro ao apagar dados :" + e);

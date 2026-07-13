@@ -6,7 +6,7 @@ import model.Sala;
 import java.util.ArrayList;
 public class SalaDao {
 	public void cadastrarSala(Sala sala) throws ExceptionDao{
-		String sql = "insert into Sala (desgnacao,tipo_sala) values(?,?)";
+		String sql = "insert into Sala (designacao, tipo_sala) values(?,?)";
 		Connection con = null;
 		PreparedStatement inserir = null;
 		try {

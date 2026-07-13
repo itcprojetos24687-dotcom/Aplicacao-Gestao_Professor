@@ -1,8 +1,12 @@
 package dao;
 import model.Matricula;
+import model.Logs;
+import model.Seccao;
+import model.Usuario;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import javax.swing.JOptionPane;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -23,6 +27,14 @@ public class MatriculaDao {
 			InsertMatricula.setInt(1, matricula.getData_matricula());
 			InsertMatricula.setInt(2, matricula.getAno_lectivo());
 			InsertMatricula.execute();
+
+			// LOG: Cadastro de matrícula (estilo UsuarioDao)
+			Usuario u = Seccao.obterUtilizador();
+			if (u != null) {
+				Logs log = new Logs("INSERT", "Matrícula para o ano " + matricula.getAno_lectivo() + " foi cadastrada", u);
+				log.setData(LocalDateTime.now());
+				new LogDao().salvar(log);
+			}
 			
 		}catch(SQLException e) {
 			//JOptionPane.showMessageDialog(null, "Erro ao inserir dado");
@@ -97,7 +109,7 @@ public class MatriculaDao {
 		return matriculas;
 			
 	}
-	public void atualizarMatricula(Matricula matricula) {
+	public void atualizarMatricula(Matricula matricula) throws ExceptionDao {
 		String  sql = "update Matricula set data_matricula = ?, ano_lectivo = ? where codigo = ?";
 		PreparedStatement alterarMatricula = null;
 		
@@ -107,9 +119,19 @@ public class MatriculaDao {
 			alterarMatricula.setInt(1, matricula.getData_matricula());
 			alterarMatricula.setInt(2, matricula.getAno_lectivo());
 			alterarMatricula.setInt(3, matricula.getCodigo());
+			alterarMatricula.executeUpdate();
+
+			// LOG: Atualização de matrícula (estilo UsuarioDao)
+			Usuario u = Seccao.obterUtilizador();
+			if (u != null) {
+				Logs log = new Logs("UPDATE", "Matrícula (ID: " + matricula.getCodigo() + ") para o ano " + matricula.getAno_lectivo() + " foi atualizada", u);
+				log.setData(LocalDateTime.now());
+				new LogDao().salvar(log);
+			}
+
 		}catch(SQLException e) {
 			//JOptionPane.showMessageDialog(null,"Erro ao alterar");
-			e.printStackTrace();
+			throw new ExceptionDao("Erro ao alterar dados: " + e);
 		}
 		finally {
 			try {
@@ -118,7 +140,7 @@ public class MatriculaDao {
 					//JOptionPane.showMessageDialog(null, "Fechado com sucesso");
 				}
 			}catch(SQLException sq) {
-				sq.printStackTrace();
+				throw new ExceptionDao("Erro ao fechar o statement: " + sq);
 			}
 			try {
 				if(con != null) {
@@ -126,7 +148,7 @@ public class MatriculaDao {
 					//JOptionPane.showMessageDialog(null, "Fechado com sucesso");
 				}
 			}catch(SQLException l) {
-				//JOptionPane.showMessageDialog(null, "Falha de fechado ");
+				throw new ExceptionDao("Erro ao fechar a conexao: " + l);
 			}
 		}
 	}
@@ -135,17 +157,50 @@ public void apagarMatricula(Matricula matricula) throws ExceptionDao {
 
 	String sql = "delete from Matricula where codigo=?";
 	PreparedStatement apagarMatricula = null;
+
+	// Buscar dados da matrícula antes de apagar para o log
+	int anoLectivo = 0;
+	PreparedStatement buscar = null;
 	try {
-		
 		con = new Conexao().getConnection();
+		buscar = con.prepareStatement("select ano_lectivo from Matricula where codigo = ?");
+		buscar.setInt(1, matricula.getCodigo());
+		ResultSet rs = buscar.executeQuery();
+		if (rs.next()) {
+			anoLectivo = rs.getInt("ano_lectivo");
+		}
+	} catch (SQLException e) {
+		// Se não conseguir buscar, continua com dados vazios
+	} finally {
+		try {
+			if (buscar != null) {
+				buscar.close();
+			}
+		} catch (SQLException e) {
+			// Ignorar erro ao fechar
+		}
+	}
+
+	try {
+		if (con == null || con.isClosed()) {
+			con = new Conexao().getConnection();
+		}
 		apagarMatricula = con.prepareStatement(sql);
 		apagarMatricula.setInt(1, matricula.getCodigo());
 		apagarMatricula.executeUpdate();
+
+		// LOG: Exclusão de matrícula (estilo UsuarioDao)
+		Usuario u = Seccao.obterUtilizador();
+		if (u != null) {
+			Logs log = new Logs("DELETE", "Matrícula (ID: " + matricula.getCodigo() + ") para o ano " + anoLectivo + " foi removida", u);
+			log.setData(LocalDateTime.now());
+			new LogDao().salvar(log);
+		}
 		//JOptionPane.showMessageDialog(null, "Apagado com sucesso");
 		
 	}catch(SQLException e) {
 		//JOptionPane.showMessageDialog(null, "Erro ao inserir dado");
-		 throw new ExceptionDao("Erro ao inserir dados :" + e);
+		 throw new ExceptionDao("Erro ao apagar dados :" + e);
 	}finally {
 		try {
 			if(apagarMatricula != null) {

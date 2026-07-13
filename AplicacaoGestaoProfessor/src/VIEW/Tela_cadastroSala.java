@@ -1,5 +1,6 @@
 package VIEW;
 import java.awt.EventQueue;
+import controller.SalaController;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -124,24 +125,27 @@ public class Tela_cadastroSala extends JFrame {
 		btnGuardar.setFocusPainted(false);
 		
 		btnGuardar.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent e) {
-				String designacao = txtNomeSala.getText().trim();
-				String tipo = (String) cmbTipoSala.getSelectedItem();
-				
-				if (designacao.isEmpty()) {
-					JOptionPane.showMessageDialog(Tela_cadastroSala.this, "Por favor, insira a designação da sala!", "Aviso", JOptionPane.WARNING_MESSAGE);
-					return;
-				}
-				
-				try {
-					Sala sala = new Sala(designacao, tipo);
-					sala.cadastrarSala(sala);
-					JOptionPane.showMessageDialog(Tela_cadastroSala.this, "Sala '" + designacao + "' guardada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-					dispose();
-				} catch (ExceptionDao ex) {
-					JOptionPane.showMessageDialog(Tela_cadastroSala.this, "Erro ao guardar sala: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-				}
-			}
+		    public void actionPerformed(java.awt.event.ActionEvent e) {
+		        String designacao = txtNomeSala.getText().trim();
+		        String tipo = (String) cmbTipoSala.getSelectedItem();
+		        
+		        if (designacao.isEmpty()) {
+		            JOptionPane.showMessageDialog(Tela_cadastroSala.this, "Por favor, insira a designação da sala!", "Aviso", JOptionPane.WARNING_MESSAGE);
+		            return;
+		        }
+		        try {
+		            SalaController sc = new SalaController();
+		            boolean sucesso = sc.cadastrarSala(designacao, tipo);
+		            if(sucesso) {
+		                JOptionPane.showMessageDialog(Tela_cadastroSala.this, "Sala guardada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+		                dispose();
+		            } else {
+		                JOptionPane.showMessageDialog(Tela_cadastroSala.this, "Dados inválidos.", "Aviso", JOptionPane.WARNING_MESSAGE);
+		            }
+		        } catch (ExceptionDao ex) {
+		            JOptionPane.showMessageDialog(Tela_cadastroSala.this, "Erro ao guardar sala: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+		        }
+		    }
 		});
 		card.add(btnGuardar);
 	}

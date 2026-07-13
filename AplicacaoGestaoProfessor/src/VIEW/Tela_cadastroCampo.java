@@ -1,5 +1,6 @@
 package VIEW;
 import java.awt.EventQueue;
+import controller.CampoController;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -98,23 +99,25 @@ public class Tela_cadastroCampo extends JFrame {
 		btnGuardar.setFocusPainted(false);
 		
 		btnGuardar.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent e) {
-				String nome = txtNomeCampo.getText().trim();
-				
-				if (nome.isEmpty()) {
-					JOptionPane.showMessageDialog(Tela_cadastroCampo.this, "Por favor, insira o nome do campo!", "Aviso", JOptionPane.WARNING_MESSAGE);
-					return;
-				}
-				
-				try {
-					Campo campo = new Campo(nome);
-					campo.cadastrarCampo(campo);
-					JOptionPane.showMessageDialog(Tela_cadastroCampo.this, "Campo '" + nome + "' guardado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-					dispose();
-				} catch (ExceptionDao ex) {
-					JOptionPane.showMessageDialog(Tela_cadastroCampo.this, "Erro ao guardar campo: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-				}
-			}
+		    public void actionPerformed(java.awt.event.ActionEvent e) {
+		        String nome = txtNomeCampo.getText().trim();
+		        if (nome.isEmpty()) {
+		            JOptionPane.showMessageDialog(Tela_cadastroCampo.this, "Por favor, insira o nome do campo!", "Aviso", JOptionPane.WARNING_MESSAGE);
+		            return;
+		        }
+		        try {
+		            CampoController cc = new CampoController();
+		            boolean sucesso = cc.cadastrarCampo(nome);
+		            if(sucesso) {
+		                JOptionPane.showMessageDialog(Tela_cadastroCampo.this, "Campo guardado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+		                dispose();
+		            } else {
+		                JOptionPane.showMessageDialog(Tela_cadastroCampo.this, "Dados inválidos.", "Aviso", JOptionPane.WARNING_MESSAGE);
+		            }
+		        } catch (ExceptionDao ex) {
+		            JOptionPane.showMessageDialog(Tela_cadastroCampo.this, "Erro ao guardar campo: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+		        }
+		    }
 		});
 		card.add(btnGuardar);
 	}

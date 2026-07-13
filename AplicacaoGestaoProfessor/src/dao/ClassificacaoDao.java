@@ -8,7 +8,11 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import model.Logs;
+import model.Seccao;
+import model.Usuario;
 
 public class ClassificacaoDao {
 
@@ -26,7 +30,12 @@ public class ClassificacaoDao {
 			insertClassificacao.execute();
 
 			
-			
+			Usuario u = Seccao.obterUtilizador();
+			if (u != null) {
+				Logs log = new Logs("INSERT", "Classificação " + classificacao.getCodigo() + " foi cadastrada", u);
+				log.setData(LocalDateTime.now());
+				new LogDao().salvar(log);
+			}
 
 		} catch (SQLException e) {
 			throw new ExceptionDao("Erro ao inserir dados :" + e);
@@ -105,6 +114,14 @@ public class ClassificacaoDao {
 			alterarClassificacao.setInt(2, classificacao.getCodigo());
 			alterarClassificacao.executeUpdate();
 
+			// LO
+			Usuario u = Seccao.obterUtilizador();
+			if (u != null) {
+				Logs log = new Logs("UPDATE", "Classificação " + classificacao.getCodigo() + " foi atualizada", u);
+				log.setData(LocalDateTime.now());
+				new LogDao().salvar(log);
+			}
+
 		} catch (SQLException e) {
 			throw new ExceptionDao("Erro ao alterar dados: " + e);
 		} finally {
@@ -134,6 +151,14 @@ public class ClassificacaoDao {
 			apagarClassificacao = con.prepareStatement(sql);
 			apagarClassificacao.setInt(1, classificacao.getCodigo());
 			apagarClassificacao.executeUpdate();
+
+			// LOG: Exclusão de classificação
+			Usuario u = Seccao.obterUtilizador();
+			if (u != null) {
+				Logs log = new Logs("DELETE", "Classificação " + classificacao.getCodigo() + " foi removida", u);
+				log.setData(LocalDateTime.now());
+				new LogDao().salvar(log);
+			}
 
 		} catch (SQLException e) {
 			throw new ExceptionDao("Erro ao apagar dados :" + e);
