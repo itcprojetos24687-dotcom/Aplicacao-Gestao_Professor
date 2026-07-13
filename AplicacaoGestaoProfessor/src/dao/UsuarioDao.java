@@ -20,7 +20,7 @@ public class UsuarioDao {
 
 		try {
 			con = new Conexao().getConnection();
-			JOptionPane.showMessageDialog(null, "Conexao estabelecida");
+			
 			lg = con.prepareStatement(sql);
 			lg.setString(1, username);
 			lg.setString(2, password);

@@ -54,7 +54,7 @@ public class LogDao {
 			ResultSet rs = stms.executeQuery();
 			if (rs != null) {
 				logs = new ArrayList<Logs>();
-				JOptionPane.showMessageDialog(null, "NAo esta null: ");
+				
 				while (rs.next()) {
 					Logs log = new Logs();
 					Usuario u = new Usuario();

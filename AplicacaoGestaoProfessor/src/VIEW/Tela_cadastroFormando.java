@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import controller.FormandoController;
+import model.Seccao;
+
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -149,7 +151,9 @@ public class Tela_cadastroFormando extends JPanel {
         	            email, bi, codigoEdicao
         	        );
         	        if(sucesso) {
-        	            JOptionPane.showMessageDialog(this, "Formando actualizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        	            
+        	        	JOptionPane.showMessageDialog(this, "Formando actualizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        	        	 new Tela_Principal(Seccao.obterUtilizador()).listarFormando();
         	            modoEdicao = false;
         	            codigoEdicao = 0;
         	            limparCampos();
@@ -164,6 +168,7 @@ public class Tela_cadastroFormando extends JPanel {
         	        );
         	        if(sucesso) {
         	            JOptionPane.showMessageDialog(this, "Formando guardado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        	            new Tela_Principal(Seccao.obterUtilizador()).listarFormando();
         	            limparCampos();
         	        } else {
         	            JOptionPane.showMessageDialog(this, "Dados inválidos.", "Aviso", JOptionPane.WARNING_MESSAGE);
