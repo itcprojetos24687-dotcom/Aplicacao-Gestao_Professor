@@ -16,16 +16,16 @@ public class TurmaController {
 			turma.setDiretor_turma(dt);
 			turma.setQualificacao(q);
 			if(q != null && n != null) {
-				JOptionPane.showMessageDialog(null, "Qualificacao: "+ q+" Nivel: "+n);
+				
 				Quali_NivelController qc = new Quali_NivelController();
 				int codigo = qc.buscarCodigo(q,n);
-				JOptionPane.showMessageDialog(null, codigo);
+			
 				if(codigo >0) {
 					Diretor_TurmaController dc = new Diretor_TurmaController();
 					Quali_Nivel qn = new Quali_Nivel();
 					qn.setCodigo(codigo);
 					turma.setQuali_nivel(qn);
-					JOptionPane.showMessageDialog(null,turma.toString());
+				
 					turma.cadastrarTurma(turma);
 					return true;
 					
@@ -50,7 +50,7 @@ public class TurmaController {
 						Quali_NivelController qc = new Quali_NivelController();
 						int codigoQuali_Nivel = qc.buscarCodigo(q,n);
 
-						if(codigo >0) {
+						if(codigoQuali_Nivel >0) {
 
 							Quali_Nivel qn = new Quali_Nivel();
 							qn.setCodigo(codigoQuali_Nivel);

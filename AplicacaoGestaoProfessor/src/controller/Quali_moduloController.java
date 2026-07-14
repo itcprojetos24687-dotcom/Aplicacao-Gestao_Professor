@@ -12,10 +12,10 @@ import model.Modulo;
 
 public class Quali_moduloController {
 	static Scanner sc = new Scanner(System.in);
-	public boolean cadastrarQuali_modulo(String semestre, int ano_curricular)
+	public boolean cadastrarQuali_modulo(String semestre,Modulo m, Qualificacao q)
 	throws ExceptionDao{
-		if(semestre != null && semestre.length()>0 && semestre.matches("[a-zA-Z]+") &&  ano_curricular>0) {
-			Quali_modulo quali_modulo = new Quali_modulo(semestre, ano_curricular);
+		if(semestre != null && semestre.length()>0 && semestre.matches("[a-zA-Z]+") &&  m != null && q != null) {
+			Quali_modulo quali_modulo = new Quali_modulo(semestre, m,q);
 			quali_modulo.cadastrarQuali_modulo(quali_modulo);
 			return true;
 		}
@@ -25,10 +25,10 @@ public class Quali_moduloController {
 		return new Quali_modulo().listarQuali_modulo(semestre);
 	}
 
-public boolean atualizarQuali_modulo(String semestre, int ano_curricular, int codigo)
+public boolean atualizarQuali_modulo(int codigo, String semestre,Modulo modulo, Qualificacao q)
 		throws ExceptionDao{
-			if(semestre != null && semestre.length()>0 && semestre.matches("[a-zA-Z]+") && codigo != 0 && ano_curricular > 0){
-				Quali_modulo quali_modulo = new Quali_modulo( semestre,  ano_curricular);
+			if(semestre != null && semestre.length()>0 && semestre.matches("[a-zA-Z]+") && codigo != 0 && q != null){
+				Quali_modulo quali_modulo = new Quali_modulo( semestre, modulo, q);
 				quali_modulo.setCodigo(codigo);
 				quali_modulo.atualizarQuali_modulo(quali_modulo);;
 				return true;

@@ -65,6 +65,7 @@ public class Tela_Principal {
     private JTable tabelaFormando;
    private  JTable tabelaMatricula;
    private JTable tabelaSala;
+   private JTable tabelaModulo;
     private final Color AZUL_ESCURO_NAV = new Color(15, 38, 70);
     private final Color AZUL_DESTAQUE   = new Color(13, 110, 253);
     private final Color FUNDO_CLARO      = new Color(244, 246, 249);
@@ -233,8 +234,8 @@ public class Tela_Principal {
 
         cardLayout = new CardLayout();
         panelConteudoDinamico = new JPanel(cardLayout);
-
-        panelConteudoDinamico.add(criarPainelDashboard(), "Dashboard");
+        
+        panelConteudoDinamico.add(criarPainelLicoes(), "Licoes");
 
         panelConteudoDinamico.add(criarPainelModulos(), "Modulos");
 
@@ -309,7 +310,7 @@ public class Tela_Principal {
       
         
 
-        String[] menus = {"Dashboard", "Formadores","Modulos", "Inscrições", "Matrículas", "Turmas", "Qualificações","Formandos", "Cadastros ▾"};
+        String[] menus = {"Licoes", "Formadores","Modulos", "Inscrições", "Matrículas", "Turmas", "Qualificações","Formandos", "Cadastros ▾"};
         
         for (String menu : menus) {
         	if (nivelAcesso.equalsIgnoreCase("Formador") && (menu.equals("Cadastros ▾") || menu.equals("Formadores") || menu.equals("Formandos") || menu.equals("Inscrições") || menu.equals("Matrículas") || menu.equals("Modulo") || menu.equals("Qualificações"))) {
@@ -326,7 +327,7 @@ public class Tela_Principal {
             final Color corPadraoFundo;
             final Color corHoverFundo;
 
-            if (menu.equals("Dashboard")) {
+            if (menu.equals("Licoes")) {
                 corPadraoFundo = AZUL_DESTAQUE; 
                 corHoverFundo = new Color(11, 94, 215);
                 btnMenu.setBackground(corPadraoFundo);
@@ -421,11 +422,11 @@ public class Tela_Principal {
         JPanel agrupadorTextoHeader = new JPanel(new BorderLayout());
         agrupadorTextoHeader.setBackground(FUNDO_CLARO);
 
-        lblTituloPagina = new JLabel("Dashboard");
+        lblTituloPagina = new JLabel("");
         lblTituloPagina.setFont(new Font("Segoe UI", Font.BOLD, 28));
         lblTituloPagina.setForeground(AZUL_ESCURO_NAV);
 
-        lblSubtituloPagina = new JLabel("Visão Geral do Sistema");
+        lblSubtituloPagina = new JLabel("");
         lblSubtituloPagina.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         lblSubtituloPagina.setForeground(TEXTO_MUTED);
 
@@ -594,6 +595,27 @@ public class Tela_Principal {
         				s.printStackTrace();
         			}
         		}
+        		if(nomeCardView.equals("Modulos")) {
+        			DefaultTableModel modelo =(DefaultTableModel) tabelaModulo.getModel();
+        			String texto = txtPesquisar.getText();
+        			try {
+        				ModuloController mc = new ModuloController();
+        				
+        				ArrayList<Modulo> modulos = mc.listarModulo(texto);
+        				modelo.setRowCount(0);
+        				for(Modulo m : modulos) {
+        					modelo.addRow(new Object[] {
+        							     m.getCodigo(),
+        							     m.getCarga_horaria(),
+        							     m.getQuali_Nivel().getNivel(),
+        							    m.getQuali_Nivel().getQualificacao(),
+        							    m.getQuali_Nivel().getNivel()
+        					});
+        				}
+        			}catch(Exception s) {
+        				s.printStackTrace();
+        			}
+        		}
         		
         		
         	}
@@ -623,7 +645,7 @@ public class Tela_Principal {
                new Cadastro_Formador().setVisible(true); 
             } else if(nomeCardView.equals("Qualificações")) {
 
-            	new Tela_cadastroQualificação().setVisible(true);
+            	new Tela_cadastroQualificacao().setVisible(true);
                 cardLayout.show(panelConteudoDinamico, "FormularioQualificacao");
 
                 //abrirEmJanela(new Tela_cadastroQualificação(), "Cadastro de Qualificação", 800, 400);
@@ -653,7 +675,7 @@ public class Tela_Principal {
 					String campo = (String)tabelaQualificacao.getModel().getValueAt(tabelaQualificacao.getSelectedRow(), 4);
 					
 					try {
-						Tela_cadastroQualificação tq = new Tela_cadastroQualificação();
+						Tela_cadastroQualificacao tq = new Tela_cadastroQualificacao();
 						tq.buscarQualificacao(codigo, titulo, coordenador, nivel, campo);
 						tq.setVisible(true);
 						//cardLayout.show(panelConteudoDinamico, "FormularioQualificacao");
@@ -743,6 +765,28 @@ public class Tela_Principal {
 				        s.printStackTrace();
 				    }
 				}
+				if(nomeCardView.equals("Modulos")) {
+				    int linhaSelecionada = tabelaModulo.getSelectedRow();
+				    if(linhaSelecionada == -1) {
+				        JOptionPane.showMessageDialog(null, "Seleccione um Modulo para editar.");
+				        return;
+				    }
+				    Integer codigo = (Integer) tabelaModulo.getModel().getValueAt(linhaSelecionada, 0);
+				    String nome = (String) tabelaModulo.getModel().getValueAt(linhaSelecionada, 1);
+				    Integer carga_horaria = (Integer) tabelaModulo.getModel().getValueAt(linhaSelecionada, 2);
+				    String semestre = (String) tabelaModulo.getModel().getValueAt(linhaSelecionada, 3);
+				    Qualificacao q = (Qualificacao) tabelaModulo.getModel().getValueAt(linhaSelecionada, 4);
+				    Nivel nivel = (Nivel) tabelaModulo.getModel().getValueAt(linhaSelecionada, 5);
+				    try {
+				    	Tela_cadastroModulo tela = new Tela_cadastroModulo();
+				    	tela.buscarModulo(codigo, nome, carga_horaria, semestre, q, nivel);
+				    	tela.setVisible(true);
+				       
+				        
+				    }catch(Exception s) {
+				        s.printStackTrace();
+				    }
+				}
 				
 			}
 			
@@ -814,7 +858,7 @@ public class Tela_Principal {
         		            boolean sucesso = tc.apagarTurma(codigo);
         		            if(sucesso) {
         		                JOptionPane.showMessageDialog(null, "Turma eliminada com sucesso");
-        		                ((DefaultTableModel) tabelaFormando.getModel()).removeRow(linhaSelecionada);
+        		                ((DefaultTableModel) tabelaTurma.getModel()).removeRow(linhaSelecionada);
         		            } else {
         		                JOptionPane.showMessageDialog(null, "Falha ao eliminar");
         		            }
@@ -829,7 +873,7 @@ public class Tela_Principal {
         		        JOptionPane.showMessageDialog(null, "Seleccione uma Matricula para eliminar.");
         		        return;
         		    }
-        		    Integer codigo = (Integer) tabelaTurma.getModel().getValueAt(linhaSelecionada, 0);
+        		    Integer codigo = (Integer) tabelaMatricula.getModel().getValueAt(linhaSelecionada, 0);
         		    try {
         		        int confirm = JOptionPane.showConfirmDialog(null, "Tens a certeza que deseja eliminar?", "Confirmar", JOptionPane.YES_NO_OPTION);
         		        if(confirm == JOptionPane.YES_OPTION) {
@@ -838,7 +882,31 @@ public class Tela_Principal {
         		            boolean sucesso = mc.apagarMatricula(codigo);
         		            if(sucesso) {
         		                JOptionPane.showMessageDialog(null, "Matricula eliminada com sucesso");
-        		                ((DefaultTableModel) tabelaFormando.getModel()).removeRow(linhaSelecionada);
+        		                ((DefaultTableModel) tabelaModulo.getModel()).removeRow(linhaSelecionada);
+        		            } else {
+        		                JOptionPane.showMessageDialog(null, "Falha ao eliminar");
+        		            }
+        		        }
+        		    }catch(Exception s) {
+        		        s.printStackTrace();
+        		    }
+        		}
+        		if(nomeCardView.equals("Modulos")) {
+        		    int linhaSelecionada = tabelaModulo.getSelectedRow();
+        		    if(linhaSelecionada == -1) {
+        		        JOptionPane.showMessageDialog(null, "Seleccione uma Modulo para eliminar.");
+        		        return;
+        		    }
+        		    Integer codigo = (Integer) tabelaModulo.getModel().getValueAt(linhaSelecionada, 0);
+        		    try {
+        		        int confirm = JOptionPane.showConfirmDialog(null, "Tens a certeza que deseja eliminar?", "Confirmar", JOptionPane.YES_NO_OPTION);
+        		        if(confirm == JOptionPane.YES_OPTION) {
+        		            ModuloController mc = new ModuloController();
+        		       
+        		            boolean sucesso = mc.apagarModulo(codigo);
+        		            if(sucesso) {
+        		                JOptionPane.showMessageDialog(null, "Modulo eliminada com sucesso");
+        		                ((DefaultTableModel) tabelaModulo.getModel()).removeRow(linhaSelecionada);
         		            } else {
         		                JOptionPane.showMessageDialog(null, "Falha ao eliminar");
         		            }
@@ -869,9 +937,9 @@ public class Tela_Principal {
         painel.add(criarPainelBarraFerramentas("+ Novo Módulo", modeloModulos, "Modulos"), BorderLayout.NORTH);
 
         JScrollPane scrollPane = new JScrollPane();
-        JTable table = new JTable(modeloModulos);
-        table.setRowHeight(35);
-        scrollPane.setViewportView(table);
+        tabelaModulo = new JTable(modeloModulos);
+        tabelaModulo.setRowHeight(35);
+        scrollPane.setViewportView(tabelaModulo);
         painel.add(scrollPane, BorderLayout.CENTER);
         return painel;
     }
@@ -985,6 +1053,180 @@ public class Tela_Principal {
         return painel;
     }
     
+    private JPanel criarPainelLicoes() {
+        JPanel painel = new JPanel(new BorderLayout(0, 0));
+        painel.setBackground(FUNDO_CLARO);
+
+        // HEADER DO PAINEL
+        JPanel panelHeader = new JPanel(new BorderLayout());
+        panelHeader.setBackground(AZUL_ESCURO_NAV);
+        panelHeader.setPreferredSize(new Dimension(0, 70));
+        panelHeader.setBorder(new EmptyBorder(15, 25, 15, 25));
+
+        JLabel lblTitulo = new JLabel("  Gestão de Lições");
+        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        lblTitulo.setForeground(BRANCO);
+        panelHeader.add(lblTitulo, BorderLayout.WEST);
+
+        JLabel lblSub = new JLabel("Registo e controlo de lições do sistema");
+        lblSub.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        lblSub.setForeground(new Color(180, 200, 230));
+        panelHeader.add(lblSub, BorderLayout.EAST);
+
+        painel.add(panelHeader, BorderLayout.NORTH);
+
+        // BARRA DE ACÇÕES
+        JPanel panelAccoes = new JPanel(new BorderLayout());
+        panelAccoes.setBackground(BRANCO);
+        panelAccoes.setBorder(new EmptyBorder(12, 20, 12, 20));
+
+        // Pesquisa
+        JPanel panelPesquisa = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
+        panelPesquisa.setBackground(BRANCO);
+
+        JTextField txtPesquisarLicao = new JTextField();
+        txtPesquisarLicao.setPreferredSize(new Dimension(280, 38));
+        txtPesquisarLicao.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        txtPesquisarLicao.setBorder(new LineBorder(new Color(200, 210, 225), 1, true));
+        txtPesquisarLicao.setToolTipText("Pesquisar por módulo, formador ou turma...");
+
+        JButton btnPesquisar = new JButton("  Pesquisar");
+        btnPesquisar.setPreferredSize(new Dimension(130, 38));
+        btnPesquisar.setBackground(new Color(240, 243, 250));
+        btnPesquisar.setForeground(AZUL_ESCURO_NAV);
+        btnPesquisar.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnPesquisar.setBorder(new LineBorder(new Color(200, 210, 225), 1, true));
+        btnPesquisar.setFocusPainted(false);
+        btnPesquisar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        panelPesquisa.add(txtPesquisarLicao);
+        panelPesquisa.add(btnPesquisar);
+        panelAccoes.add(panelPesquisa, BorderLayout.WEST);
+
+        // Botões CRUD
+        JPanel panelBotoes = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
+        panelBotoes.setBackground(BRANCO);
+
+        JButton btnNovaLicao = new JButton("＋  Nova Lição");
+        btnNovaLicao.setPreferredSize(new Dimension(145, 38));
+        btnNovaLicao.setBackground(AZUL_DESTAQUE);
+        btnNovaLicao.setForeground(BRANCO);
+        btnNovaLicao.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnNovaLicao.setBorder(null);
+        btnNovaLicao.setFocusPainted(false);
+        btnNovaLicao.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnNovaLicao.addActionListener(e -> new Tela_cadastroLicao().setVisible(true));
+
+        JButton btnEditarLicao = new JButton("  Editar");
+        btnEditarLicao.setPreferredSize(new Dimension(110, 38));
+        btnEditarLicao.setBackground(new Color(240, 243, 250));
+        btnEditarLicao.setForeground(AZUL_ESCURO_NAV);
+        btnEditarLicao.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnEditarLicao.setBorder(new LineBorder(new Color(200, 210, 225), 1, true));
+        btnEditarLicao.setFocusPainted(false);
+        btnEditarLicao.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        JButton btnEliminarLicao = new JButton("  Eliminar");
+        btnEliminarLicao.setPreferredSize(new Dimension(115, 38));
+        btnEliminarLicao.setBackground(new Color(248, 215, 218));
+        btnEliminarLicao.setForeground(new Color(114, 28, 36));
+        btnEliminarLicao.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnEliminarLicao.setBorder(new LineBorder(new Color(245, 198, 203), 1, true));
+        btnEliminarLicao.setFocusPainted(false);
+        btnEliminarLicao.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        panelBotoes.add(btnNovaLicao);
+        panelBotoes.add(btnEditarLicao);
+        panelBotoes.add(btnEliminarLicao);
+        panelAccoes.add(panelBotoes, BorderLayout.EAST);
+
+        // TABELA
+        DefaultTableModel modeloLicoes = new DefaultTableModel(
+            new Object[][] {},
+            new String[] { "ID", "Módulo", "Formador", "Sala", "Turma", "Data", "Hora Início", "Hora Fim" }
+        ) {
+            @Override public boolean isCellEditable(int row, int column) { return false; }
+        };
+
+        JTable tabelaLicoes = new JTable(modeloLicoes);
+        tabelaLicoes.setRowHeight(40);
+        tabelaLicoes.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        tabelaLicoes.setShowHorizontalLines(true);
+        tabelaLicoes.setShowVerticalLines(false);
+        tabelaLicoes.setGridColor(new Color(230, 235, 245));
+        tabelaLicoes.setSelectionBackground(new Color(210, 225, 255));
+        tabelaLicoes.setSelectionForeground(AZUL_ESCURO_NAV);
+        tabelaLicoes.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
+        tabelaLicoes.getTableHeader().setBackground(new Color(235, 240, 250));
+        tabelaLicoes.getTableHeader().setForeground(AZUL_ESCURO_NAV);
+        tabelaLicoes.getTableHeader().setPreferredSize(new Dimension(0, 40));
+        tabelaLicoes.setIntercellSpacing(new Dimension(10, 0));
+
+        // Larguras das colunas
+        tabelaLicoes.getColumnModel().getColumn(0).setPreferredWidth(50);
+        tabelaLicoes.getColumnModel().getColumn(1).setPreferredWidth(180);
+        tabelaLicoes.getColumnModel().getColumn(2).setPreferredWidth(150);
+        tabelaLicoes.getColumnModel().getColumn(3).setPreferredWidth(100);
+        tabelaLicoes.getColumnModel().getColumn(4).setPreferredWidth(120);
+        tabelaLicoes.getColumnModel().getColumn(5).setPreferredWidth(100);
+        tabelaLicoes.getColumnModel().getColumn(6).setPreferredWidth(100);
+        tabelaLicoes.getColumnModel().getColumn(7).setPreferredWidth(100);
+
+        JScrollPane scrollPane = new JScrollPane(tabelaLicoes);
+        scrollPane.setBorder(new LineBorder(new Color(220, 228, 240), 1));
+        scrollPane.getViewport().setBackground(BRANCO);
+
+        // RODAPÉ COM CONTADOR
+        JPanel panelRodape = new JPanel(new BorderLayout());
+        panelRodape.setBackground(new Color(245, 247, 252));
+        panelRodape.setBorder(new EmptyBorder(8, 20, 8, 20));
+
+        JLabel lblTotal = new JLabel("Total de lições: 0");
+        lblTotal.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblTotal.setForeground(TEXTO_MUTED);
+        panelRodape.add(lblTotal, BorderLayout.WEST);
+
+        // CONTAINER CENTRAL
+        JPanel panelCentro = new JPanel(new BorderLayout(0, 0));
+        panelCentro.setBackground(BRANCO);
+        panelCentro.setBorder(new EmptyBorder(0, 15, 15, 15));
+        panelCentro.add(panelAccoes, BorderLayout.NORTH);
+        panelCentro.add(scrollPane, BorderLayout.CENTER);
+        panelCentro.add(panelRodape, BorderLayout.SOUTH);
+
+        painel.add(panelCentro, BorderLayout.CENTER);
+
+        // LISTENERS 
+        btnPesquisar.addActionListener(e -> {
+            JOptionPane.showMessageDialog(null, "Pesquisa ainda não ligada à base de dados.");
+        });
+
+        btnEditarLicao.addActionListener(e -> {
+            int linha = tabelaLicoes.getSelectedRow();
+            if(linha == -1) {
+                JOptionPane.showMessageDialog(null, "Seleccione uma lição para editar.");
+                return;
+            }
+            new Tela_cadastroLicao().setVisible(true);
+        });
+
+        btnEliminarLicao.addActionListener(e -> {
+            int linha = tabelaLicoes.getSelectedRow();
+            if(linha == -1) {
+                JOptionPane.showMessageDialog(null, "Seleccione uma lição para eliminar.");
+                return;
+            }
+            int confirm = JOptionPane.showConfirmDialog(null, "Tens a certeza que deseja eliminar esta lição?", "Confirmar", JOptionPane.YES_NO_OPTION);
+            if(confirm == JOptionPane.YES_OPTION) {
+                modeloLicoes.removeRow(linha);
+                lblTotal.setText("Total de lições: " + modeloLicoes.getRowCount());
+                JOptionPane.showMessageDialog(null, "Lição eliminada com sucesso.");
+            }
+        });
+
+        return painel;
+    }
+    
     private JPanel criarCardMetrica(String titulo, String valor, Color corDestaque) {
         JPanel card = new JPanel(new BorderLayout());
         card.setBackground(FUNDO_CLARO);
@@ -1016,7 +1258,7 @@ public class Tela_Principal {
     }
     private void abrirJanelaLegada(String nomeClasse) {
         try {
-            if (nomeClasse.equals("Tela_cadastroQualificação")) new Tela_cadastroQualificação().setVisible(true);
+            if (nomeClasse.equals("Tela_cadastroQualificação")) new Tela_cadastroQualificacao().setVisible(true);
             else if (nomeClasse.equals("Tela_cadastroNivel")) new Tela_cadastroNivel().setVisible(true);
             else if (nomeClasse.equals("Tela_cadastroSala")) new Tela_cadastroSala().setVisible(true);
             else if (nomeClasse.equals("Tela_cadastroCampo")) new Tela_cadastroCampo().setVisible(true);

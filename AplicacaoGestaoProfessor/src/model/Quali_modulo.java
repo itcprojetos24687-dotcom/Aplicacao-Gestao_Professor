@@ -12,16 +12,36 @@ public class Quali_modulo {
 	private Modulo modulo;
 	private Qualificacao qualificacao;
 	private String semestre;
+	private Nivel nivel;
 	private int ano_curricular;
 	
 	public Quali_modulo() {
 		
 	}
-	public Quali_modulo(String semestre, int ano_curricular) {
+	public Quali_modulo(String semestre, Modulo m, Qualificacao q) {
 		this.semestre = semestre;
-		this.ano_curricular = ano_curricular;
+		modulo = m;
+		qualificacao = q;
 	}
 
+	public Modulo getModulo() {
+		return modulo;
+	}
+	public void setModulo(Modulo modulo) {
+		this.modulo = modulo;
+	}
+	public Qualificacao getQualificacao() {
+		return qualificacao;
+	}
+	public void setQualificacao(Qualificacao qualificacao) {
+		this.qualificacao = qualificacao;
+	}
+	public Nivel getNivel() {
+		return nivel;
+	}
+	public void setNivel(Nivel nivel) {
+		this.nivel = nivel;
+	}
 	public int getCodigo() {
 		return codigo;
 	}
