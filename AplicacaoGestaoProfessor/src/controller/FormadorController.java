@@ -32,12 +32,20 @@ public class FormadorController {
 
 		return new Formador().listarFormador(nome);
 	}
-	public boolean atualizarFormador(int codigo, String nome, String apelido, String email, String genero, String estadoCivil,int contacto, double salario)
+	public boolean atualizarFormador(int codigo, String nome, String apelido, String email, String genero, String estadoCivil,int contacto, double salario, boolean isDiretor,boolean isCoordenador)
 			throws ExceptionDao{
 				if(codigo > 0 && nome != null && nome.length()>0 && nome.matches("[a-zA-Z]+") && codigo != 0&& apelido != null && apelido.matches("[a-zA-z]+") && apelido.length() > 0 && email != null && email.length() > 0 && contacto > 0){
 					Formador formador = new Formador(nome, apelido, email,genero,estadoCivil,contacto, salario);
 					formador.setCodigo(codigo);
 					formador.atualizarFormador(formador);
+					if(isDiretor) {
+						Diretor_TurmaController dt = new Diretor_TurmaController();
+						dt.atualizarDiretor_Turma(formador, codigo);
+					}
+					else if(isCoordenador) {
+						CoordenadorController cc = new CoordenadorController();
+						//cc.atualizarCoordenador(formador, codigo);
+					}
 					return true;
 				}
 				return false;

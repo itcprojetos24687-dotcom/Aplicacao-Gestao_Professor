@@ -237,10 +237,10 @@ public class Tela_Principal {
         
         panelConteudoDinamico.add(criarPainelLicoes(), "Licoes");
 
-        panelConteudoDinamico.add(criarPainelModulos(), "Modulos");
+       //panelConteudoDinamico.add(criarPainelModulos(), "Modulos");
 
         panelConteudoDinamico.add(criarPainelFormadores(), "Formadores");
-        panelConteudoDinamico.add(criarPainelListaInscricoes(), "Inscrições"); 
+        //panelConteudoDinamico.add(criarPainelListaInscricoes(), "Inscrições"); 
         //panelConteudoDinamico.add(new Tela_Incrição(), "FormularioInscricao");
         panelConteudoDinamico.add(criarPainelMatriculas(), "Matrículas");
         //panelConteudoDinamico.add(criarPainelSalas(), "Salas");
@@ -310,8 +310,7 @@ public class Tela_Principal {
       
         
 
-        String[] menus = {"Licoes", "Formadores","Modulos", "Inscrições", "Matrículas", "Turmas", "Qualificações","Formandos", "Cadastros ▾"};
-        
+        String[] menus = {"Licoes", "Formadores","Modulos", "Inscrições", "Matrículas", "Turmas", "Qualificações","Formandos", "Cadastros ▾"};   
         for (String menu : menus) {
         	if (nivelAcesso.equalsIgnoreCase("Formador") && (menu.equals("Cadastros ▾") || menu.equals("Formadores") || menu.equals("Formandos") || menu.equals("Inscrições") || menu.equals("Matrículas") || menu.equals("Modulo") || menu.equals("Qualificações"))) {
                 continue;
@@ -812,6 +811,7 @@ public class Tela_Principal {
         					sucesso = fc.apagarFormador(codigo);
         					if(sucesso) {
         						JOptionPane.showMessageDialog(null, "Formador apagado com sucesso");
+        						listarFormadores();
         					}else {
         						JOptionPane.showMessageDialog(null, "falha ao apagar");
         					}
@@ -834,6 +834,7 @@ public class Tela_Principal {
         		            boolean sucesso = fc.apagarFormando(codigo);
         		            if(sucesso) {
         		                JOptionPane.showMessageDialog(null, "Formando eliminado com sucesso");
+        		                listarFormando();
         		                ((DefaultTableModel) tabelaFormando.getModel()).removeRow(linhaSelecionada);
         		            } else {
         		                JOptionPane.showMessageDialog(null, "Falha ao eliminar");
@@ -858,6 +859,7 @@ public class Tela_Principal {
         		            boolean sucesso = tc.apagarTurma(codigo);
         		            if(sucesso) {
         		                JOptionPane.showMessageDialog(null, "Turma eliminada com sucesso");
+        		                listarTurma();
         		                ((DefaultTableModel) tabelaTurma.getModel()).removeRow(linhaSelecionada);
         		            } else {
         		                JOptionPane.showMessageDialog(null, "Falha ao eliminar");
@@ -882,6 +884,7 @@ public class Tela_Principal {
         		            boolean sucesso = mc.apagarMatricula(codigo);
         		            if(sucesso) {
         		                JOptionPane.showMessageDialog(null, "Matricula eliminada com sucesso");
+        		                listarMatriculas();
         		                ((DefaultTableModel) tabelaModulo.getModel()).removeRow(linhaSelecionada);
         		            } else {
         		                JOptionPane.showMessageDialog(null, "Falha ao eliminar");
@@ -1317,4 +1320,92 @@ public class Tela_Principal {
 			}
 		
     }
+   public void listarFormando() throws Exception{
+	   DefaultTableModel modelo = (DefaultTableModel) tabelaFormando.getModel();
+	    String texto = txtPesquisar.getText();
+	    try {
+	        FormandoController fc = new FormandoController();
+	        ArrayList<Formando> formandos = fc.listarFormando(texto);
+	        modelo.setRowCount(0);
+	        for(Formando f : formandos) {
+	            modelo.addRow(new Object[] {
+	                f.getCodigo(),
+	                f.getNome(),
+	                f.getApelido(),
+	                f.getContacto(),
+	                f.getEmail(),
+	                f.getBi()
+	            });
+	        }
+	    }catch(Exception s) {
+	        s.printStackTrace();
+	    }
+	    
+    }
+   public void listarTurma() throws Exception{
+	   int linhaSelecionada = tabelaTurma.getSelectedRow();
+	    if(linhaSelecionada == -1) {
+	        JOptionPane.showMessageDialog(null, "Seleccione um formando para editar.");
+	        return;
+	    }
+	    Integer codigo = (Integer) tabelaTurma.getModel().getValueAt(linhaSelecionada, 0);
+	    String nome = (String) tabelaTurma.getModel().getValueAt(linhaSelecionada, 1);
+	    Integer Ano_Lectivo = (Integer) tabelaTurma.getModel().getValueAt(linhaSelecionada, 2);
+	    String turno = (String) tabelaTurma.getModel().getValueAt(linhaSelecionada, 3);
+	    String Diretor_Turma = (String) tabelaTurma.getModel().getValueAt(linhaSelecionada, 4);
+	    String Qualificacao = (String) tabelaTurma.getModel().getValueAt(linhaSelecionada, 5);
+	    String nivel = (String) tabelaTurma.getModel().getValueAt(linhaSelecionada, 6);
+	    try {
+	        Cadastro_Turma cd = new Cadastro_Turma();
+	        cd.buscarTurma(codigo, nome, Ano_Lectivo,turno,Diretor_Turma,Qualificacao,nivel);
+	       cd.frame.setVisible(true);
+	    }catch(Exception s) {
+	        s.printStackTrace();
+	    }
+   }
+   public void listarFormadores()throws Exception{
+	   DefaultTableModel modelo = (DefaultTableModel) tabelaFormador.getModel();
+		String texto = txtPesquisar.getText();
+		try {
+			
+			FormadorController fc = new FormadorController();
+			ArrayList<Formador> formadores = fc.listarFormador(texto);
+			modelo.setRowCount(0);
+			for(Formador f: formadores) {
+				modelo.addRow(new Object[] {
+						          f.getCodigo(),
+						          f.getNome(),
+						          f.getApelido(),
+						          f.getGenero(),
+						          f.getEmail(),
+						          f.getEstadoCivil(),
+						          f.getContacto(),
+						          f.getSalario(),
+				});
+			}
+		}catch(Exception s) {
+			s.printStackTrace();
+		}
+   }
+   public void listarMatriculas() throws Exception {
+	   DefaultTableModel modelo =(DefaultTableModel) tabelaMatricula.getModel();
+		String texto = txtPesquisar.getText();
+		try {
+			MatriculaController mc = new MatriculaController();
+			
+			ArrayList<Matricula> matriculas = mc.listarMatricula(texto);
+			modelo.setRowCount(0);
+			for(Matricula m : matriculas) {
+				modelo.addRow(new Object[] {
+						     m.getCodigo(),
+						     m.getFormando(),
+						     m.getQualificacao(),
+						    m.getNivel(),
+						    m.getData_matricula()
+				});
+			}
+		}catch(Exception s) {
+			s.printStackTrace();
+		}
+   }
 }

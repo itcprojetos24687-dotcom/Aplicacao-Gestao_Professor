@@ -7,6 +7,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+
+import controller.NivelController;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import java.awt.Font;
@@ -22,22 +25,22 @@ public class Tela_cadastroNivel extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtNomeNivel;
 
-	public static void main(String[] args) {
-		try { 
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); 
-		} catch (Exception e) {}
-		
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Tela_cadastroNivel frame = new Tela_cadastroNivel();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		try { 
+//			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); 
+//		} catch (Exception e) {}
+//		
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					Tela_cadastroNivel frame = new Tela_cadastroNivel();
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	public Tela_cadastroNivel() {
 		setTitle("Cadastro de Nível");
@@ -96,23 +99,27 @@ public class Tela_cadastroNivel extends JFrame {
 		btnGuardar.setFocusPainted(false);
 		
 		btnGuardar.addActionListener(e -> {
-		    String nome = txtNomeNivel.getText().trim();
-		    if (nome.isEmpty()) {
-		        JOptionPane.showMessageDialog(this, "Por favor, insira o nome do nível!", "Aviso", JOptionPane.WARNING_MESSAGE);
-		        return;
-		    }
-		    try {
-		        NivelController nc = new NivelController();
-		        boolean sucesso = nc.cadastrarNivel(nome);
-		        if(sucesso) {
-		            JOptionPane.showMessageDialog(this, "Nível guardado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-		            dispose();
-		        } else {
-		            JOptionPane.showMessageDialog(this, "Dados inválidos.", "Aviso", JOptionPane.WARNING_MESSAGE);
-		        }
-		    } catch (Exception ex) {
-		        JOptionPane.showMessageDialog(this, "Erro ao guardar nível: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-		    }
+
+			String nome = txtNomeNivel.getText().trim();
+			boolean sucesso;
+			if (txtNomeNivel.getText().trim().isEmpty()) {
+				JOptionPane.showMessageDialog(this, "Por favor, insira o nome do nível!", "Aviso", JOptionPane.WARNING_MESSAGE);
+			} 
+			try {
+				
+				NivelController nc = new NivelController();
+				
+				sucesso = nc.cadastrarNivel(nome);
+				if(sucesso) {
+					JOptionPane.showMessageDialog(this, "Nível '" + txtNomeNivel.getText().trim() + "' guardado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+					dispose();
+					
+				}else {
+					JOptionPane.showMessageDialog(this, "Falha a cadastrar Nível '" + txtNomeNivel.getText().trim() , "Falhado", JOptionPane.INFORMATION_MESSAGE);
+				}
+			}catch(Exception s) {
+				s.printStackTrace();
+				}
 		});
 		card.add(btnGuardar);
 	}

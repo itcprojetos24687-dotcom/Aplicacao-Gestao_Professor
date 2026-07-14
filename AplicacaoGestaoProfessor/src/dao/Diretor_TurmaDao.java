@@ -238,7 +238,7 @@ public class Diretor_TurmaDao {
 		}
 	}*/
 	public void atualizarDiretor_Turma(Diretor_Turma diretor, int codigo)throws ExceptionDao {
-		String sql = "update Turma set cod_Formador = ? where cod_Formador = "+codigo;
+		String sql = "update Diretor_Turma set cod_Formador = ? where cod_Formador = "+codigo;
 		PreparedStatement alterar = null;
 		Connection con = null;
 		

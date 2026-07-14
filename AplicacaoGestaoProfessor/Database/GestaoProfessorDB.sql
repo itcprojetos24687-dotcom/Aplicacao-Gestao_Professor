@@ -21,7 +21,7 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 -- GTID state at the beginning of the backup 
 --
 
-SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ 'e463015e-6c1e-11f1-8ea1-e2754903d4c5:1-371';
+SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ 'e463015e-6c1e-11f1-8ea1-e2754903d4c5:1-477';
 
 --
 -- Current Database: `GestaoProfessor`
@@ -114,6 +114,24 @@ CREATE TABLE `Formador` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `Formando`
+--
+
+DROP TABLE IF EXISTS `Formando`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Formando` (
+  `codigo_formando` int NOT NULL AUTO_INCREMENT,
+  `nome_formando` varchar(100) NOT NULL,
+  `apelido_formando` varchar(100) NOT NULL,
+  `contacto_formando` int DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `BI` varchar(20) NOT NULL,
+  PRIMARY KEY (`codigo_formando`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `Log`
 --
 
@@ -129,7 +147,45 @@ CREATE TABLE `Log` (
   PRIMARY KEY (`codigo`),
   KEY `fk_id_Usuario` (`id_Usuario`),
   CONSTRAINT `fk_id_Usuario` FOREIGN KEY (`id_Usuario`) REFERENCES `Usuario` (`idUser`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `Matricula`
+--
+
+DROP TABLE IF EXISTS `Matricula`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Matricula` (
+  `codigo` int NOT NULL AUTO_INCREMENT,
+  `cod_formando` int NOT NULL,
+  `cod_Quali` int NOT NULL,
+  `data` varchar(10) NOT NULL,
+  PRIMARY KEY (`codigo`),
+  KEY `cod_formando` (`cod_formando`),
+  KEY `cod_Quali` (`cod_Quali`),
+  CONSTRAINT `Matricula_ibfk_1` FOREIGN KEY (`cod_formando`) REFERENCES `Formando` (`codigo_formando`),
+  CONSTRAINT `Matricula_ibfk_2` FOREIGN KEY (`cod_Quali`) REFERENCES `Qualificacao` (`cod_Quali`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `Modulo`
+--
+
+DROP TABLE IF EXISTS `Modulo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Modulo` (
+  `codigo` int NOT NULL AUTO_INCREMENT,
+  `nome_modulo` varchar(100) NOT NULL,
+  `carga_horaria` int NOT NULL,
+  `id_Quali_Nivel` int NOT NULL,
+  PRIMARY KEY (`codigo`),
+  KEY `id_Quali_Nivel` (`id_Quali_Nivel`),
+  CONSTRAINT `Modulo_ibfk_1` FOREIGN KEY (`id_Quali_Nivel`) REFERENCES `Quali_Nivel` (`codigo_Quali_Nivel`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -160,11 +216,6 @@ CREATE TABLE `Perfil` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-insert into Perfil values (1,"Administrador");
-insert into Perfil values (2,"Operador");
-insert into Perfil values (3,"Super Operador");
-insert into Perfil values (4,"Auditor");
-
 --
 -- Table structure for table `Quali_Nivel`
 --
@@ -173,12 +224,34 @@ DROP TABLE IF EXISTS `Quali_Nivel`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Quali_Nivel` (
+  `codigo_Quali_Nivel` int NOT NULL AUTO_INCREMENT,
   `cod_Quali` int NOT NULL,
   `cod_Nivel` int NOT NULL,
-  PRIMARY KEY (`cod_Quali`,`cod_Nivel`),
+  PRIMARY KEY (`codigo_Quali_Nivel`),
+  KEY `fk_codigo_Qualificacao` (`cod_Quali`),
   KEY `fk_codigo_Nivel` (`cod_Nivel`),
   CONSTRAINT `fk_codigo_Nivel` FOREIGN KEY (`cod_Nivel`) REFERENCES `Nivel` (`codigo`),
-  CONSTRAINT `fk_codigo_Quali` FOREIGN KEY (`cod_Quali`) REFERENCES `Qualificacao` (`cod_Quali`)
+  CONSTRAINT `fk_codigo_Qualificacao` FOREIGN KEY (`cod_Quali`) REFERENCES `Qualificacao` (`cod_Quali`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `Quali_modulo`
+--
+
+DROP TABLE IF EXISTS `Quali_modulo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Quali_modulo` (
+  `codigo` int NOT NULL AUTO_INCREMENT,
+  `cod_modulo` int NOT NULL,
+  `cod_Quali` int NOT NULL,
+  `semestre` varchar(40) NOT NULL,
+  PRIMARY KEY (`codigo`),
+  KEY `cod_modulo` (`cod_modulo`),
+  KEY `cod_Quali` (`cod_Quali`),
+  CONSTRAINT `Quali_modulo_ibfk_1` FOREIGN KEY (`cod_modulo`) REFERENCES `Modulo` (`codigo`),
+  CONSTRAINT `Quali_modulo_ibfk_2` FOREIGN KEY (`cod_Quali`) REFERENCES `Qualificacao` (`cod_Quali`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -196,7 +269,7 @@ CREATE TABLE `Qualificacao` (
   PRIMARY KEY (`cod_Quali`),
   KEY `fk_cod_Coordenador` (`cod_Coordenador`),
   CONSTRAINT `fk_cod_Coordenador` FOREIGN KEY (`cod_Coordenador`) REFERENCES `Coordenador` (`cod_Formador`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -227,13 +300,13 @@ CREATE TABLE `Turma` (
   `ano_lectivo` int NOT NULL,
   `turno` varchar(60) NOT NULL,
   `id_Diretor_Turma` int NOT NULL,
-  `id_Qualificacao` int NOT NULL,
+  `id_Quali_Nivel` int DEFAULT '1',
   PRIMARY KEY (`codigo`),
   KEY `fk_id_Diretor` (`id_Diretor_Turma`),
-  KEY `fk_id_Qualificacao` (`id_Qualificacao`),
-  CONSTRAINT `fk_id_Diretor` FOREIGN KEY (`id_Diretor_Turma`) REFERENCES `Diretor_Turma` (`cod_Formador`),
-  CONSTRAINT `fk_id_Qualificacao` FOREIGN KEY (`id_Qualificacao`) REFERENCES `Qualificacao` (`cod_Quali`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `fk_codigo_Quali_Nivel` (`id_Quali_Nivel`),
+  CONSTRAINT `fk_codigo_Quali_Nivel` FOREIGN KEY (`id_Quali_Nivel`) REFERENCES `Quali_Nivel` (`codigo_Quali_Nivel`),
+  CONSTRAINT `fk_id_Diretor` FOREIGN KEY (`id_Diretor_Turma`) REFERENCES `Diretor_Turma` (`cod_Formador`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -267,5 +340,5 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-insert into Usuario (idPerfil,nome,username,apelido,password,primeiroAcesso) values(1,"SuperAdmin","Admin","ADMINISTRADOR","Admin123",1);
--- Dump completed on 2026-07-12 11:06:50
+
+-- Dump completed on 2026-07-13 16:32:06

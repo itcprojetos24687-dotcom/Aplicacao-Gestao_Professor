@@ -1,10 +1,12 @@
 package VIEW;
 import java.awt.EventQueue;
-import controller.CampoController;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+
+import controller.CampoController;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import java.awt.Font;
@@ -13,7 +15,7 @@ import java.awt.Cursor;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.JButton;
-import model.Campo;
+import model.*;
 import dao.ExceptionDao;
 
 public class Tela_cadastroCampo extends JFrame {
@@ -21,22 +23,22 @@ public class Tela_cadastroCampo extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtNomeCampo;
 
-	public static void main(String[] args) {
-		try { 
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); 
-		} catch (Exception e) {}
-		
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Tela_cadastroCampo frame = new Tela_cadastroCampo();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		try { 
+//			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); 
+//		} catch (Exception e) {}
+//		
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					Tela_cadastroCampo frame = new Tela_cadastroCampo();
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	public Tela_cadastroCampo() {
 		setTitle("Cadastro de Campo");
@@ -99,25 +101,30 @@ public class Tela_cadastroCampo extends JFrame {
 		btnGuardar.setFocusPainted(false);
 		
 		btnGuardar.addActionListener(new java.awt.event.ActionListener() {
-		    public void actionPerformed(java.awt.event.ActionEvent e) {
-		        String nome = txtNomeCampo.getText().trim();
-		        if (nome.isEmpty()) {
-		            JOptionPane.showMessageDialog(Tela_cadastroCampo.this, "Por favor, insira o nome do campo!", "Aviso", JOptionPane.WARNING_MESSAGE);
-		            return;
-		        }
-		        try {
-		            CampoController cc = new CampoController();
-		            boolean sucesso = cc.cadastrarCampo(nome);
-		            if(sucesso) {
-		                JOptionPane.showMessageDialog(Tela_cadastroCampo.this, "Campo guardado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-		                dispose();
-		            } else {
-		                JOptionPane.showMessageDialog(Tela_cadastroCampo.this, "Dados inválidos.", "Aviso", JOptionPane.WARNING_MESSAGE);
-		            }
-		        } catch (ExceptionDao ex) {
-		            JOptionPane.showMessageDialog(Tela_cadastroCampo.this, "Erro ao guardar campo: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-		        }
-		    }
+
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				String nome = txtNomeCampo.getText().trim();
+				boolean sucesso;
+				if (nome.isEmpty()) {
+					JOptionPane.showMessageDialog(Tela_cadastroCampo.this, "Por favor, insira o nome do campo!", "Aviso", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				
+				try {
+					CampoController campo = new CampoController();
+					sucesso = campo.cadastrarCampo(nome);
+					if(sucesso) {
+						JOptionPane.showMessageDialog(Tela_cadastroCampo.this, "Campo '" + nome + "' guardado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+						dispose();
+						
+					}
+					else {
+						JOptionPane.showMessageDialog(Tela_cadastroCampo.this, "Falha ao cadastrar Campo", "Falha", JOptionPane.INFORMATION_MESSAGE);
+					}
+				} catch (ExceptionDao ex) {
+					JOptionPane.showMessageDialog(Tela_cadastroCampo.this, "Erro ao guardar campo: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+				}
+			}
 		});
 		card.add(btnGuardar);
 	}

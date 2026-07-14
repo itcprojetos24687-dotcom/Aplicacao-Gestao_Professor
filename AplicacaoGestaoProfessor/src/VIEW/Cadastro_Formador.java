@@ -36,6 +36,8 @@ public class Cadastro_Formador extends JFrame {
 	private JTextField textHoras_Mes;
 	private JComboBox comboGenero;
 	private JComboBox comboEstadoCivil;
+	private JCheckBox chckbxDiretor;
+	private JCheckBox chckbxCoordenador;
 	private int idUser;
 
 	/**
@@ -149,7 +151,7 @@ public class Cadastro_Formador extends JFrame {
 		chckbxCoordenador.setBounds(284, 267, 142, 25);
 		panelPrincipal.add(chckbxCoordenador);
 		
-		JCheckBox chckbxDiretor = new JCheckBox("Diretor de Turma");
+		chckbxDiretor = new JCheckBox("Diretor de Turma");
 		chckbxDiretor.setFont(new Font("Dialog", Font.BOLD, 15));
 		chckbxDiretor.setBounds(438, 267, 173, 25);
 		panelPrincipal.add(chckbxDiretor);
@@ -209,11 +211,11 @@ public class Cadastro_Formador extends JFrame {
 				String email = textEmail.getText();
 				String genero = comboGenero.getSelectedItem().toString();
 				String estadoCivil = comboEstadoCivil.getSelectedItem().toString();
-				int valor_hora = Integer.parseInt(textValor_Hora.getText());
-				int horas_mes = Integer.parseInt(textHoras_Mes.getText());
+				//int valor_hora = Integer.parseInt(textValor_Hora.getText());
+				//int horas_mes = Integer.parseInt(textHoras_Mes.getText());
 				boolean isDiretor = chckbxDiretor.isSelected();
 				boolean isCoordenador = chckbxCoordenador.isSelected();
-				int salario = valor_hora * horas_mes;
+				int salario = 0;
 				boolean sucesso;
 				try {
 					FormadorController fc = new FormadorController();
@@ -228,7 +230,7 @@ public class Cadastro_Formador extends JFrame {
 						}
 					}
 					else {
-						sucesso = fc.atualizarFormador(idUser, nome, apelido, email, genero, estadoCivil, contacto, salario);
+						sucesso = fc.atualizarFormador(idUser, nome, apelido, email, genero, estadoCivil, contacto,salario, isDiretor,isCoordenador);
 						new Tela_Principal(Seccao.obterUtilizador()).listar();
 						if (sucesso){
 							idUser = 0;
@@ -262,6 +264,11 @@ public class Cadastro_Formador extends JFrame {
 				comboEstadoCivil.setSelectedIndex(i);
 			}
 		}
+		textValor_Hora.setEditable(false);
+		textHoras_Mes.setEditable(false);
+		chckbxDiretor.setSelected(false);
+		chckbxCoordenador.setSelected(false);
+		
 		
 	}
 	private void limpar() {

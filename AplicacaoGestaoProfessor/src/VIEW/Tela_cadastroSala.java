@@ -1,4 +1,5 @@
 package VIEW;
+import model.*;
 import java.awt.EventQueue;
 import controller.SalaController;
 import javax.swing.JFrame;
@@ -16,29 +17,29 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import model.Sala;
 import dao.ExceptionDao;
-
+import controller.*;
 public class Tela_cadastroSala extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtNomeSala;
 	private JComboBox<String> cmbTipoSala;
 
-	public static void main(String[] args) {
-		try { 
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); 
-		} catch (Exception e) {}
-		
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Tela_cadastroSala frame = new Tela_cadastroSala();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		try { 
+//			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); 
+//		} catch (Exception e) {}
+//		
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					Tela_cadastroSala frame = new Tela_cadastroSala();
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	// Em Tela_Principal.java, adiciona este caso em abrirJanelaLegada():
 	//
@@ -125,27 +126,31 @@ public class Tela_cadastroSala extends JFrame {
 		btnGuardar.setFocusPainted(false);
 		
 		btnGuardar.addActionListener(new java.awt.event.ActionListener() {
-		    public void actionPerformed(java.awt.event.ActionEvent e) {
-		        String designacao = txtNomeSala.getText().trim();
-		        String tipo = (String) cmbTipoSala.getSelectedItem();
-		        
-		        if (designacao.isEmpty()) {
-		            JOptionPane.showMessageDialog(Tela_cadastroSala.this, "Por favor, insira a designação da sala!", "Aviso", JOptionPane.WARNING_MESSAGE);
-		            return;
-		        }
-		        try {
-		            SalaController sc = new SalaController();
-		            boolean sucesso = sc.cadastrarSala(designacao, tipo);
-		            if(sucesso) {
-		                JOptionPane.showMessageDialog(Tela_cadastroSala.this, "Sala guardada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-		                dispose();
-		            } else {
-		                JOptionPane.showMessageDialog(Tela_cadastroSala.this, "Dados inválidos.", "Aviso", JOptionPane.WARNING_MESSAGE);
-		            }
-		        } catch (ExceptionDao ex) {
-		            JOptionPane.showMessageDialog(Tela_cadastroSala.this, "Erro ao guardar sala: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-		        }
-		    }
+
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				String designacao = txtNomeSala.getText().trim();
+				String tipo = (String) cmbTipoSala.getSelectedItem();
+				boolean sucesso;
+				if (designacao.isEmpty()) {
+					JOptionPane.showMessageDialog(Tela_cadastroSala.this, "Por favor, insira a designação da sala!", "Aviso", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				
+				try {
+					SalaController sala = new SalaController();
+					sucesso = sala.cadastrarSala(designacao,tipo);
+					if(sucesso) {
+						JOptionPane.showMessageDialog(Tela_cadastroSala.this, "Sala '" + designacao + "' guardada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+						dispose();
+						
+					}else {
+						JOptionPane.showMessageDialog(Tela_cadastroSala.this, "Falha ao cadastrar Sala", "Falhado", JOptionPane.INFORMATION_MESSAGE);
+
+					}
+				} catch (ExceptionDao ex) {
+					JOptionPane.showMessageDialog(Tela_cadastroSala.this, "Erro ao guardar sala: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+				}
+			}
 		});
 		card.add(btnGuardar);
 	}
