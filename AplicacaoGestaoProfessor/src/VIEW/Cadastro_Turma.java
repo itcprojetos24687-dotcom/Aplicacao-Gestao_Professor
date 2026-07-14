@@ -209,7 +209,9 @@ public class Cadastro_Turma {
 						if (sucesso) {
 							//new Tela_Principal(Seccao.obterUtilizador()).listarTurmas();
 							JOptionPane.showMessageDialog(null, "Cadastrado com sucesso");
+							frame.setVisible(false);
 							tela_principal = Tela_Principal.getInstancia();
+							tela_principal.listarTurma();
 						}
 						else {
 							JOptionPane.showMessageDialog(null, "Falha ao cadastrar");
@@ -220,6 +222,9 @@ public class Cadastro_Turma {
 							//new Tela_Principal(Seccao.obterUtilizador()).listarTurmas();
 							idUser = 0;
 							JOptionPane.showMessageDialog(null, "Atualizado com sucesso");
+							tela_principal = Tela_Principal.getInstancia();
+							tela_principal.listarTurma();
+							frame.setVisible(false);
 						}else {
 							JOptionPane.showMessageDialog(null,"Falha ao atualizar");
 						}
@@ -239,11 +244,13 @@ public class Cadastro_Turma {
 		for(int i = 0; i< comboTurno.getItemCount();i++) {
 			if(comboTurno.getItemAt(i).equals(turno)) {
 				comboTurno.setSelectedIndex(i);
+				break;
 			}
 		}
 		for(int i = 0; i< comboDiretor_Turma.getItemCount();i++) {
 			if(comboDiretor_Turma.getItemAt(i).equals(diretor)) {
 				comboDiretor_Turma.setSelectedIndex(i);
+				break;
 			}
 		}
 		

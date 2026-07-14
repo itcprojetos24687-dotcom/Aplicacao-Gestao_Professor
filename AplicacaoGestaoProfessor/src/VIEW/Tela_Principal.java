@@ -1356,25 +1356,27 @@ public class Tela_Principal {
 	    
     }
    public void listarTurma() throws Exception{
-	   int linhaSelecionada = tabelaTurma.getSelectedRow();
-	    if(linhaSelecionada == -1) {
-	        JOptionPane.showMessageDialog(null, "Seleccione um formando para editar.");
-	        return;
-	    }
-	    Integer codigo = (Integer) tabelaTurma.getModel().getValueAt(linhaSelecionada, 0);
-	    String nome = (String) tabelaTurma.getModel().getValueAt(linhaSelecionada, 1);
-	    Integer Ano_Lectivo = (Integer) tabelaTurma.getModel().getValueAt(linhaSelecionada, 2);
-	    String turno = (String) tabelaTurma.getModel().getValueAt(linhaSelecionada, 3);
-	    String Diretor_Turma = (String) tabelaTurma.getModel().getValueAt(linhaSelecionada, 4);
-	    String Qualificacao = (String) tabelaTurma.getModel().getValueAt(linhaSelecionada, 5);
-	    String nivel = (String) tabelaTurma.getModel().getValueAt(linhaSelecionada, 6);
-	    try {
-	        Cadastro_Turma cd = new Cadastro_Turma();
-	        cd.buscarTurma(codigo, nome, Ano_Lectivo,turno,Diretor_Turma,Qualificacao,nivel);
-	       cd.frame.setVisible(true);
-	    }catch(Exception s) {
-	        s.printStackTrace();
-	    }
+
+		DefaultTableModel modelo = (DefaultTableModel) tabelaTurma.getModel();
+		String texto = txtPesquisar.getText();
+		try {
+			TurmaController tc = new TurmaController();
+			ArrayList<Turma> turmas = tc.listarTurma(texto);
+			modelo.setRowCount(0);
+			for(Turma t: turmas) {
+				modelo.addRow(new Object[] {
+						      t.getCodigo(),
+						      t.getNome(),
+						      t.getAno_ingresso(),
+						      t.getTurno(),
+						      t.getDiretor_turma().getFomador().getNome(),
+						      t.getQuali_nivel().getQualificacao().getTitulo(),
+						      t.getQuali_nivel().getNivel().getNome()
+				});
+			}
+		}catch(Exception s) {
+			s.printStackTrace();
+		}
    }
    public void listarFormadores()throws Exception{
 	   DefaultTableModel modelo = (DefaultTableModel) tabelaFormador.getModel();

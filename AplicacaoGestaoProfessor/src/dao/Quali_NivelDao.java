@@ -89,22 +89,20 @@ public class Quali_NivelDao {
 	}
 
 	public int buscarCodigo(Qualificacao q, Nivel n)throws ExceptionDao {
-		String sql = "select codigo_Quali_Nivel from Qualificacao "
-				+ "join Quali_Nivel on Qualificacao.cod_Quali= Quali_Nivel.cod_Quali "
-				+ "join Nivel on Nivel.codigo = cod_Nivel "
-				+ "where Qualificacao.titulo = ? and Nivel.nome = ?";
+		String sql = "select codigo_Quali_Nivel from Quali_Nivel where cod_Quali = ? and cod_Nivel = ?";
 		Connection con = null;
 		PreparedStatement stms = null;
 		int codigo = 0;
 		try{
 			con = new Conexao().getConnection();
 			stms = con.prepareStatement(sql);
-			stms.setString(1, q.getTitulo());
-			stms.setString(2, n.getNome());
+			stms.setInt(1, q.getCodigo());
+			stms.setInt(2, n.getCodigo());
 			ResultSet rs = stms.executeQuery();
 			if(rs.next()) {
-					codigo = rs.getInt("cod_Quali");
+					codigo = rs.getInt("codigo_Quali_Nivel");
 			}
+			
 			
 		}catch(SQLException s) {
 			new ExceptionDao("Erro ao Selecionar"+s);
