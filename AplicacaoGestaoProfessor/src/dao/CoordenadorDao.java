@@ -103,7 +103,7 @@ public class CoordenadorDao {
 		return listaCoordenador;
 	}
 
-	public void atualizarCoordenador(Coordenador coordenador) throws ExceptionDao {
+	public void atualizarCoordenador(Coordenador coordenador, int codigoFormador) throws ExceptionDao {
 		String sql = "update Coordenador set cod_formador = ? where codigo = ?";
 		Connection con = null;
 		PreparedStatement alterarCoordenador = null;
@@ -112,8 +112,15 @@ public class CoordenadorDao {
 			con = new Conexao().getConnection();
 			alterarCoordenador = con.prepareStatement(sql);
 			alterarCoordenador.setInt(1, coordenador.getFormador().getCodigo());
-			alterarCoordenador.setInt(2, coordenador.getFormador().getCodigo());
+			alterarCoordenador.setInt(2, codigoFormador);
 			alterarCoordenador.executeUpdate();
+			
+			Usuario u = Seccao.obterUtilizador();
+            if (u != null) {
+                Logs log = new Logs("UPDATE", "Coordenador " + coordenador.getFormador().getNome() + " foi atualizado", u);
+                log.setData(LocalDateTime.now());
+                new LogDao().salvar(log);
+            }
 
 		} catch (SQLException e) {
 			throw new ExceptionDao("Erro ao alterar dados: " + e);
@@ -164,4 +171,46 @@ public class CoordenadorDao {
 //			}
 //		}
 //	}
+
+	public boolean isCoordenador(int codigoFormador) throws ExceptionDao {
+        String sql = "SELECT * FROM Coordenador WHERE cod_Formador = ?";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            Connection con = new Conexao().getConnection();
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, codigoFormador);
+            rs = stmt.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            throw new ExceptionDao("Erro ao verificar coordenador: " + e);
+        } finally {
+            try { if (rs != null) rs.close(); } catch (SQLException e) {}
+            try { if (stmt != null) stmt.close(); } catch (SQLException e) {}
+        }
+    }
+
+	public void apagarCoordenador(int codigo) throws ExceptionDao{
+		String sql = "DELETE FROM Coordenador WHERE cod_Formador = ?";
+        PreparedStatement stmt = null;
+        Connection con = null;
+        try {
+            con = new Conexao().getConnection();
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, codigo);
+            stmt.executeUpdate();
+
+            Usuario u = Seccao.obterUtilizador();
+            if (u != null) {
+                Logs log = new Logs("DELETE", "Coordenador (ID Formador: " + codigo + ") foi removido", u);
+                log.setData(LocalDateTime.now());
+                new LogDao().salvar(log);
+            }
+        } catch (SQLException e) {
+            throw new ExceptionDao("Erro ao remover coordenador: " + e);
+        } finally {
+            try { if (stmt != null) stmt.close(); } catch (SQLException e) {}
+            try { if (con != null) con.close(); } catch (SQLException e) {}
+        }
+    }
 }

@@ -211,6 +211,7 @@ public class Tela_Matricula extends JPanel {
     			sucesso = mc.atualizarMatricula(idUser,(Formando)comboFormando.getSelectedItem(), (Qualificacao)comboQualificacao.getSelectedItem(), (Nivel)comboNivel.getSelectedItem(),data);
     		}if(sucesso) {
 				JOptionPane.showMessageDialog(null, "Matricula atualizada com sucesso");
+				
 			}
 			else {
 				JOptionPane.showMessageDialog(null, "falha ao atualizar Matricula");

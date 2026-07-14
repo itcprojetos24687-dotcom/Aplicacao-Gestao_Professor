@@ -37,24 +37,28 @@ public class Cadastro_Formador extends JFrame {
 	private JComboBox comboGenero;
 	private JComboBox comboEstadoCivil;
 	private JCheckBox chckbxDiretor;
+	//private JCheckBox chckbxCoordenador;
 	private JCheckBox chckbxCoordenador;
 	private int idUser;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Cadastro_Formador frame = new Cadastro_Formador();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					Cadastro_Formador frame = new Cadastro_Formador();
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
+	
+	private Tela_Principal tela_principal;
+	private OnDadosAlteradosListener listener;
 
 	/**
 	 * Create the frame.
@@ -146,7 +150,7 @@ public class Cadastro_Formador extends JFrame {
 		panelPrincipal.add(textHoras_Mes);
 		textHoras_Mes.setColumns(10);
 		
-		JCheckBox chckbxCoordenador = new JCheckBox("Coordenador");
+		chckbxCoordenador = new JCheckBox("Coordenador");
 		chckbxCoordenador.setFont(new Font("Dialog", Font.BOLD, 15));
 		chckbxCoordenador.setBounds(284, 267, 142, 25);
 		panelPrincipal.add(chckbxCoordenador);
@@ -211,30 +215,34 @@ public class Cadastro_Formador extends JFrame {
 				String email = textEmail.getText();
 				String genero = comboGenero.getSelectedItem().toString();
 				String estadoCivil = comboEstadoCivil.getSelectedItem().toString();
-				//int valor_hora = Integer.parseInt(textValor_Hora.getText());
-				//int horas_mes = Integer.parseInt(textHoras_Mes.getText());
+				int valor_hora = Integer.parseInt(textValor_Hora.getText());
+				int horas_mes = Integer.parseInt(textHoras_Mes.getText());
 				boolean isDiretor = chckbxDiretor.isSelected();
 				boolean isCoordenador = chckbxCoordenador.isSelected();
-				int salario = 0;
+				int salario = valor_hora * horas_mes;
 				boolean sucesso;
 				try {
 					FormadorController fc = new FormadorController();
 					if(idUser == 0) {
-						sucesso = fc.cadastrarFormador(nome, apelido, email, genero, estadoCivil, contacto, salario, isDiretor,isCoordenador);
-						new Tela_Principal(Seccao.obterUtilizador()).listar();
+						sucesso = fc.cadastrarFormador(nome, apelido, email, genero, estadoCivil, contacto,valor_hora,horas_mes, salario, isDiretor,isCoordenador);
+						//new Tela_Principal(Seccao.obterUtilizador()).listar();
 						if(sucesso) {
 							JOptionPane.showMessageDialog(null, "Cadastrado com sucesso");
+							tela_principal = Tela_Principal.getInstancia();
+							tela_principal.listarFormadores();
 						}
 						else {
 							JOptionPane.showMessageDialog(null,"Falha ao cadastrar");
 						}
 					}
 					else {
-						sucesso = fc.atualizarFormador(idUser, nome, apelido, email, genero, estadoCivil, contacto,salario, isDiretor,isCoordenador);
-						new Tela_Principal(Seccao.obterUtilizador()).listar();
+						sucesso = fc.atualizarFormador(idUser, nome, apelido, email, genero, estadoCivil, contacto,valor_hora,horas_mes,salario, isDiretor,isCoordenador);
+						//new Tela_Principal(Seccao.obterUtilizador()).listar();
 						if (sucesso){
 							idUser = 0;
 							JOptionPane.showMessageDialog(null,"Atualizado com sucesso");
+							tela_principal = Tela_Principal.getInstancia();
+							tela_principal.listarFormadores();
 						}
 						else {
 							JOptionPane.showMessageDialog(null, "Falha ao atualizar");
@@ -248,7 +256,7 @@ public class Cadastro_Formador extends JFrame {
 		panelFoater.add(btnSalvar);
 
 	}
-	public void buscarFormador(int codigo, String nome, String apelido, String email,String genero,String estadoCivil, int contacto, int salario) {
+	public void buscarFormador(int codigo, String nome, String apelido, String email,String genero,String estadoCivil, int contacto,int valor_horas,int horas_mes, double salario) {
 		idUser = codigo;
 		textNome.setText(nome);
 		textApelido.setText(apelido);
@@ -257,17 +265,28 @@ public class Cadastro_Formador extends JFrame {
 		for(int i = 0; i <comboGenero.getItemCount(); i++) {
 			if(comboGenero.getItemAt(i).equals(genero)) {
 				comboGenero.setSelectedIndex(i);
+				break;
 			}
 		}
 		for(int i = 0; i <comboEstadoCivil.getItemCount(); i++) {
 			if(comboEstadoCivil.getItemAt(i).equals(estadoCivil)) {
 				comboEstadoCivil.setSelectedIndex(i);
+				break;
+			}
+			try {
+				FormadorController fc = new FormadorController();
+				boolean [] status = fc.getStatusFormador(codigo);
+				chckbxDiretor.setSelected(status[0]);
+				chckbxCoordenador.setSelected(status[1]);
+			}catch(Exception e) {
+				e.printStackTrace();
+				chckbxDiretor.setSelected(false);
+				chckbxCoordenador.setSelected(false);
 			}
 		}
-		textValor_Hora.setEditable(false);
-		textHoras_Mes.setEditable(false);
-		chckbxDiretor.setSelected(false);
-		chckbxCoordenador.setSelected(false);
+		textValor_Hora.setText(String.valueOf(valor_horas));
+		textHoras_Mes.setText(String.valueOf(horas_mes));
+		
 		
 		
 	}

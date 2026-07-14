@@ -66,10 +66,10 @@ public class MatriculaDao {
 	public ArrayList<Matricula> listarMatricula(String data) throws ExceptionDao{
 		
 		String sql = "select Matricula.codigo, nome_formando,apelido_formando, titulo, Nivel.nome as nivel, data from Matricula"
-				+ " join Formando on codigo_formando = cod_formando "
+				+ " join Formando on codigo_formando = Matricula.cod_formando "
 				+ "join Qualificacao on Qualificacao.cod_Quali = Matricula.cod_Quali "
 				+ "join Quali_Nivel on Qualificacao.cod_Quali= Quali_Nivel.cod_Quali "
-				+ "join Nivel on Nivel.codigo= cod_Nivel";
+				+ "join Nivel on Nivel.codigo= Quali_Nivel.cod_Nivel";
 		PreparedStatement listarMatricula = null;
 		ArrayList <Matricula> matriculas = null;
 		

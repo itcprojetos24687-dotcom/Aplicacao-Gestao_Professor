@@ -38,6 +38,9 @@ public class Tela_cadastroFormando extends JPanel {
     private final Color BRANCO          = Color.WHITE;
     private final Color TEXTO_MUTED     = new Color(108, 117, 125);
 
+    private Tela_Principal tela_principal;
+	private OnDadosAlteradosListener listener;
+    
     public Tela_cadastroFormando() {
         setLayout(new BorderLayout(0, 15));
         setBackground(BRANCO);

@@ -15,16 +15,20 @@ public class Formador {
 	private String estadoCivil;
 	private int contacto;
 	private double salario;
+	private int valor_horas;
+	private int horas_mes;
 	private ArrayList<Licao> licoes;
 	
 	public Formador() {}
-	public Formador(String nome, String apelido, String email, String genero, String estadoCivil,int contacto, double salario) {
+	public Formador(String nome, String apelido, String email, String genero, String estadoCivil,int contacto,int valor_horas ,int horas_mes,double salario) {
 		this.nome = nome;
 		this.apelido = apelido;
 		this.email = email;
 		this.genero = genero;
 		this.estadoCivil = estadoCivil;
 		this.contacto = contacto;
+		this.valor_horas = valor_horas;
+		this.horas_mes = horas_mes;
 		this.salario = salario;
 	}
 	
@@ -86,12 +90,23 @@ public class Formador {
 		this.salario = salario;
 	}
 	public static double calcularSalario(int valor_hora, int num_horas) {
-		double salario = valor_hora * num_horas;
-		return salario;
+		return	valor_hora * num_horas; 
 	}
 	
 	public void cadastrarFormador(Formador formador) throws ExceptionDao{
 		new FormadorDao().cadastrarFormador(formador);
+	}
+	public int getValor_horas() {
+		return valor_horas;
+	}
+	public void setValor_horas(int valor_horas) {
+		this.valor_horas = valor_horas;
+	}
+	public int getHoras_mes() {
+		return horas_mes;
+	}
+	public void setHoras_mes(int horas_mes) {
+		this.horas_mes = horas_mes;
 	}
 	public ArrayList<Formador> listarFormador(String nome) throws ExceptionDao{
 		return new FormadorDao().listarFormador(nome);
@@ -105,8 +120,7 @@ public class Formador {
 	}
 	@Override
 	public String toString() {
-		return "Formador [codigo=" + codigo + ", nome=" + nome + ", apelido=" + apelido + ", email=" + email
-				+ ", contacto=" + contacto + "]";
+		return  nome + " "+apelido;
 	}
 	
 	

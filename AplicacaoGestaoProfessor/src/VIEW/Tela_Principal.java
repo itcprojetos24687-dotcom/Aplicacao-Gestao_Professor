@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 
 import java.awt.Font;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Dimension;
@@ -82,11 +83,17 @@ public class Tela_Principal {
 //            }
 //        });
 //    }
+    
+    private static Tela_Principal instancia;
 
     public Tela_Principal(Usuario u) {
          this.nivelAcesso = u.getPerfil().getNome();
+         instancia = this;
          inicializarModelos();
          initialize();
+    }
+    public static Tela_Principal getInstancia() {
+    	return instancia;
     }
 
 //    public Tela_Principal(Perfil p, Tela_login tl) {
@@ -120,7 +127,7 @@ public class Tela_Principal {
             new Object[][] {
                 
             },
-            new String[] { "Código", "Nome", "Apelido", "Genero", "Email","Estado Civil", "Contacto", "Salario" }
+            new String[] { "Código", "Nome", "Apelido", "Genero", "Email","Estado Civil", "Contacto","Valor por hora","Horas por mes", "Salario" }
         );
 
         modeloModulos = new DefaultTableModel(
@@ -545,7 +552,9 @@ public class Tela_Principal {
         							          f.getEmail(),
         							          f.getEstadoCivil(),
         							          f.getContacto(),
-        							          f.getSalario(),
+        							          f.getValor_horas(),
+        							          f.getHoras_mes(),
+        							          Formador.calcularSalario(f.getValor_horas(), f.getHoras_mes()),
         					});
         				}
         			}catch(Exception s) {
@@ -693,11 +702,15 @@ public class Tela_Principal {
 					String estadoCivil=(String)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 5);
 					String email=(String)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 4);
 					Integer contacto=(Integer)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 6);
-					Double Salario=(Double)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 7);
+					Integer valor_horas=(Integer)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 7);
+					Integer horas_mes=(Integer)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 8);
+
+					Double Salario=(Double)tabelaFormador.getModel().getValueAt(tabelaFormador.getSelectedRow(), 9);
+					
 					try {
 						Cadastro_Formador cf = new Cadastro_Formador();
 						cf.setVisible(true);
-						cf.buscarFormador(codigo, nome, apelido, email, genero, estadoCivil, contacto, 0);
+						cf.buscarFormador(codigo, nome, apelido, email, genero, estadoCivil, contacto,valor_horas,horas_mes, Salario);
 						
 					}catch(Exception s) {
 						s.printStackTrace();
@@ -1408,4 +1421,38 @@ public class Tela_Principal {
 			s.printStackTrace();
 		}
    }
+//   @Override
+//   public void ListarDadosAoAlterar() {
+//	   String painelAtual = getPainelActivo();
+//       switch (painelAtual) {
+//           case "Formadores":
+//               listarFormadores();
+//               break;
+//           case "Formandos":
+//               listarFormandos();
+//               break;
+//           case "Turmas":
+//               listarTurmas();
+//               break;
+//           case "Matrículas":
+//               listarMatriculas();
+//               break;
+//           case "Qualificações":
+//               listarQualificacoes();
+//               break;
+//           case "Modulos":
+//               listarModulos();
+//               break;
+//           default:
+//               break;
+//       }
+//	   }
+//   private String getPainelActivo() {
+//	   for(Component comp: panelConteudoDinamico.getComponents()) {
+//		   if(comp.isVisible()) {
+//			   return comp.getName();
+//		   }
+//	   }
+//	   return "";
+//   }
 }

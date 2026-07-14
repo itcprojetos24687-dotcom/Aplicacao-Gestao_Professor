@@ -7,6 +7,14 @@ import java.util.ArrayList;
 
 public class CoordenadorController {
 
+	public void salvarCoordenador(Formador f,int codigoFormador)throws ExceptionDao{
+		if(new Coordenador().isCoordenador(codigoFormador)) {
+			atualizarCoordenador(f,codigoFormador);
+		}
+		else {
+			cadastrarCoordenador(f);
+		}
+	}
 	public boolean cadastrarCoordenador(Formador formador) throws ExceptionDao {
 		if (formador != null && formador.getCodigo() != 0) {
 			Coordenador coordenador = new Coordenador();
@@ -20,6 +28,19 @@ public class CoordenadorController {
 	public ArrayList<Coordenador> listarCoordenador() throws ExceptionDao {
 		return new Coordenador().listarCoordenador();
 	}
+	public boolean isCoordenador( int codigoFormador) throws ExceptionDao{
+		if(codigoFormador >0) {
+			return new Coordenador().isCoordenador(codigoFormador);
+			
+		}
+		return false;
+	}
+	public void atualizarCoordenador(Formador f, int codigoFormador) throws ExceptionDao{
+		if(f != null && codigoFormador >0) {
+			Coordenador c = new Coordenador(f);
+			c.atualizarCoordenador(c, codigoFormador);
+		}
+	}
 
 //	public boolean atualizarCoordenador(int codigo, Formador formador) throws ExceptionDao {
 //		if (codigo != 0 && formador != null && formador.getCodigo() != 0) {
@@ -32,15 +53,13 @@ public class CoordenadorController {
 //		return false;
 //	}
 //
-//	public boolean apagarCoordenador(int codigo) throws ExceptionDao {
-//		if (codigo != 0) {
-//			Coordenador coordenador = new Coordenador();
-//			coordenador.setCodigo(codigo);
-//			coordenador.apagarCoordenador(coordenador);
-//			return true;
-//		}
-//		return false;
-//	}
+	public boolean apagarCoordenador(int codigo) throws ExceptionDao {
+		if (codigo != 0) {
+			new Coordenador().apagarCoordenador(codigo);
+			return true;
+		}
+		return false;
+	}
 
 	/*public static void main(String[] args) throws ExceptionDao {
 		CoordenadorController controller = new CoordenadorController();

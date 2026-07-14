@@ -282,5 +282,48 @@ public class Diretor_TurmaDao {
 			
 		}
 		
+	}    public boolean isDiretor(int codigoFormador) throws ExceptionDao {
+        String sql = "SELECT * FROM Diretor_Turma WHERE cod_Formador = ?";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            con = new Conexao().getConnection();
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, codigoFormador);
+            rs = stmt.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            throw new ExceptionDao("Erro ao verificar diretor: " + e);
+        } finally {
+            try { if (rs != null) rs.close(); } catch (SQLException e) {new ExceptionDao("Erro ao fechar result set" +e);}
+            try { if (stmt != null) stmt.close(); } catch (SQLException e) {}
+            try { if (con != null) con.close(); } catch (SQLException e) {}
+        }
+    }
+	public void apagarDiretor(int codigoFormador) throws ExceptionDao{
+        String sql = "DELETE FROM Diretor_Turma WHERE cod_Formador = ?";
+        PreparedStatement stmt = null;
+        try {
+            con = new Conexao().getConnection();
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, codigoFormador);
+            stmt.executeUpdate();
+
+            // LOG
+            Usuario u = Seccao.obterUtilizador();
+            if (u != null) {
+                Logs log = new Logs("DELETE", "Diretor de Turma (ID Formador: " + codigoFormador + ") foi removido", u);
+                log.setData(LocalDateTime.now());
+                new LogDao().salvar(log);
+            }
+        } catch (SQLException e) {
+           new ExceptionDao("Erro ao remover diretor: " + e);
+        } finally {
+            try { if (stmt != null) stmt.close(); } catch (SQLException e) {}
+            try { if (con != null) con.close(); } catch (SQLException e) {}
+        
 	}
+	}
+	
+	
 }

@@ -47,6 +47,9 @@ public class Tela_cadastroQualificacao extends JFrame {
 // Tela_cadastroQualificação tl = new Tela_cadastroQualificação();
 // tl.setVisible(true);
 // }
+    
+    private Tela_Principal tela_principal;
+	private OnDadosAlteradosListener listener;
    
     public Tela_cadastroQualificacao() {
     

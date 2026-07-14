@@ -17,7 +17,7 @@ public class FormadorDao {
 
 	Connection con = null;
 	public void cadastrarFormador(Formador formador) throws ExceptionDao {
-		String sql = "insert into Formador(nome, apelido, email, genero, estadoCivil, contacto, salario)" + "values(?,?,?,?,?,?,?)";
+		String sql = "insert into Formador(nome, apelido, email, genero, estadoCivil, contacto, valor_hora, horas_mes )" + "values(?,?,?,?,?,?,?,?)";
 		PreparedStatement InsertFormador = null;
 		try {
 			
@@ -29,7 +29,9 @@ public class FormadorDao {
 			InsertFormador.setString(4, formador.getGenero());
 			InsertFormador.setString(5, formador.getEstadoCivil());
 			InsertFormador.setInt(6, formador.getContacto());
-			InsertFormador.setDouble(7, formador.getSalario());
+			InsertFormador.setInt(7, formador.getValor_horas());
+			InsertFormador.setInt(8, formador.getHoras_mes());
+			
 			InsertFormador.execute();
 			
 			// LOG: Cadastro de formador (estilo UsuarioDao)
@@ -67,6 +69,7 @@ public class FormadorDao {
 				throw new ExceptionDao("Erro ao fechar a conexao ");
 			}
 		}
+		
 	}
 	public ArrayList<Formador> listarFormador(String nome) throws ExceptionDao{
 
@@ -92,7 +95,8 @@ public class FormadorDao {
 					formador.setGenero(rs.getString("genero"));
 					formador.setEstadoCivil(rs.getString("estadoCivil"));
 					formador.setContacto(rs.getInt("contacto"));
-					formador.setSalario(rs.getDouble("salario"));
+					formador.setValor_horas(rs.getInt("valor_hora"));
+					formador.setHoras_mes(rs.getInt("horas_mes"));
 					formadores.add(formador);
 					//JOptionPane.showMessageDialog(null, "Adicionado com sucesso");
 				}
@@ -128,7 +132,7 @@ public class FormadorDao {
 		
 	}
 	public void atualizarFormador(Formador formador) throws ExceptionDao {
-		String sql = "update Formador set nome = ?, apelido = ?, email = ?, genero = ?, estadoCivil = ?, contacto = ?,  where codigo = ?";
+		String sql = "update Formador set nome = ?, apelido = ?, email = ?, genero = ?, estadoCivil = ?, contacto = ?,valor_hora = ?, horas_mes =?  where codigo = ?";
 	
 		//public void atualizarFormador(Formador formador) {
 		//String sql = "update Formador set nome = ?, apelido = ?, email = ?, genero = ?, estadoCivil = ?, contacto = ? where codigo = ?";
@@ -144,8 +148,11 @@ public class FormadorDao {
 			alterarFormador.setString(4, formador.getGenero());
 			alterarFormador.setString(5, formador.getEstadoCivil());
 			alterarFormador.setInt(6, formador.getContacto());
+			alterarFormador.setInt(7, formador.getValor_horas());
+			alterarFormador.setInt(8, formador.getHoras_mes());
+			
 			//alterarFormador.setDouble(7, formador.getSalario());
-			alterarFormador.setInt(7, formador.getCodigo());
+			alterarFormador.setInt(9, formador.getCodigo());
 			alterarFormador.executeUpdate();
 			
 			// LOG: Atualização de formador (estilo UsuarioDao)

@@ -22,6 +22,18 @@ public class Coordenador{
 	public ArrayList<Coordenador> listarCoordenador() throws ExceptionDao{
 		return new CoordenadorDao().listarCoordenador();
 	}
+	public boolean isCoordenador(int codigoFormador)throws ExceptionDao {
+		
+		return new CoordenadorDao().isCoordenador(codigoFormador);
+	}
+	public void apagarCoordenador(int codigo) throws ExceptionDao{
+		 new CoordenadorDao().apagarCoordenador(codigo);
+		
+	}
+	public void atualizarCoordenador(Coordenador c, int codigoFormador)throws ExceptionDao {
+		new CoordenadorDao().atualizarCoordenador(c, codigoFormador);
+		
+	}
 	public String toString() {
 		return formador.getNome();
 	}

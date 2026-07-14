@@ -35,7 +35,13 @@ public class Diretor_Turma {
 //	public void apagarCampo(Diretor_Turma diretor)throws ExceptionDao{
 //		new Diretor_TurmaDao().apagarDiretor_Turma(diretor);
 //	}
+	public boolean isDiretor(int codigoFormandor) throws ExceptionDao{
+		return new Diretor_TurmaDao().isDiretor(codigoFormandor);
+	}
 	public String toString() {
 		return formador.getNome();
+	}
+	public void apagarDiretor(int codigoFormador) throws ExceptionDao {
+		 new Diretor_TurmaDao().apagarDiretor(codigoFormador);
 	}
 }

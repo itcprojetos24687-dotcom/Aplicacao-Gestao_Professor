@@ -116,7 +116,7 @@ public class Tela_Logs extends JPanel {
 				try {
 					LogController lc = new LogController();
 					ArrayList<Logs> logs = lc.listarlogs();
-					JOptionPane.showMessageDialog(null, logs);
+					
 					DefaultTableModel modelo = (DefaultTableModel) tabelaLogs.getModel();
 					modelo.setRowCount(0);
 					for(Logs l: logs) {
@@ -127,7 +127,7 @@ public class Tela_Logs extends JPanel {
 								l.getDescricao(),
 								l.getData()
 						});
-						JOptionPane.showMessageDialog(null, l);
+						
 					}
 					
 				}catch(Exception s) {

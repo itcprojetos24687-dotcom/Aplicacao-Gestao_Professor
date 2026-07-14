@@ -42,6 +42,9 @@ public class Cadastro_Turma {
 	/**
 	 * Create the application.
 	 */
+	private Tela_Principal tela_principal;
+	private OnDadosAlteradosListener listener;
+	
 	public Cadastro_Turma() {
 		initialize();
 	}
@@ -206,6 +209,7 @@ public class Cadastro_Turma {
 						if (sucesso) {
 							//new Tela_Principal(Seccao.obterUtilizador()).listarTurmas();
 							JOptionPane.showMessageDialog(null, "Cadastrado com sucesso");
+							tela_principal = Tela_Principal.getInstancia();
 						}
 						else {
 							JOptionPane.showMessageDialog(null, "Falha ao cadastrar");
@@ -222,6 +226,7 @@ public class Cadastro_Turma {
 					}
 				}catch(Exception s) {
 					s.printStackTrace();
+					JOptionPane.showMessageDialog(null,"Erro : "+ s.getMessage());
 				}
 			}
 		});
