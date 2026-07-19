@@ -25,9 +25,7 @@ public class UsuarioDao {
 			lg.setString(1, username);
 			lg.setString(2, password);
 			ResultSet rs = lg.executeQuery();
-			//JOptionPane.showMessageDialog(null, "Execute Query feita com sucesso");
 			if (rs != null) {
-				//JOptionPane.showMessageDialog(null, "Result set nao e null, pegou algo");
 				while (rs.next()) {
 					u = new Usuario();
 					p = new Perfil();
@@ -39,16 +37,11 @@ public class UsuarioDao {
 					p.setId(rs.getInt("id"));
 					p.setNome(rs.getString("Perfil.nome"));
 					u.setPerfil(p);
-					//JOptionPane.showMessageDialog(null, u);
-					
-					
-					//JOptionPane.showMessageDialog(null, u.getUsername()+""+u.getPassword());
 				}
 			}
 
 			if (u != null) {
 				Logs log = new Logs("LOGIN", "Utilizador " + u.getUsername() + " iniciou sessão", u);
-				
 				log.setData(LocalDateTime.now());
 				new LogDao().salvar(log);
 			}
@@ -96,11 +89,20 @@ public class UsuarioDao {
 			insertUsuario.setInt(5, idPerfil);
 			insertUsuario.execute();
 			Usuario u = Seccao.obterUtilizador();
-			Logs log = new Logs("INSERT","Operador "+usuario.getNome()+ " foi cadastrado",u);
-			log.salvar(log);
+			if (u != null) {
+				try {
+					Logs log = new Logs("INSERT", usuario.getPerfil().getNome() + " " + usuario.getNome() + " foi cadastrado", u);
+					log.setData(LocalDateTime.now());
+					log.salvar(log);
+				} catch (ExceptionDao logEx) {
+					System.err.println("Aviso: falha ao gravar log de auditoria: " + logEx.getMessage());
+				}
+			}
 			
-
 		} catch (SQLException e) {
+			if (e instanceof java.sql.SQLIntegrityConstraintViolationException) {
+				throw new ExceptionDao("Esse nome de utilizador já existe. Escolha outro username.");
+			}
 			throw new ExceptionDao("Erro ao inserir dados :" + e);
 
 		} finally {
@@ -136,7 +138,6 @@ public class UsuarioDao {
 
 			con = new Conexao().getConnection();
 			listarUsuario = con.prepareStatement(sql);
-			//listarUsuario.setString(1, username);
 			ResultSet rs = listarUsuario.executeQuery();
 
 			if (rs != null) {
@@ -149,11 +150,9 @@ public class UsuarioDao {
 					usuario.setCodigo(rs.getInt("idUser"));
 					usuario.setNome(rs.getString("nome"));
 					usuario.setUsername(rs.getString("username"));
-					//usuario.setIdPerfil(rs.getInt("idPerfil"));
 					p.setNome(rs.getString("Perfil.nome"));
 					usuario.setPerfil(p);
 					usuario.setApelido(rs.getString("apelido"));
-					//usuario.setPrimeiroAcesso(rs.getBoolean("primeiroAcesso"));
 					
 
 					usuarios.add(usuario);
@@ -196,18 +195,14 @@ public class UsuarioDao {
 			alterar.setString(1, novapassword);
 			alterar.setInt(2, codigo);
 			
-			
 			alterar.executeUpdate();
-			//JOptionPane.showMessageDialog(null,"Alterado com sucesso");
 		}catch(SQLException e) {
-			//JOptionPane.showMessageDialog(null,"Erro ao alterar");
-			throw new ExceptionDao("Erro ao fechar  a conexao"+ e);
+			throw new ExceptionDao("Erro ao alterar senha"+ e);
 		}
 		finally {
 			try {
 				if(alterar != null) {
 					alterar.close();
-					//JOptionPane.showMessageDialog(null, "Fechado com sucesso");
 				}
 			}catch(SQLException sq) {
 				throw new ExceptionDao("Erro ao fechar  a conexao"+ sq);
@@ -215,48 +210,15 @@ public class UsuarioDao {
 			try {
 				if(con != null) {
 					con.close();
-					//JOptionPane.showMessageDialog(null, "Fechado com sucesso");
 				}
 			}catch(SQLException l) {
 				throw new ExceptionDao("Erro ao fechar  a conexao"+ l);
-				//JOptionPane.showMessageDialog(null, "Falha de fechado ");
 			}
 			
 		}
 		
 	}
-//	public void alterarPrimeiroAcesso(Usuario u) throws ExceptionDao{
-//		String sql = "update Usuario set primeiroAcesso = 0 where idUser = ?";
-//		Connection con = null;
-//		PreparedStatement stms = null;
-//		try {
-//			con = new Conexao().getConnection();
-//			stms = con.prepareStatement(sql);
-//			stms.setBoolean(1, u.isPrimeiroAcesso());
-//			stms.setInt(2, u.getCodigo());
-//			}catch(SQLException s) {
-//				new ExceptionDao("Erro ao alterar acesso"+ s);
-//		}finally {
-//			try {
-//				if(stms != null) {
-//					stms.close();
-//					//JOptionPane.showMessageDialog(null, "Fechado com sucesso");
-//				}
-//			}catch(SQLException sq) {
-//				throw new ExceptionDao("Erro ao fechar  a conexao"+ sq);
-//			}
-//			try {
-//				if(con != null) {
-//					con.close();
-//					//JOptionPane.showMessageDialog(null, "Fechado com sucesso");
-//				}
-//			}catch(SQLException l) {
-//				throw new ExceptionDao("Erro ao fechar  a conexao"+ l);
-//				//JOptionPane.showMessageDialog(null, "Falha de fechado ");
-//			}
-//			
-//		}
-//	}
+
 	public Usuario autenticar( String password) throws ExceptionDao {
 
 
@@ -271,9 +233,7 @@ public class UsuarioDao {
 			lg = con.prepareStatement(sql);
 			lg.setString(1, password);
 			ResultSet rs = lg.executeQuery();
-			//JOptionPane.showMessageDialog(null, "Execute Query feita com sucesso");
 			if (rs != null) {
-				//JOptionPane.showMessageDialog(null, "Result set nao e null, pegou algo");
 				while (rs.next()) {
 					u = new Usuario();
 					u.setPassword(rs.getString("password"));
@@ -315,9 +275,20 @@ public class UsuarioDao {
 			stms = con.prepareStatement(sql);
 			stms.setString(1, senhaResetada);
 			stms.executeUpdate();
+
+			Usuario logUser = Seccao.obterUtilizador();
+			if (logUser != null) {
+				try {
+					Logs log = new Logs("UPDATE", "Senha do utilizador (ID: " + codigo + ") foi resetada", logUser);
+					log.setData(LocalDateTime.now());
+					new LogDao().salvar(log);
+				} catch (ExceptionDao logEx) {
+					System.err.println("Aviso: falha ao gravar log: " + logEx.getMessage());
+				}
+			}
 			
 		}catch(SQLException sq) {
-			new ExceptionDao("Erro ao atualizar senha");
+			throw new ExceptionDao("Erro ao atualizar senha: " + sq);
 		}finally {
 			try {
 				if (stms != null) {
@@ -338,9 +309,6 @@ public class UsuarioDao {
 	}
 
 	public ArrayList<Usuario> obterTodosUsuarios() throws ExceptionDao {
-
-
-
 
 		String sql = "select idUser,nome_completo,username,email,Perfil.nome from Usuario "
 				+ " join Perfil on idPerfil = id ";
@@ -366,7 +334,6 @@ public class UsuarioDao {
 					usuario.setCodigo(rs.getInt("idUser"));
 					usuario.setNome(rs.getString("nome"));
 					usuario.setUsername(rs.getString("username"));
-					//usuario.setIdPerfil(rs.getInt("idPerfil"));
 					p.setNome(rs.getString("nome"));
 					usuario.setPerfil(p);
 					usuario.setApelido(rs.getString("apelido"));
@@ -402,7 +369,6 @@ public class UsuarioDao {
 	}
 
 	public Usuario obterUsuarioPorCodigo(int codigo) throws ExceptionDao {
-
 
 		String sql = "select * from Usuario where codigo=?";
 		Connection con = null;
@@ -447,17 +413,27 @@ public class UsuarioDao {
 					con.close();
 				}
 			} catch (SQLException sq) {
-				throw new ExceptionDao("Erro ao fechar conexao: " + sql);
+				throw new ExceptionDao("Erro ao fechar conexao: " + sq);
 			}
 		}
 
 		return usuario;
 	}
-
 	public void atualizarUsuario(Usuario usuario) throws ExceptionDao {
 		String sql = "update Usuario set idPerfil = ? where idUser = ?";
 		PreparedStatement alterar = null;
 		Connection con = null;
+		
+		// Buscar o username atual antes de atualizar, para a mensagem do log ficar completa
+		String usernameAtual = "";
+		try {
+			Usuario existente = obterUsuarioPorCodigo(usuario.getCodigo());
+			if (existente != null) {
+				usernameAtual = existente.getUsername();
+			}
+		} catch (Exception ex) {
+			// se não conseguir buscar, segue com nome vazio
+		}
 		
 		try {
 			con = new Conexao().getConnection();
@@ -467,16 +443,24 @@ public class UsuarioDao {
 			alterar.setInt(2, usuario.getCodigo());
 			
 			alterar.executeUpdate();
-			//JOptionPane.showMessageDialog(null,"Alterado com sucesso");
+
+			Usuario logUser = Seccao.obterUtilizador();
+			if (logUser != null) {
+				try {
+					Logs log = new Logs("UPDATE", "Utilizador " + usernameAtual + " (ID: " + usuario.getCodigo() + ") teve o perfil atualizado para " + usuario.getPerfil().getNome(), logUser);
+					log.setData(LocalDateTime.now());
+					new LogDao().salvar(log);
+				} catch (ExceptionDao logEx) {
+					System.err.println("Aviso: falha ao gravar log: " + logEx.getMessage());
+				}
+			}
 		}catch(SQLException e) {
-			//JOptionPane.showMessageDialog(null,"Erro ao alterar");
-			throw new ExceptionDao("Erro ao fechar  a conexao"+ e);
+			throw new ExceptionDao("Erro ao alterar dados"+ e);
 		}
 		finally {
 			try {
 				if(alterar != null) {
 					alterar.close();
-					//JOptionPane.showMessageDialog(null, "Fechado com sucesso");
 				}
 			}catch(SQLException sq) {
 				throw new ExceptionDao("Erro ao fechar  a conexao"+ sq);
@@ -484,16 +468,13 @@ public class UsuarioDao {
 			try {
 				if(con != null) {
 					con.close();
-					//JOptionPane.showMessageDialog(null, "Fechado com sucesso");
 				}
 			}catch(SQLException l) {
 				throw new ExceptionDao("Erro ao fechar  a conexao"+ l);
-				//JOptionPane.showMessageDialog(null, "Falha de fechado ");
 			}
 			
 		}
 	}
-
 	public void apagarUsuario(Usuario usuario) throws ExceptionDao {
 		String sql = "delete from Usuario where idUser=?";
 		PreparedStatement apagar = null;
@@ -504,16 +485,24 @@ public class UsuarioDao {
 			apagar = con.prepareStatement(sql);
 			apagar.setInt(1, usuario.getCodigo());
 			apagar.executeUpdate();
-			//JOptionPane.showMessageDialog(null, "Apagado com sucesso");
+
+			Usuario logUser = Seccao.obterUtilizador();
+			if (logUser != null) {
+				try {
+					Logs log = new Logs("DELETE", "Utilizador (ID: " + usuario.getCodigo() + ") foi removido", logUser);
+					log.setData(LocalDateTime.now());
+					new LogDao().salvar(log);
+				} catch (ExceptionDao logEx) {
+					System.err.println("Aviso: falha ao gravar log: " + logEx.getMessage());
+				}
+			}
 			
 		}catch(SQLException e) {
-			//JOptionPane.showMessageDialog(null, "Erro ao inserir dado");
 			 throw new ExceptionDao("Erro ao apagar dados :" + e);
 		}finally {
 			try {
 				if(apagar != null) {
 					apagar.close();
-					//JOptionPane.showMessageDialog(null, "Statemente fechado com sucesso");
 				}
 			}catch(SQLException sq) {
 				throw new ExceptionDao("Erro ao fechar o statement");
@@ -521,7 +510,6 @@ public class UsuarioDao {
 			try {
 				if (con != null) {
 					con.close();
-					//JOptionPane.showMessageDialog(null, "Conexao fechado com sucesso");
 				}
 			}catch(SQLException f) {
 				throw new ExceptionDao("Erro ao fechar a conexao ");

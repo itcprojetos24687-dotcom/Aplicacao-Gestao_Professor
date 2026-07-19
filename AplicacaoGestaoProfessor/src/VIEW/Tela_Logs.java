@@ -26,6 +26,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.Timer;
 
 import controller.LogController;
 
@@ -37,6 +38,7 @@ public class Tela_Logs extends JPanel {
     private DefaultTableModel modeloLogs;
     private JTextField txtPesquisar;
     private JComboBox<String> comboNivel;
+    private Timer timerAtualizacao;
 
     private final Color AZUL_ESCURO_NAV = new Color(15, 38, 70);
     private final Color AZUL_DESTAQUE   = new Color(13, 110, 253);
@@ -50,15 +52,48 @@ public class Tela_Logs extends JPanel {
 //    }
     //private OnLogsCadastradaListener listener;
     
-    public Tela_Logs() {
+public Tela_Logs() {
     	
     	setLayout(new BorderLayout(0, 20));
     	setBackground(new Color(0, 0, 128));
     	setBorder(new EmptyBorder(25, 30, 25, 30));
     	
     	inicializarComponentes();
+    	carregarLogs(null);
+    	iniciarAtualizacaoAutomatica();
     }
+    private void carregarLogs(String filtro) {
+        try {
+            LogController lc = new LogController();
+            ArrayList<Logs> logs = (filtro == null || filtro.isBlank())
+                    ? lc.listarlogs()
+                    : lc.listarlogs(filtro);
 
+            DefaultTableModel modelo = (DefaultTableModel) tabelaLogs.getModel();
+            modelo.setRowCount(0);
+            for (Logs l : logs) {
+                modelo.addRow(new Object[] {
+                        l.getUsuario().getUsername(),
+                        l.getUsuario().getPerfil().getNome(),
+                        l.getAcao(),
+                        l.getDescricao(),
+                        l.getData()
+                });
+            }
+        } catch (Exception s) {
+            s.printStackTrace();
+        }
+    }
+    
+    private void iniciarAtualizacaoAutomatica() {
+        timerAtualizacao = new Timer(5000, e -> {
+            if (txtPesquisar.getText() == null || txtPesquisar.getText().isBlank()) {
+                carregarLogs(null);
+            }
+        });
+        timerAtualizacao.start();
+    }
+    
     private void inicializarComponentes() {
         JPanel panelHeader = new JPanel(new BorderLayout());
         panelHeader.setBackground(new Color(0, 0, 128));
@@ -110,30 +145,8 @@ public class Tela_Logs extends JPanel {
         btnFiltrar.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnFiltrar.addActionListener(new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String nome = txtPesquisar.getText();
-				try {
-					LogController lc = new LogController();
-					ArrayList<Logs> logs = lc.listarlogs();
-					
-					DefaultTableModel modelo = (DefaultTableModel) tabelaLogs.getModel();
-					modelo.setRowCount(0);
-					for(Logs l: logs) {
-						modelo.addRow(new Object[] {
-								l.getUsuario().getUsername(),
-								l.getUsuario().getPerfil().getNome(),
-								l.getAcao(),
-								l.getDescricao(),
-								l.getData()
-						});
-						
-					}
-					
-				}catch(Exception s) {
-					s.printStackTrace();
-				}
-				
+        	public void actionPerformed(ActionEvent e) {
+				carregarLogs(txtPesquisar.getText());
 			}
         	
         });

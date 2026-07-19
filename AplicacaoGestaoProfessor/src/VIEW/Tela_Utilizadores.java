@@ -1,6 +1,7 @@
 package VIEW;
 
 import  model.*;
+
 import controller.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -35,7 +36,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-
+import dao.ExceptionDao;
 import java.util.ArrayList;
 public class Tela_Utilizadores extends JFrame {
 
@@ -237,31 +238,28 @@ public class Tela_Utilizadores extends JFrame {
                 //JOptionPane.showMessageDialog(null, "Abrir formulário de criação de utilizador.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
             }
         });
-
         btnEditar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	try {
             		int linha = tableUtilizadores.getSelectedRow();
-            		Integer codigo = (Integer)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 0);
-            		String username = (String)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 1);
-            		String nome = (String)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 2);
-            		String apelido = (String)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 3);
-            		String p = (String)tableUtilizadores.getModel().getValueAt(tableUtilizadores.getSelectedRow(), 4);
             		
             		if (linha == -1) {
             			JOptionPane.showMessageDialog(null, "Selecione um utilizador na tabela para editar.", "Aviso", JOptionPane.WARNING_MESSAGE);
             		} else {
+            			Integer codigo = (Integer)tableUtilizadores.getModel().getValueAt(linha, 0);
+            			String username = (String)tableUtilizadores.getModel().getValueAt(linha, 1);
+            			String nome = (String)tableUtilizadores.getModel().getValueAt(linha, 2);
+            			String apelido = (String)tableUtilizadores.getModel().getValueAt(linha, 3);
+            			String p = (String)tableUtilizadores.getModel().getValueAt(linha, 4);
+            			
             			criarDialog();
             			buscarUsuario(codigo,username,nome,apelido,p);
-            			//String username = tableUtilizadores.getValueAt(linha, 1).toString();
-            			//JOptionPane.showMessageDialog(null, "A editar as permissões de: " + username, "Editar", JOptionPane.INFORMATION_MESSAGE);
             		}
             	}catch(Exception s){
             		s.printStackTrace();
             	}
             }
         });
-
         btnExcluir.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	boolean sucesso;
@@ -349,6 +347,15 @@ public class Tela_Utilizadores extends JFrame {
 	   }
 	 //  comboPerfil.addItem(p);
 	   
+   }
+   private void limparCampos() {
+       campoNome.setText("");
+       campoNomeOperador.setText("");
+       campoApelido.setText("");
+       campoSenha.setText("");
+       if (comboPerfil.getItemCount() > 0) {
+           comboPerfil.setSelectedIndex(0);
+       }
    }
     private void estilizarBotao(JButton botao, Color fundo, Color texto, int largura, int altura) {
         botao.setPreferredSize(new Dimension(largura, altura));
@@ -498,6 +505,7 @@ public class Tela_Utilizadores extends JFrame {
         			 listar();
         			 if(sucesso) {
         				 JOptionPane.showMessageDialog(null, "Operador Cadastrado com sucesso");
+        				 limparCampos();
         			 }else {
         				 JOptionPane.showMessageDialog(null, "Falha ao cadastrado");
         			 }
@@ -513,7 +521,8 @@ public class Tela_Utilizadores extends JFrame {
         		 }
         		 
   
-        		 
+        	 }catch(ExceptionDao ex) {
+        		 JOptionPane.showMessageDialog(null, ex.getMessage());
         	 }catch(Exception s) {
         		 JOptionPane.showMessageDialog(null,"Erro ao fazer cadastro");
         		 s.printStackTrace();

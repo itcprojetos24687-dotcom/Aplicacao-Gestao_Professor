@@ -19,12 +19,12 @@ public class Logs {
 	}
 	public Logs() {
 	}
-	public Logs(String acao,String descricao,Usuario usuario) {
+	public Logs(String acao, String descricao, Usuario usuario) {
 		this.acao = acao;
 		this.descricao = descricao;
 		this.usuario = usuario;
+		this.data = LocalDateTime.now();
 	}
-	
 	public int getCodigo() {
 		return codigo;
 	}
