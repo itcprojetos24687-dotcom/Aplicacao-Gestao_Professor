@@ -17,7 +17,7 @@ public class FormadorDao {
 
 	Connection con = null;
 	public void cadastrarFormador(Formador formador) throws ExceptionDao {
-		String sql = "insert into Formador(nome, apelido, email, genero, estadoCivil, contacto, valor_hora, horas_mes )" + "values(?,?,?,?,?,?,?,?)";
+		String sql = "insert into Formador(nome, apelido, email, genero, estadoCivil, contacto, valor_hora, horas_mes, salario )" + "values(?,?,?,?,?,?,?,?,?)";
 		PreparedStatement InsertFormador = null;
 		try {
 			
@@ -31,6 +31,7 @@ public class FormadorDao {
 			InsertFormador.setInt(6, formador.getContacto());
 			InsertFormador.setInt(7, formador.getValor_horas());
 			InsertFormador.setInt(8, formador.getHoras_mes());
+			InsertFormador.setInt(9, formador.getValor_horas() * formador.getHoras_mes());
 			
 			InsertFormador.execute();
 			

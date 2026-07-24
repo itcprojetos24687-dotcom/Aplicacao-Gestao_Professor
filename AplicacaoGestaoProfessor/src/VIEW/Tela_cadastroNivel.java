@@ -111,9 +111,10 @@ public class Tela_cadastroNivel extends JFrame {
 				
 				sucesso = nc.cadastrarNivel(nome);
 				if(sucesso) {
-					JOptionPane.showMessageDialog(this, "Nível '" + txtNomeNivel.getText().trim() + "' guardado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-					dispose();
-					
+				    JOptionPane.showMessageDialog(this, "Nível '" + txtNomeNivel.getText().trim() + "' guardado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+				    EventoCadastro.notificar();
+				    dispose();
+				    
 				}else {
 					JOptionPane.showMessageDialog(this, "Falha a cadastrar Nível '" + txtNomeNivel.getText().trim() , "Falhado", JOptionPane.INFORMATION_MESSAGE);
 				}

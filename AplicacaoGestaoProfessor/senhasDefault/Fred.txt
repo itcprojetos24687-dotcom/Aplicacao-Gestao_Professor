@@ -1,0 +1,4 @@
+Nome: Fred
+Username: Fred
+Perfil: Super Operador
+Senha : Fred123

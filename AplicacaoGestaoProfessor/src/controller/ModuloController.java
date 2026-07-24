@@ -10,7 +10,7 @@ public class ModuloController {
 	static Scanner sc = new Scanner(System.in);
 	public boolean cadastrarModulo(String nome, int carga_horaria, String semestre,Qualificacao q, Nivel n)
 	throws ExceptionDao{
-		if(nome != null && nome.length()>0 && nome.matches("[a-zA-Z]+") &&  carga_horaria>0 && q != null && n != null) {
+		if(nome != null && nome.length()>0 && nome.matches("[a-zA-Z0-9 ]+") &&  carga_horaria>0 && q != null && n != null) {
 			Modulo modulo = new Modulo(nome,  carga_horaria);
 			if(q != null && n != null) {
 				Quali_NivelController qc = new Quali_NivelController();
@@ -43,7 +43,7 @@ public class ModuloController {
 
 public boolean atualizarModulo(String nome, int carga_horaria, int codigo, Qualificacao q, Nivel n,String semestre)
 		throws ExceptionDao{
-			if( semestre != null && semestre.length()>0 && q != null && n != null &&nome != null && nome.length()>0 && nome.matches("[a-zA-Z]+") && codigo != 0 && carga_horaria > 0){
+	        if( semestre != null && semestre.length()>0 && q != null && n != null &&nome != null && nome.length()>0 && nome.matches("[a-zA-Z0-9 ]+") && codigo != 0 && carga_horaria > 0){
 				Modulo modulo = new Modulo( nome,  carga_horaria);
 				modulo.setCodigo(codigo);
 				if(q != null && n != null) {

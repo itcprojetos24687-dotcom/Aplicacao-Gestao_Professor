@@ -104,7 +104,7 @@ public class QualificacaoDao {
 				+ "join Quali_Nivel on Quali_Nivel.cod_Quali = Qualificacao.cod_Quali "
 				+ "join Nivel on cod_Nivel=Nivel.codigo "
 				+ "join Classificacao on cod_Qualificacao = Qualificacao.cod_Quali "
-				+ "join Campo on Campo.codigo = cod_Qualificacao where titulo like '%"+titulo+"%'";
+				+ "join Campo on Campo.codigo = Classificacao.cod_Campo where titulo like '%"+titulo+"%'";
 		Connection con = null;
 		PreparedStatement listarQualificacao = null;
 		ArrayList<Qualificacao> qualificacoes = null;

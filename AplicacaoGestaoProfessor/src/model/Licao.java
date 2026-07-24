@@ -1,58 +1,93 @@
 package model;
-import java.util.ArrayList;
-import dao.*;
-import javax.swing.JOptionPane;
 import dao.ExceptionDao;
+import dao.LicaoDao;
+import java.util.ArrayList;
+
 public class Licao {
 	private int codigo;
 	private Modulo modulo;
-	private Sala sala;
 	private Formador formador;
+	private Sala sala;
 	private Turma turma;
-	private String date;
-	private int horas_inicio;
-	private int horas_fim;
+	private String data;        // yyyy-MM-dd
+	private String hora_inicio; // HH:mm
+	private String hora_fim;    // HH:mm
+
 	public Licao() {
+
 	}
-	public Licao(int codigo, int horas_inicio, int horas_fim) {
-	    this.codigo = codigo;
-	    this.horas_inicio = horas_inicio;
-	    this.horas_fim = horas_fim;
+
+	public Licao(Modulo modulo, Formador formador, Sala sala, Turma turma, String data, String hora_inicio, String hora_fim) {
+		this.modulo = modulo;
+		this.formador = formador;
+		this.sala = sala;
+		this.turma = turma;
+		this.data = data;
+		this.hora_inicio = hora_inicio;
+		this.hora_fim = hora_fim;
 	}
+
 	public int getCodigo() {
 		return codigo;
 	}
 	public void setCodigo(int codigo) {
 		this.codigo = codigo;
 	}
-	public int getHoras_inicio() {
-		return horas_inicio;
+	public Modulo getModulo() {
+		return modulo;
 	}
-	public void setHoras_inicio(int horas_inicio) {
-		this.horas_inicio= horas_inicio;
+	public void setModulo(Modulo modulo) {
+		this.modulo = modulo;
 	}
-	public int getHoras_fim(){
-		return horas_fim;
+	public Formador getFormador() {
+		return formador;
 	}
-	public void setHoras_fim(int horas_fim) {
-		this.horas_fim = horas_fim;
+	public void setFormador(Formador formador) {
+		this.formador = formador;
 	}
+	public Sala getSala() {
+		return sala;
+	}
+	public void setSala(Sala sala) {
+		this.sala = sala;
+	}
+	public Turma getTurma() {
+		return turma;
+	}
+	public void setTurma(Turma turma) {
+		this.turma = turma;
+	}
+	public String getData() {
+		return data;
+	}
+	public void setData(String data) {
+		this.data = data;
+	}
+	public String getHora_inicio() {
+		return hora_inicio;
+	}
+	public void setHora_inicio(String hora_inicio) {
+		this.hora_inicio = hora_inicio;
+	}
+	public String getHora_fim() {
+		return hora_fim;
+	}
+	public void setHora_fim(String hora_fim) {
+		this.hora_fim = hora_fim;
+	}
+
 	public void cadastrarLicao(Licao licao) throws ExceptionDao{
-		new LicaoDao().cadastrarlicao(licao);
+		new LicaoDao().cadastrarLicao(licao);
 	}
-	public ArrayList<Licao> listarLicao(int horas_inicio) throws ExceptionDao{
-		return new LicaoDao().listarLicao(horas_inicio);
-	}
-	public void atualizarLicao(Licao licao) throws ExceptionDao{
-		new LicaoDao().atualizarLicao(licao);
+	public ArrayList<Licao> listarLicao(String texto) throws ExceptionDao{
+		return new LicaoDao().listarLicao(texto);
 	}
 	public void apagarLicao(Licao licao) throws ExceptionDao{
-		JOptionPane.showMessageDialog(null, "Chamado no model com sucesso");
 		new LicaoDao().apagarLicao(licao);
 	}
+
 	@Override
 	public String toString() {
-		return " Licao [codigo=" + codigo + ", horas_inicio=" + horas_inicio + ",horas_fim =" + horas_fim
-				+ "]";
+		return "Licao [codigo=" + codigo + ", data=" + data + "]";
 	}
 }

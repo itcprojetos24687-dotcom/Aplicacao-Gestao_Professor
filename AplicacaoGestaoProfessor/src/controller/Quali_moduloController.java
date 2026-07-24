@@ -14,7 +14,7 @@ public class Quali_moduloController {
 	static Scanner sc = new Scanner(System.in);
 	public boolean cadastrarQuali_modulo(String semestre,Modulo m, Qualificacao q)
 	throws ExceptionDao{
-		if(semestre != null && semestre.length()>0 && semestre.matches("[a-zA-Z]+") &&  m != null && q != null) {
+		if(semestre != null && semestre.length()>0 &&  m != null && q != null) {
 			Quali_modulo quali_modulo = new Quali_modulo(semestre, m,q);
 			quali_modulo.cadastrarQuali_modulo(quali_modulo);
 			return true;
@@ -27,7 +27,7 @@ public class Quali_moduloController {
 
 public boolean atualizarQuali_modulo(int codigo, String semestre,Modulo modulo, Qualificacao q)
 		throws ExceptionDao{
-			if(semestre != null && semestre.length()>0 && semestre.matches("[a-zA-Z]+") && codigo != 0 && q != null){
+	        if(semestre != null && semestre.length()>0 && codigo != 0 && q != null){
 				Quali_modulo quali_modulo = new Quali_modulo( semestre, modulo, q);
 				quali_modulo.setCodigo(codigo);
 				quali_modulo.atualizarQuali_modulo(quali_modulo);;

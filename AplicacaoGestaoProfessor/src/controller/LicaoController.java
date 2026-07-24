@@ -1,36 +1,29 @@
 package controller;
-
-import java.util.ArrayList;
-import java.util.Scanner;
-import dao.*;
-import dao.ExceptionDao;
 import model.Licao;
+import model.Modulo;
+import model.Formador;
+import model.Sala;
+import model.Turma;
+import dao.ExceptionDao;
+import java.util.ArrayList;
 
 public class LicaoController {
-	static Scanner sc = new Scanner(System.in);
 
-	public boolean cadastrarLicao(int horas_inicio, int horas_fim)
+	public boolean cadastrarLicao(Modulo modulo, Formador formador, Sala sala, Turma turma, String data, String hora_inicio, String hora_fim)
 	throws ExceptionDao{
-		if(horas_inicio > 0 && horas_fim > 0){
-			Licao licao = new Licao(0, horas_inicio, horas_fim);
+		if(modulo != null && formador != null && sala != null && turma != null
+				&& data != null && data.length() > 0
+				&& hora_inicio != null && hora_inicio.length() > 0
+				&& hora_fim != null && hora_fim.length() > 0){
+			Licao licao = new Licao(modulo, formador, sala, turma, data, hora_inicio, hora_fim);
 			licao.cadastrarLicao(licao);
 			return true;
 		}
 		return false;
 	}
 
-	public ArrayList<Licao> listarLicao(int horas_inicio) throws ExceptionDao{
-		return new Licao().listarLicao(horas_inicio);
-	}
-
-	public boolean atualizarLicao(int codigo, int horas_inicio, int horas_fim)
-	throws ExceptionDao{
-		if(codigo != 0 && horas_inicio > 0 && horas_fim > 0){
-			Licao licao = new Licao(codigo, horas_inicio, horas_fim);
-			licao.atualizarLicao(licao);
-			return true;
-		}
-		return false;
+	public ArrayList<Licao> listarLicao(String texto) throws ExceptionDao{
+		return new Licao().listarLicao(texto);
 	}
 
 	public boolean apagarLicao(int codigo) throws ExceptionDao{
@@ -42,19 +35,4 @@ public class LicaoController {
 		}
 		return false;
 	}
-
-	/*public static void main( String[]args) throws ExceptionDao{
-		LicaoController controller = new LicaoController();
-		System.out.print("Adiciona o codigo");
-		int codigo = sc.nextInt();
-		try {
-			controller.apagarLicao(codigo);
-			JOptionPane.showMessageDialog(null, "Apagado com sucesso");
-		}catch(Exception e) {
-			JOptionPane.showMessageDialog(null, "Erro no metodo apagar Licao");
-			throw new ExceptionDao("Erro ao apagar Licao"+e);
-		}
-	}*/
-
-
 }

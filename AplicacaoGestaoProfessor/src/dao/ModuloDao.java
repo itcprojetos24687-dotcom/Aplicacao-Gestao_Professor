@@ -66,11 +66,12 @@ public class ModuloDao {
 	
 	public ArrayList<Modulo> listarModulo(String nome) throws ExceptionDao{
 		String sql = "select Modulo.codigo, Modulo.nome_modulo as nome, Modulo.carga_horaria, " +
-				"Qualificacao.titulo, Nivel.nome as nivel " +
+				"Qualificacao.titulo, Nivel.nome as nivel, Quali_modulo.semestre as semestre " +
 				"from Modulo " +
-				"join Quali_Nivel on Quali_Nivel.codigo = Modulo.id_Quali_Nivel " +
+				"join Quali_Nivel on Quali_Nivel.codigo_Quali_Nivel = Modulo.id_Quali_Nivel " +
 				"join Qualificacao on Qualificacao.cod_Quali = Quali_Nivel.cod_Quali " +
 				"join Nivel on Nivel.codigo = Quali_Nivel.cod_Nivel " +
+				"left join Quali_modulo on Quali_modulo.cod_modulo = Modulo.codigo " +
 				"where Modulo.nome_modulo like ?";
 		
 		PreparedStatement listarModulo = null;
@@ -89,6 +90,7 @@ public class ModuloDao {
 					Qualificacao q = new Qualificacao();
 					Nivel n = new Nivel();
 					Quali_Nivel qn = new Quali_Nivel();
+					Quali_modulo qm = new Quali_modulo();
 					
 					modulo.setCodigo(rs.getInt("codigo"));
 					modulo.setNome(rs.getString("nome"));
@@ -101,6 +103,10 @@ public class ModuloDao {
 					qn.setNivel(n);
 					
 					modulo.setQuali_Nivel(qn);
+					
+					qm.setSemestre(rs.getString("semestre"));
+					modulo.setQuali_modulo(qm);
+					
 					modulos.add(modulo);
 				}
 			}

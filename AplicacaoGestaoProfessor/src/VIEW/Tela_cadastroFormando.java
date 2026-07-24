@@ -2,22 +2,26 @@ package VIEW;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import controller.FormandoController;
 import model.Seccao;
 
 import java.awt.Font;
-import java.awt.GridLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 
 public class Tela_cadastroFormando extends JPanel {
 
@@ -32,93 +36,130 @@ public class Tela_cadastroFormando extends JPanel {
     private int codigoEdicao = 0;
     private boolean modoEdicao = false;
 
-    private final Color AZUL_ESCURO_NAV = new Color(15, 38, 70);
-    private final Color AZUL_DESTAQUE   = new Color(13, 110, 253);
-    private final Color FUNDO_CLARO     = new Color(244, 246, 249);
-    private final Color BRANCO          = Color.WHITE;
-    private final Color TEXTO_MUTED     = new Color(108, 117, 125);
+    // Paleta de Cores Moderna Clean e Minimalista
+    private final Color COLOR_PANEL        = new Color(255, 255, 255); 
+    private final Color COLOR_TEXT         = new Color(29, 29, 31); 
+    private final Color COLOR_TEXT_MUTED   = new Color(134, 134, 139); 
+    private final Color COLOR_FIELD_BG     = new Color(255, 255, 255); 
+    private final Color COLOR_FIELD_BORDER = new Color(210, 210, 215); 
+    private final Color COLOR_ACCENT       = new Color(0, 122, 255); 
+    private final Color COLOR_BUTTON_BG    = new Color(232, 232, 237); 
 
     private Tela_Principal tela_principal;
-	private OnDadosAlteradosListener listener;
+    private OnDadosAlteradosListener listener;
     
     public Tela_cadastroFormando() {
-        setLayout(new BorderLayout(0, 15));
-        setBackground(BRANCO);
-        setBorder(new EmptyBorder(20, 20, 20, 20));
+        // Tenta uniformizar comportamentos nativos do look and feel básico
+        try {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (Exception e) {
+            // Fallback silencioso
+        }
 
+        setLayout(new BorderLayout(0, 15));
+        setBackground(COLOR_PANEL);
+        setBorder(new EmptyBorder(20, 25, 20, 25));
+
+        // --- TOPO: Subtítulo Informativo ---
         JPanel panelAcoes = new JPanel(new BorderLayout());
-        panelAcoes.setBackground(BRANCO);
+        panelAcoes.setBackground(COLOR_PANEL);
 
         JPanel panelTituloInterno = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        panelTituloInterno.setBackground(BRANCO);
+        panelTituloInterno.setBackground(COLOR_PANEL);
         JLabel lblInfo = new JLabel("Preencha os dados abaixo para registar um novo formando no sistema.");
         lblInfo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        lblInfo.setForeground(TEXTO_MUTED);
+        lblInfo.setForeground(COLOR_TEXT_MUTED);
         panelTituloInterno.add(lblInfo);
         panelAcoes.add(panelTituloInterno, BorderLayout.WEST);
         
         add(panelAcoes, BorderLayout.NORTH);
 
-        JPanel panelFormContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        panelFormContainer.setBackground(BRANCO);
+        // --- CORPO: Formulário com GridBagLayout (Fluido e Responsivo) ---
+        JPanel panelFormContainer = new JPanel(new GridBagLayout());
+        panelFormContainer.setBackground(COLOR_PANEL);
 
-        JPanel panelGridCampos = new JPanel(new GridLayout(5, 2, 20, 20));
-        panelGridCampos.setBackground(BRANCO);
-        panelGridCampos.setPreferredSize(new Dimension(750, 270));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(6, 10, 6, 10);
+        gbc.weightx = 0.5;
 
-        Font fontLabel = new Font("Segoe UI", Font.BOLD, 14);
+        Font fontLabel = new Font("Segoe UI", Font.BOLD, 13);
         Font fontText = new Font("Segoe UI", Font.PLAIN, 14);
 
-        // 1. Nome
-        panelGridCampos.add(new JLabel("Nome *") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
+        // Linha 0: Nome vs Apelido (Labels)
+        gbc.gridx = 0; gbc.gridy = 0;
+        JLabel lblNomeTitle = new JLabel("Nome *");
+        lblNomeTitle.setFont(fontLabel);
+        lblNomeTitle.setForeground(COLOR_TEXT_MUTED);
+        panelFormContainer.add(lblNomeTitle, gbc);
+
+        gbc.gridx = 1;
+        JLabel lblApelidoTitle = new JLabel("Apelido *");
+        lblApelidoTitle.setFont(fontLabel);
+        lblApelidoTitle.setForeground(COLOR_TEXT_MUTED);
+        panelFormContainer.add(lblApelidoTitle, gbc);
+
+        // Linha 1: Nome vs Apelido (Inputs)
+        gbc.gridx = 0; gbc.gridy = 1;
         txtNome = new JTextField();
-        txtNome.setFont(fontText);
-        panelGridCampos.add(txtNome);
+        styleTextField(txtNome, fontText);
+        panelFormContainer.add(txtNome, gbc);
 
-        // 2. Apelido
-        panelGridCampos.add(new JLabel("Apelido *") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
+        gbc.gridx = 1;
         txtApelido = new JTextField();
-        txtApelido.setFont(fontText);
-        panelGridCampos.add(txtApelido);
+        styleTextField(txtApelido, fontText);
+        panelFormContainer.add(txtApelido, gbc);
 
-        // 3. Contacto
-        panelGridCampos.add(new JLabel("Contacto") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
+        // Linha 2: Contacto vs Email (Labels)
+        gbc.gridx = 0; gbc.gridy = 2;
+        JLabel lblContactoTitle = new JLabel("Contacto");
+        lblContactoTitle.setFont(fontLabel);
+        lblContactoTitle.setForeground(COLOR_TEXT_MUTED);
+        panelFormContainer.add(lblContactoTitle, gbc);
+
+        gbc.gridx = 1;
+        JLabel lblEmailTitle = new JLabel("Email");
+        lblEmailTitle.setFont(fontLabel);
+        lblEmailTitle.setForeground(COLOR_TEXT_MUTED);
+        panelFormContainer.add(lblEmailTitle, gbc);
+
+        // Linha 3: Contacto vs Email (Inputs)
+        gbc.gridx = 0; gbc.gridy = 3;
         txtContacto = new JTextField();
-        txtContacto.setFont(fontText);
-        panelGridCampos.add(txtContacto);
+        styleTextField(txtContacto, fontText);
+        panelFormContainer.add(txtContacto, gbc);
 
-        // 4. Email
-        panelGridCampos.add(new JLabel("Email") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
+        gbc.gridx = 1;
         txtEmail = new JTextField();
-        txtEmail.setFont(fontText);
-        panelGridCampos.add(txtEmail);
+        styleTextField(txtEmail, fontText);
+        panelFormContainer.add(txtEmail, gbc);
 
-        // 5. BI
-        panelGridCampos.add(new JLabel("BI *") {{ setFont(fontLabel); setForeground(AZUL_ESCURO_NAV); }});
+        // Linha 4: BI (Label ocupando a linha toda ou meia tela)
+        gbc.gridx = 0; gbc.gridy = 4;
+        JLabel lblBiTitle = new JLabel("BI *");
+        lblBiTitle.setFont(fontLabel);
+        lblBiTitle.setForeground(COLOR_TEXT_MUTED);
+        panelFormContainer.add(lblBiTitle, gbc);
+
+        // Linha 5: BI (Input)
+        gbc.gridx = 0; gbc.gridy = 5;
         txtBi = new JTextField();
-        txtBi.setFont(fontText);
-        panelGridCampos.add(txtBi);
+        styleTextField(txtBi, fontText);
+        panelFormContainer.add(txtBi, gbc);
 
-        panelFormContainer.add(panelGridCampos);
         add(panelFormContainer, BorderLayout.CENTER);
 
+        // --- RODAPÉ: Botões de Ação ---
         JPanel panelBotoesRodape = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 10));
-        panelBotoesRodape.setBackground(BRANCO);
+        panelBotoesRodape.setBackground(COLOR_PANEL);
         panelBotoesRodape.setBorder(new EmptyBorder(10, 0, 0, 0));
 
         btnLimpar = new JButton("Limpar");
-        btnLimpar.setBackground(BRANCO);
-        btnLimpar.setFont(fontLabel);
-        btnLimpar.setPreferredSize(new Dimension(150, 40));
-        btnLimpar.setBorder(new LineBorder(new Color(220, 224, 230)));
+        styleButton(btnLimpar, COLOR_BUTTON_BG, COLOR_TEXT);
         btnLimpar.addActionListener(e -> limparCampos());
 
         btnSalvar = new JButton("Guardar Formando");
-        btnSalvar.setBackground(AZUL_DESTAQUE);
-        btnSalvar.setForeground(BRANCO);
-        btnSalvar.setFont(fontLabel);
-        btnSalvar.setPreferredSize(new Dimension(165, 40));
-        btnSalvar.setBorder(null);
+        styleButton(btnSalvar, COLOR_ACCENT, Color.WHITE);
         btnSalvar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 acaoSalvar();
@@ -129,6 +170,28 @@ public class Tela_cadastroFormando extends JPanel {
         panelBotoesRodape.add(btnSalvar);
         
         add(panelBotoesRodape, BorderLayout.SOUTH);
+    }
+    
+    // --- MÉTODOS AUXILIARES DE ESTILIZAÇÃO (UI) ---
+    private void styleTextField(JTextField field, Font font) {
+        field.setFont(font);
+        field.setBackground(COLOR_FIELD_BG);
+        field.setForeground(COLOR_TEXT);
+        field.setCaretColor(COLOR_TEXT);
+        field.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(COLOR_FIELD_BORDER, 1),
+            BorderFactory.createEmptyBorder(8, 12, 8, 12)
+        ));
+        field.setPreferredSize(new Dimension(field.getPreferredSize().width, 38));
+    }
+
+    private void styleButton(JButton button, Color background, Color foreground) {
+        button.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        button.setBackground(background);
+        button.setForeground(foreground);
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createEmptyBorder(10, 24, 10, 24));
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
     
     private void acaoSalvar() {
@@ -143,46 +206,44 @@ public class Tela_cadastroFormando extends JPanel {
             return;
         }
 
-        if (!contacto.isEmpty()) {
-        	try {
-        	    FormandoController fc = new FormandoController();
-        	    boolean sucesso;
-        	    if(modoEdicao) {
-        	        sucesso = fc.atualizarFormando(
-        	            nome, apelido,
-        	            contacto.isEmpty() ? 0 : Integer.parseInt(contacto),
-        	            email, bi, codigoEdicao
-        	        );
-        	        if(sucesso) {
-        	            
-        	        	JOptionPane.showMessageDialog(this, "Formando actualizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-        	        	 new Tela_Principal(Seccao.obterUtilizador()).listarFormando();
-        	            modoEdicao = false;
-        	            codigoEdicao = 0;
-        	            limparCampos();
-        	        } else {
-        	            JOptionPane.showMessageDialog(this, "Dados inválidos.", "Aviso", JOptionPane.WARNING_MESSAGE);
-        	        }
-        	    } else {
-        	        sucesso = fc.cadastrarFormando(
-        	            nome, apelido,
-        	            contacto.isEmpty() ? 0 : Integer.parseInt(contacto),
-        	            email, bi
-        	        );
-        	        if(sucesso) {
-        	            JOptionPane.showMessageDialog(this, "Formando guardado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-        	            new Tela_Principal(Seccao.obterUtilizador()).listarFormando();
-        	            limparCampos();
-        	        } else {
-        	            JOptionPane.showMessageDialog(this, "Dados inválidos.", "Aviso", JOptionPane.WARNING_MESSAGE);
-        	        }
-        	    }
-        	} catch (Exception ex) {
-        	    ex.printStackTrace();
-        	    JOptionPane.showMessageDialog(this, "Erro: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-        	}
+        try {
+            FormandoController fc = new FormandoController();
+            boolean sucesso;
+            if(modoEdicao) {
+                sucesso = fc.atualizarFormando(
+                    nome, apelido,
+                    contacto.isEmpty() ? 0 : Integer.parseInt(contacto),
+                    email, bi, codigoEdicao
+                );
+                if(sucesso) {
+                    JOptionPane.showMessageDialog(this, "Formando actualizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                    new Tela_Principal(Seccao.obterUtilizador()).listarFormando();
+                    modoEdicao = false;
+                    codigoEdicao = 0;
+                    limparCampos();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Dados inválidos.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                }
+            } else {
+                sucesso = fc.cadastrarFormando(
+                    nome, apelido,
+                    contacto.isEmpty() ? 0 : Integer.parseInt(contacto),
+                    email, bi
+                );
+                if(sucesso) {
+                    JOptionPane.showMessageDialog(this, "Formando guardado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                    new Tela_Principal(Seccao.obterUtilizador()).listarFormando();
+                    limparCampos();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Dados inválidos.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Erro: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
+
     public void buscarFormando(int codigo, String nome, String apelido, int contacto, String email, String bi) {
         this.codigoEdicao = codigo;
         this.modoEdicao = true;

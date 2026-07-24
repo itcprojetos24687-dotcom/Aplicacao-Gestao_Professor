@@ -4,28 +4,27 @@ import java.time.LocalDateTime;
 import model.Inscricao;
 import model.Modulo;
 import model.Formando;
-import model.Quali_modulo;
 import model.Logs;
 import model.Seccao;
 import model.Usuario;
 import java.util.ArrayList;
-
 
 public class InscricaoDao {
 	Connection con = null;
 
 	public void cadastrarInscricao(Inscricao inscricao) throws ExceptionDao {
 
-	    String sql = "insert into Inscricao(data_inscricao, semestre) values(?,?)";
+	    String sql = "insert into Inscricao(codigo_formando, codigo_modulo, semestre, data_inscricao) values(?,?,?,?)";
 	    PreparedStatement InsertInscricao = null;
 	    try {
 	        con = new Conexao().getConnection();
 	        InsertInscricao = con.prepareStatement(sql);
-	        InsertInscricao.setInt(1, inscricao.getData_inscricao());
-	        InsertInscricao.setString(2, inscricao.getSemestre());
+	        InsertInscricao.setInt(1, inscricao.getFormando().getCodigo());
+	        InsertInscricao.setInt(2, inscricao.getModulo().getCodigo());
+	        InsertInscricao.setString(3, inscricao.getSemestre());
+	        InsertInscricao.setDate(4, Date.valueOf(inscricao.getData_inscricao()));
 	        InsertInscricao.execute();
 
-	        // LOG: Cadastro de inscrição (estilo UsuarioDao)
 	        Usuario u = Seccao.obterUtilizador();
 	        if (u != null) {
 	            Logs log = new Logs("INSERT", "Inscrição para o semestre " + inscricao.getSemestre() + " foi cadastrada", u);
@@ -55,23 +54,42 @@ public class InscricaoDao {
 
 	public ArrayList<Inscricao> listarInscricao(String semestre) throws ExceptionDao {
 
-	    String sql = "select * from Inscricao where semestre like '%" + semestre + "%'";
+	    String sql = "select i.codigo_inscricao, i.codigo_formando, i.codigo_modulo, i.semestre, i.data_inscricao, " +
+	    		"f.nome_formando, f.apelido_formando, m.nome_modulo " +
+	    		"from Inscricao i " +
+	    		"join Formando f on f.codigo_formando = i.codigo_formando " +
+	    		"join Modulo m on m.codigo = i.codigo_modulo " +
+	    		"where i.semestre like ?";
 	    PreparedStatement listarInscricao = null;
 	    ArrayList<Inscricao> inscricoes = null;
 
 	    try {
 	        con = new Conexao().getConnection();
 	        listarInscricao = con.prepareStatement(sql);
+	        listarInscricao.setString(1, "%" + semestre + "%");
 	        ResultSet rs = listarInscricao.executeQuery();
 
 	        if (rs != null) {
-	            inscricoes = new ArrayList();
+	            inscricoes = new ArrayList<>();
 	            while (rs.next()) {
 	                Inscricao inscricao = new Inscricao();
+	                Formando formando = new Formando();
+	                Modulo modulo = new Modulo();
 
-	                inscricao.setCodigo(rs.getInt("codigo"));
-	                inscricao.setData_inscricao(rs.getInt("data_inscricao"));
+	                inscricao.setCodigo(rs.getInt("codigo_inscricao"));
 	                inscricao.setSemestre(rs.getString("semestre"));
+	                Date data = rs.getDate("data_inscricao");
+	                inscricao.setData_inscricao(data != null ? data.toString() : "");
+
+	                formando.setCodigo(rs.getInt("codigo_formando"));
+	                formando.setNome(rs.getString("nome_formando"));
+	                formando.setApelido(rs.getString("apelido_formando"));
+	                inscricao.setFormando(formando);
+
+	                modulo.setCodigo(rs.getInt("codigo_modulo"));
+	                modulo.setNome(rs.getString("nome_modulo"));
+	                inscricao.setModulo(modulo);
+
 	                inscricoes.add(inscricao);
 	            }
 	        }
@@ -90,25 +108,26 @@ public class InscricaoDao {
 	                con.close();
 	            }
 	        } catch (SQLException sq) {
-	            throw new ExceptionDao("Erro ao fechar conexao: " + sql);
+	            throw new ExceptionDao("Erro ao fechar conexao: " + sq);
 	        }
 	    }
 	    return inscricoes;
 	}
 
 	public void atualizarInscricao(Inscricao inscricao) throws ExceptionDao {
-	    String sql = "update Inscricao set data_inscricao = ?, semestre = ? where codigo = ?";
+	    String sql = "update Inscricao set codigo_formando = ?, codigo_modulo = ?, semestre = ?, data_inscricao = ? where codigo_inscricao = ?";
 	    PreparedStatement alterarInscricao = null;
 
 	    try {
 	        con = new Conexao().getConnection();
 	        alterarInscricao = con.prepareStatement(sql);
-	        alterarInscricao.setInt(1, inscricao.getData_inscricao());
-	        alterarInscricao.setString(2, inscricao.getSemestre());
-	        alterarInscricao.setInt(3, inscricao.getCodigo());
+	        alterarInscricao.setInt(1, inscricao.getFormando().getCodigo());
+	        alterarInscricao.setInt(2, inscricao.getModulo().getCodigo());
+	        alterarInscricao.setString(3, inscricao.getSemestre());
+	        alterarInscricao.setDate(4, Date.valueOf(inscricao.getData_inscricao()));
+	        alterarInscricao.setInt(5, inscricao.getCodigo());
 	        alterarInscricao.executeUpdate();
 
-	        // LOG: Atualização de inscrição (estilo UsuarioDao)
 	        Usuario u = Seccao.obterUtilizador();
 	        if (u != null) {
 	            Logs log = new Logs("UPDATE", "Inscrição (ID: " + inscricao.getCodigo() + ") para o semestre " + inscricao.getSemestre() + " foi atualizada", u);
@@ -138,15 +157,14 @@ public class InscricaoDao {
 
 	public void apagarInscricao(Inscricao inscricao) throws ExceptionDao {
 
-	    String sql = "delete from Inscricao where codigo=?";
+	    String sql = "delete from Inscricao where codigo_inscricao=?";
 	    PreparedStatement apagarInscricao = null;
 
-	    // Buscar dados da inscrição antes de apagar para o log
 	    String semestre = "";
 	    PreparedStatement buscar = null;
 	    try {
 	        con = new Conexao().getConnection();
-	        buscar = con.prepareStatement("select semestre from Inscricao where codigo = ?");
+	        buscar = con.prepareStatement("select semestre from Inscricao where codigo_inscricao = ?");
 	        buscar.setInt(1, inscricao.getCodigo());
 	        ResultSet rs = buscar.executeQuery();
 	        if (rs.next()) {
@@ -172,7 +190,6 @@ public class InscricaoDao {
 	        apagarInscricao.setInt(1, inscricao.getCodigo());
 	        apagarInscricao.executeUpdate();
 
-	        // LOG: Exclusão de inscrição (estilo UsuarioDao)
 	        Usuario u = Seccao.obterUtilizador();
 	        if (u != null) {
 	            Logs log = new Logs("DELETE", "Inscrição (ID: " + inscricao.getCodigo() + ") para o semestre " + semestre + " foi removida", u);

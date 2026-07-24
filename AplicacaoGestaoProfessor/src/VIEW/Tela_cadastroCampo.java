@@ -114,9 +114,10 @@ public class Tela_cadastroCampo extends JFrame {
 					CampoController campo = new CampoController();
 					sucesso = campo.cadastrarCampo(nome);
 					if(sucesso) {
-						JOptionPane.showMessageDialog(Tela_cadastroCampo.this, "Campo '" + nome + "' guardado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-						dispose();
-						
+					    JOptionPane.showMessageDialog(Tela_cadastroCampo.this, "Campo '" + nome + "' guardado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+					    EventoCadastro.notificar();
+					    dispose();
+					    
 					}
 					else {
 						JOptionPane.showMessageDialog(Tela_cadastroCampo.this, "Falha ao cadastrar Campo", "Falha", JOptionPane.INFORMATION_MESSAGE);

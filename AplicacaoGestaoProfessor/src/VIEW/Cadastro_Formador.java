@@ -1,302 +1,381 @@
 package VIEW;
+
 import model.*;
 import controller.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import java.awt.FlowLayout;
-import javax.swing.JButton;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.GridBagLayout;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.GridBagConstraints;
+import java.util.Calendar;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import java.awt.Insets;
-import javax.swing.JTextField;
-import java.awt.Font;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
 
 public class Cadastro_Formador extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private JTextField textNome;
-	private JTextField textApelido;
-	private JTextField textContacto;
-	private JTextField textEmail;
-	private JTextField textValor_Hora;
-	private JTextField textHoras_Mes;
-	private JComboBox comboGenero;
-	private JComboBox comboEstadoCivil;
-	private JCheckBox chckbxDiretor;
-	//private JCheckBox chckbxCoordenador;
-	private JCheckBox chckbxCoordenador;
-	private int idUser;
+    private static final long serialVersionUID = 1L;
+    private JPanel contentPane;
+    private JTextField textNome;
+    private JTextField textApelido;
+    private JTextField textContacto;
+    private JTextField textEmail;
+    private JTextField textValor_Hora;
+    private JTextField textHoras_Mes;
+    private JComboBox comboGenero;
+    private JComboBox comboEstadoCivil;
+    private JCheckBox chckbxDiretor;
+    private JCheckBox chckbxCoordenador;
+    private int idUser;
 
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					Cadastro_Formador frame = new Cadastro_Formador();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
-	
-	private Tela_Principal tela_principal;
-	private OnDadosAlteradosListener listener;
+    private Tela_Principal tela_principal;
+    private OnDadosAlteradosListener listener;
 
-	/**
-	 * Create the frame.
-	 */
-	public Cadastro_Formador() {
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 642, 441);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		setLocationRelativeTo(null);
-		setMinimumSize(new Dimension(640,440));
-		contentPane.setLayout(null);
-		
-		
-		JPanel panelPrincipal = new JPanel();
-		panelPrincipal.setBounds(12, 12, 619, 367);
-		contentPane.add(panelPrincipal);
-		panelPrincipal.setLayout(null);
-		
-		JLabel lbNome = new JLabel("Nome");
-		lbNome.setFont(new Font("Dialog", Font.BOLD, 16));
-		lbNome.setBounds(37, 46, 84, 30);
-		panelPrincipal.add(lbNome);
-		
-		textNome = new JTextField();
-		textNome.setFont(new Font("Dialog", Font.PLAIN, 17));
-		textNome.setBounds(37, 75, 193, 38);
-		panelPrincipal.add(textNome);
-		textNome.setColumns(10);
-		
-		JLabel lblCadastroFormador = new JLabel("Cadastro de Formador");
-		lblCadastroFormador.setFont(new Font("Montserrat", Font.BOLD, 20));
-		lblCadastroFormador.setBounds(220, 0, 253, 38);
-		panelPrincipal.add(lblCadastroFormador);
-		
-		JLabel lblApelido = new JLabel("Apelido");
-		lblApelido.setFont(new Font("Dialog", Font.BOLD, 16));
-		lblApelido.setBounds(37, 125, 97, 17);
-		panelPrincipal.add(lblApelido);
-		
-		textApelido = new JTextField();
-		textApelido.setFont(new Font("Dialog", Font.PLAIN, 17));
-		textApelido.setBounds(37, 154, 193, 38);
-		panelPrincipal.add(textApelido);
-		textApelido.setColumns(10);
-		
-		JLabel lbContacto = new JLabel("Contacto\n");
-		lbContacto.setFont(new Font("Dialog", Font.BOLD, 17));
-		lbContacto.setBounds(37, 204, 111, 25);
-		panelPrincipal.add(lbContacto);
-		
-		textContacto = new JTextField();
-		textContacto.setFont(new Font("Dialog", Font.PLAIN, 17));
-		textContacto.setBounds(37, 230, 193, 38);
-		panelPrincipal.add(textContacto);
-		textContacto.setColumns(10);
-		
-		JLabel lblEmail = new JLabel("Email");
-		lblEmail.setFont(new Font("Dialog", Font.BOLD, 17));
-		lblEmail.setBounds(317, 53, 65, 17);
-		panelPrincipal.add(lblEmail);
-		
-		textEmail = new JTextField();
-		textEmail.setFont(new Font("Dialog", Font.PLAIN, 17));
-		textEmail.setColumns(10);
-		textEmail.setBounds(317, 75, 220, 38);
-		panelPrincipal.add(textEmail);
-		
-		JLabel lblValorPorHora = new JLabel("Valor por Hora");
-		lblValorPorHora.setFont(new Font("Dialog", Font.BOLD, 17));
-		lblValorPorHora.setBounds(317, 144, 142, 30);
-		panelPrincipal.add(lblValorPorHora);
-		
-		textValor_Hora = new JTextField();
-		textValor_Hora.setFont(new Font("Dialog", Font.PLAIN, 16));
-		textValor_Hora.setBounds(460, 144, 70, 32);
-		panelPrincipal.add(textValor_Hora);
-		textValor_Hora.setColumns(10);
-		
-		JLabel lbHoras_Mes = new JLabel("Horas por mes");
-		lbHoras_Mes.setFont(new Font("Dialog", Font.BOLD, 17));
-		lbHoras_Mes.setBounds(317, 204, 133, 25);
-		panelPrincipal.add(lbHoras_Mes);
-		
-		textHoras_Mes = new JTextField();
-		textHoras_Mes.setFont(new Font("Dialog", Font.PLAIN, 16));
-		textHoras_Mes.setBounds(468, 202, 70, 30);
-		panelPrincipal.add(textHoras_Mes);
-		textHoras_Mes.setColumns(10);
-		
-		chckbxCoordenador = new JCheckBox("Coordenador");
-		chckbxCoordenador.setFont(new Font("Dialog", Font.BOLD, 15));
-		chckbxCoordenador.setBounds(284, 267, 142, 25);
-		panelPrincipal.add(chckbxCoordenador);
-		
-		chckbxDiretor = new JCheckBox("Diretor de Turma");
-		chckbxDiretor.setFont(new Font("Dialog", Font.BOLD, 15));
-		chckbxDiretor.setBounds(438, 267, 173, 25);
-		panelPrincipal.add(chckbxDiretor);
-		
-		JLabel lblGenero = new JLabel("Genero\n");
-		lblGenero.setFont(new Font("Dialog", Font.BOLD, 17));
-		lblGenero.setBounds(37, 280, 111, 25);
-		panelPrincipal.add(lblGenero);
-		
-		JLabel lblEstadoCivil = new JLabel("Estado Civil");
-		lblEstadoCivil.setFont(new Font("Dialog", Font.BOLD, 17));
-		lblEstadoCivil.setBounds(299, 314, 111, 30);
-		panelPrincipal.add(lblEstadoCivil);
-		
-		comboEstadoCivil = new JComboBox();
-		comboEstadoCivil.setFont(new Font("Dialog", Font.BOLD, 15));
-		comboEstadoCivil.setModel(new DefaultComboBoxModel(new String[] {"Solteiro", "Casado"}));
-		comboEstadoCivil.setBounds(414, 317, 152, 26);
-		panelPrincipal.add(comboEstadoCivil);
-		
-		comboGenero = new JComboBox();
-		comboGenero.setFont(new Font("Dialog", Font.BOLD, 15));
-		comboGenero.setModel(new DefaultComboBoxModel(new String[] {"Masculino", "Feminino"}));
-		comboGenero.setBounds(37, 317, 142, 26);
-		panelPrincipal.add(comboGenero);
-		
-		JPanel panelFoater = new JPanel();
-		panelFoater.setBounds(12, 391, 619, 38);
-		contentPane.add(panelFoater);
-		panelFoater.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
-		
-		JButton btnLimpar = new JButton("Limpar");
-		btnLimpar.setPreferredSize(new Dimension(100,30));
-		btnLimpar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				limpar();
-			}
-		});
-		panelFoater.add(btnLimpar);
-		
-		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-			}
-		});
-		btnCancelar.setPreferredSize(new Dimension(100,30));
-		panelFoater.add(btnCancelar);
-		
-		JButton btnSalvar = new JButton("Guardar");
-		btnSalvar.setPreferredSize(new Dimension(100,30));
-		btnSalvar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String nome = textNome.getText();
-				String apelido = textApelido.getText();
-				int contacto = Integer.parseInt(textContacto.getText());
-				String email = textEmail.getText();
-				String genero = comboGenero.getSelectedItem().toString();
-				String estadoCivil = comboEstadoCivil.getSelectedItem().toString();
-				int valor_hora = Integer.parseInt(textValor_Hora.getText());
-				int horas_mes = Integer.parseInt(textHoras_Mes.getText());
-				boolean isDiretor = chckbxDiretor.isSelected();
-				boolean isCoordenador = chckbxCoordenador.isSelected();
-				int salario = valor_hora * horas_mes;
-				boolean sucesso;
-				try {
-					FormadorController fc = new FormadorController();
-					if(idUser == 0) {
-						sucesso = fc.cadastrarFormador(nome, apelido, email, genero, estadoCivil, contacto,valor_hora,horas_mes, salario, isDiretor,isCoordenador);
-						//new Tela_Principal(Seccao.obterUtilizador()).listar();
-						if(sucesso) {
-							JOptionPane.showMessageDialog(null, "Cadastrado com sucesso");
-							tela_principal = Tela_Principal.getInstancia();
-							tela_principal.listarFormadores();
-						}
-						else {
-							JOptionPane.showMessageDialog(null,"Falha ao cadastrar");
-						}
-					}
-					else {
-						sucesso = fc.atualizarFormador(idUser, nome, apelido, email, genero, estadoCivil, contacto,valor_hora,horas_mes,salario, isDiretor,isCoordenador);
-						//new Tela_Principal(Seccao.obterUtilizador()).listar();
-						if (sucesso){
-							idUser = 0;
-							JOptionPane.showMessageDialog(null,"Atualizado com sucesso");
-							tela_principal = Tela_Principal.getInstancia();
-							tela_principal.listarFormadores();
-						}
-						else {
-							JOptionPane.showMessageDialog(null, "Falha ao atualizar");
-						}
-					}
-				}catch(Exception s) {
-					s.printStackTrace();
-				}
-			}
-		});
-		panelFoater.add(btnSalvar);
+    // Paleta de Cores Moderna Clean (Fundo Branco)
+    private final Color COLOR_BG = new Color(245, 245, 247); 
+    private final Color COLOR_PANEL = new Color(255, 255, 255); 
+    private final Color COLOR_TEXT = new Color(29, 29, 31); 
+    private final Color COLOR_TEXT_MUTED = new Color(134, 134, 139); 
+    private final Color COLOR_FIELD_BG = new Color(255, 255, 255); 
+    private final Color COLOR_FIELD_BORDER = new Color(210, 210, 215); 
+    private final Color COLOR_ACCENT = new Color(0, 122, 255); 
+    private final Color COLOR_BUTTON_BG = new Color(232, 232, 237); 
 
-	}
-	public void buscarFormador(int codigo, String nome, String apelido, String email,String genero,String estadoCivil, int contacto,int valor_horas,int horas_mes, double salario) {
-		idUser = codigo;
-		textNome.setText(nome);
-		textApelido.setText(apelido);
-		textContacto.setText(String.valueOf(contacto));
-		textEmail.setText(email);
-		for(int i = 0; i <comboGenero.getItemCount(); i++) {
-			if(comboGenero.getItemAt(i).equals(genero)) {
-				comboGenero.setSelectedIndex(i);
-				break;
-			}
-		}
-		for(int i = 0; i <comboEstadoCivil.getItemCount(); i++) {
-			if(comboEstadoCivil.getItemAt(i).equals(estadoCivil)) {
-				comboEstadoCivil.setSelectedIndex(i);
-				break;
-			}
-			try {
-				FormadorController fc = new FormadorController();
-				boolean [] status = fc.getStatusFormador(codigo);
-				chckbxDiretor.setSelected(status[0]);
-				chckbxCoordenador.setSelected(status[1]);
-			}catch(Exception e) {
-				e.printStackTrace();
-				chckbxDiretor.setSelected(false);
-				chckbxCoordenador.setSelected(false);
-			}
-		}
-		textValor_Hora.setText(String.valueOf(valor_horas));
-		textHoras_Mes.setText(String.valueOf(horas_mes));
-		
-		
-		
-	}
-	private void limpar() {
-		textNome.setText("");
-		textApelido.setText("");
-		textContacto.setText("");
-		textEmail.setText("");
-		textValor_Hora.setText("");
-		textHoras_Mes.setText("");
-	}
-	
+    /**
+     * Create the frame.
+     */
+    public Cadastro_Formador() {
+        // Uniformização visual dos componentes Swing nativos
+        try {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+            UIManager.put("ComboBox.background", COLOR_FIELD_BG);
+            UIManager.put("ComboBox.foreground", COLOR_TEXT);
+            UIManager.put("ComboBox.selectionBackground", COLOR_ACCENT);
+            UIManager.put("ComboBox.selectionForeground", Color.WHITE);
+            UIManager.put("CheckBox.background", COLOR_PANEL);
+            UIManager.put("CheckBox.foreground", COLOR_TEXT);
+        } catch (Exception e) {
+            // Fallback silencioso
+        }
+
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setBounds(100, 100, 680, 520);
+        setMinimumSize(new Dimension(680, 520));
+        setLocationRelativeTo(null);
+        
+        contentPane = new JPanel(new BorderLayout());
+        contentPane.setBackground(COLOR_BG);
+        contentPane.setBorder(new EmptyBorder(20, 20, 20, 20));
+        setContentPane(contentPane);
+        
+        // --- TOPO: Título ---
+        JLabel lblCadastroFormador = new JLabel("Cadastro de Formador");
+        lblCadastroFormador.setHorizontalAlignment(SwingConstants.CENTER);
+        lblCadastroFormador.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        lblCadastroFormador.setForeground(COLOR_TEXT);
+        lblCadastroFormador.setBorder(new EmptyBorder(0, 0, 15, 0));
+        contentPane.add(lblCadastroFormador, BorderLayout.NORTH);
+        
+        // --- CORPO: Painel de Formulário GridBag ---
+        JPanel panelPrincipal = new JPanel(new GridBagLayout());
+        panelPrincipal.setBackground(COLOR_PANEL);
+        panelPrincipal.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(225, 225, 230), 1),
+            new EmptyBorder(15, 20, 15, 20)
+        ));
+        contentPane.add(panelPrincipal, BorderLayout.CENTER);
+        
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(6, 10, 6, 10);
+        gbc.weightx = 0.5;
+
+        Font fontLabel = new Font("Segoe UI", Font.BOLD, 13);
+        Font fontField = new Font("Segoe UI", Font.PLAIN, 14);
+        
+        // Linha 0: Nome vs Email
+        gbc.gridx = 0; gbc.gridy = 0;
+        JLabel lbNome = new JLabel("Nome");
+        lbNome.setFont(fontLabel);
+        lbNome.setForeground(COLOR_TEXT_MUTED);
+        panelPrincipal.add(lbNome, gbc);
+        
+        gbc.gridx = 1;
+        JLabel lblEmail = new JLabel("Email");
+        lblEmail.setFont(fontLabel);
+        lblEmail.setForeground(COLOR_TEXT_MUTED);
+        panelPrincipal.add(lblEmail, gbc);
+        
+        gbc.gridx = 0; gbc.gridy = 1;
+        textNome = new JTextField();
+        styleTextField(textNome, fontField);
+        panelPrincipal.add(textNome, gbc);
+        
+        gbc.gridx = 1;
+        textEmail = new JTextField();
+        styleTextField(textEmail, fontField);
+        panelPrincipal.add(textEmail, gbc);
+        
+        // Linha 2: Apelido vs Valor por Hora
+        gbc.gridx = 0; gbc.gridy = 2;
+        JLabel lblApelido = new JLabel("Apelido");
+        lblApelido.setFont(fontLabel);
+        lblApelido.setForeground(COLOR_TEXT_MUTED);
+        panelPrincipal.add(lblApelido, gbc);
+        
+        gbc.gridx = 1;
+        JLabel lblValorPorHora = new JLabel("Valor por Hora");
+        lblValorPorHora.setFont(fontLabel);
+        lblValorPorHora.setForeground(COLOR_TEXT_MUTED);
+        panelPrincipal.add(lblValorPorHora, gbc);
+        
+        gbc.gridx = 0; gbc.gridy = 3;
+        textApelido = new JTextField();
+        styleTextField(textApelido, fontField);
+        panelPrincipal.add(textApelido, gbc);
+        
+        gbc.gridx = 1;
+        textValor_Hora = new JTextField();
+        styleTextField(textValor_Hora, fontField);
+        panelPrincipal.add(textValor_Hora, gbc);
+        
+        // Linha 4: Contacto vs Horas por Mês
+        gbc.gridx = 0; gbc.gridy = 4;
+        JLabel lbContacto = new JLabel("Contacto");
+        lbContacto.setFont(fontLabel);
+        lbContacto.setForeground(COLOR_TEXT_MUTED);
+        panelPrincipal.add(lbContacto, gbc);
+        
+        gbc.gridx = 1;
+        JLabel lbHoras_Mes = new JLabel("Horas por Mês");
+        lbHoras_Mes.setFont(fontLabel);
+        lbHoras_Mes.setForeground(COLOR_TEXT_MUTED);
+        panelPrincipal.add(lbHoras_Mes, gbc);
+        
+        gbc.gridx = 0; gbc.gridy = 5;
+        textContacto = new JTextField();
+        styleTextField(textContacto, fontField);
+        panelPrincipal.add(textContacto, gbc);
+        
+        gbc.gridx = 1;
+        textHoras_Mes = new JTextField();
+        styleTextField(textHoras_Mes, fontField);
+        panelPrincipal.add(textHoras_Mes, gbc);
+        
+        // Linha 6: Gênero vs Estado Civil
+        gbc.gridx = 0; gbc.gridy = 6;
+        JLabel lblGenero = new JLabel("Gênero");
+        lblGenero.setFont(fontLabel);
+        lblGenero.setForeground(COLOR_TEXT_MUTED);
+        panelPrincipal.add(lblGenero, gbc);
+        
+        gbc.gridx = 1;
+        JLabel lblEstadoCivil = new JLabel("Estado Civil");
+        lblEstadoCivil.setFont(fontLabel);
+        lblEstadoCivil.setForeground(COLOR_TEXT_MUTED);
+        panelPrincipal.add(lblEstadoCivil, gbc);
+        
+        gbc.gridx = 0; gbc.gridy = 7;
+        comboGenero = new JComboBox();
+        comboGenero.setModel(new DefaultComboBoxModel(new String[] {"Masculino", "Feminino"}));
+        styleComboBox(comboGenero, fontField);
+        panelPrincipal.add(comboGenero, gbc);
+        
+        gbc.gridx = 1;
+        comboEstadoCivil = new JComboBox();
+        comboEstadoCivil.setModel(new DefaultComboBoxModel(new String[] {"Solteiro", "Casado"}));
+        styleComboBox(comboEstadoCivil, fontField);
+        panelPrincipal.add(comboEstadoCivil, gbc);
+        
+        // Linha 8: Cargo / Checkboxes internos organizados em linha
+        gbc.gridx = 0; gbc.gridy = 8; gbc.gridwidth = 2;
+        gbc.insets = new Insets(12, 10, 4, 10);
+        JPanel panelCheckboxes = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
+        panelCheckboxes.setBackground(COLOR_PANEL);
+        
+        chckbxCoordenador = new JCheckBox("Coordenador");
+        chckbxCoordenador.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        panelCheckboxes.add(chckbxCoordenador);
+        
+        chckbxDiretor = new JCheckBox("Diretor de Turma");
+        chckbxDiretor.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        panelCheckboxes.add(chckbxDiretor);
+        
+        panelPrincipal.add(panelCheckboxes, gbc);
+        
+        // --- RODAPÉ: Botões de Ação ---
+        JPanel panelFoater = new JPanel();
+        panelFoater.setBackground(COLOR_BG);
+        panelFoater.setBorder(new EmptyBorder(15, 0, 0, 0));
+        panelFoater.setLayout(new FlowLayout(FlowLayout.RIGHT, 12, 0));
+        contentPane.add(panelFoater, BorderLayout.SOUTH);
+        
+        JButton btnLimpar = new JButton("Limpar");
+        styleButton(btnLimpar, COLOR_BUTTON_BG, COLOR_TEXT);
+        btnLimpar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                limpar();
+            }
+        });
+        panelFoater.add(btnLimpar);
+        
+        JButton btnCancelar = new JButton("Cancelar");
+        styleButton(btnCancelar, COLOR_BUTTON_BG, COLOR_TEXT);
+        btnCancelar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
+        panelFoater.add(btnCancelar);
+        
+        JButton btnSalvar = new JButton("Guardar");
+        styleButton(btnSalvar, COLOR_ACCENT, Color.WHITE);
+        btnSalvar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String nome = textNome.getText();
+                String apelido = textApelido.getText();
+                int contacto = Integer.parseInt(textContacto.getText());
+                String email = textEmail.getText();
+                String genero = comboGenero.getSelectedItem().toString();
+                String estadoCivil = comboEstadoCivil.getSelectedItem().toString();
+                int valor_hora = Integer.parseInt(textValor_Hora.getText());
+                int horas_mes = Integer.parseInt(textHoras_Mes.getText());
+                boolean isDiretor = chckbxDiretor.isSelected();
+                boolean isCoordenador = chckbxCoordenador.isSelected();
+                int salario = valor_hora * horas_mes;
+                boolean sucesso;
+                try {
+                    FormadorController fc = new FormadorController();
+                    if(idUser == 0) {
+                        sucesso = fc.cadastrarFormador(nome, apelido, email, genero, estadoCivil, contacto, valor_hora, horas_mes, salario, isDiretor, isCoordenador);
+                        if(sucesso) {
+                            JOptionPane.showMessageDialog(null, "Cadastrado com sucesso");
+                            tela_principal = Tela_Principal.getInstancia();
+                            tela_principal.listarFormadores();
+                            if (isCoordenador) {
+                                EventoCadastro.notificar();
+                            }
+                        }
+                        else {
+                            JOptionPane.showMessageDialog(null,"Falha ao cadastrar");
+                        }
+                    }
+                    else {
+                        sucesso = fc.atualizarFormador(idUser, nome, apelido, email, genero, estadoCivil, contacto, valor_hora, horas_mes, salario, isDiretor, isCoordenador);
+                        if (sucesso){
+                            idUser = 0;
+                            JOptionPane.showMessageDialog(null,"Atualizado com sucesso");
+                            tela_principal = Tela_Principal.getInstancia();
+                            tela_principal.listarFormadores();
+                            if (isCoordenador) {
+                                EventoCadastro.notificar();
+                            }
+                        }
+                        else {
+                            JOptionPane.showMessageDialog(null, "Falha ao atualizar");
+                        }
+                    }
+                } catch(Exception s) {
+                    s.printStackTrace();
+                }
+            }
+        });
+        panelFoater.add(btnSalvar);
+    }
+    
+    // --- MÉTODOS AUXILIARES DE ESTILIZAÇÃO (UI) ---
+    private void styleTextField(JTextField field, Font font) {
+        field.setFont(font);
+        field.setBackground(COLOR_FIELD_BG);
+        field.setForeground(COLOR_TEXT);
+        field.setCaretColor(COLOR_TEXT);
+        field.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(COLOR_FIELD_BORDER, 1),
+            BorderFactory.createEmptyBorder(6, 10, 6, 10)
+        ));
+        field.setPreferredSize(new Dimension(field.getPreferredSize().width, 36));
+    }
+
+    private void styleComboBox(JComboBox combo, Font font) {
+        combo.setFont(font);
+        combo.setBackground(COLOR_FIELD_BG);
+        combo.setForeground(COLOR_TEXT);
+        combo.setBorder(BorderFactory.createLineBorder(COLOR_FIELD_BORDER, 1));
+        combo.setPreferredSize(new Dimension(combo.getPreferredSize().width, 36));
+    }
+
+    private void styleButton(JButton button, Color background, Color foreground) {
+        button.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        button.setBackground(background);
+        button.setForeground(foreground);
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createEmptyBorder(8, 22, 8, 22));
+        button.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }
+
+    public void buscarFormador(int codigo, String nome, String apelido, String email, String genero, String estadoCivil, int contacto, int valor_horas, int horas_mes, double salario) {
+        idUser = codigo;
+        textNome.setText(nome);
+        textApelido.setText(apelido);
+        textContacto.setText(String.valueOf(contacto));
+        textEmail.setText(email);
+        
+        for(int i = 0; i < comboGenero.getItemCount(); i++) {
+            if(comboGenero.getItemAt(i).equals(genero)) {
+                comboGenero.setSelectedIndex(i);
+                break;
+            }
+        }
+        
+        for(int i = 0; i < comboEstadoCivil.getItemCount(); i++) {
+            if(comboEstadoCivil.getItemAt(i).equals(estadoCivil)) {
+                comboEstadoCivil.setSelectedIndex(i);
+                break;
+            }
+        }
+
+        try {
+            FormadorController fc = new FormadorController();
+            boolean [] status = fc.getStatusFormador(codigo);
+            chckbxDiretor.setSelected(status[0]);
+            chckbxCoordenador.setSelected(status[1]);
+        } catch(Exception e) {
+            e.printStackTrace();
+            chckbxDiretor.setSelected(false);
+            chckbxCoordenador.setSelected(false);
+        }
+
+        textValor_Hora.setText(String.valueOf(valor_horas));
+        textHoras_Mes.setText(String.valueOf(horas_mes));
+    }
+    
+    private void limpar() {
+        textNome.setText("");
+        textApelido.setText("");
+        textContacto.setText("");
+        textEmail.setText("");
+        textValor_Hora.setText("");
+        textHoras_Mes.setText("");
+        comboGenero.setSelectedIndex(0);
+        comboEstadoCivil.setSelectedIndex(0);
+        chckbxDiretor.setSelected(false);
+        chckbxCoordenador.setSelected(false);
+    }
 }
